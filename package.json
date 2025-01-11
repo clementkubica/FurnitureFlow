@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.5",
+    "@googlemaps/markerclusterer": "^2.5.1",
+    "@vis.gl/react-google-maps": "latest",
     "firebase": "^11.1.0",
     "react": "^19.0.0",
     "react-dom": "^18.3.0"
