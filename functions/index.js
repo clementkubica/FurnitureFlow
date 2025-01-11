@@ -1,19 +1,40 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
 const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+const knex = require("knex") ({
+    client: 'pg',
+    connection: {
+        host: 'ep-still-paper-a51i2usm.us-east-2.aws.neon.tech',
+        user: 'FurnFlow_owner',
+        password: 'wEhk2i7IZHUW',
+        database: 'FurnFlow',
+        ssl: {
+            rejectUnauthorized: false
+        }
+    },
+});
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+exports.filterByName = onRequest({cors: false}, async (request, response) => {
+    const minLat = request.body.minLat;
+    const minLon = request.body.minLon;
+    const maxLat = request.body.maxLat;
+    const maxLon = request.body.maxLon;
+
+    const query = request.body.query
+
+    const res = await knex('items').whereBetween('longitude', [minLon, maxLon])
+    .andWhereBetween('latitude', [minLat, maxLat]).whereILike('name', `%${query}%`)
+
+    response.status(200).send(res);
+})
+
+exports.fetchItems = onRequest({cors: false}, async (request, response) => {
+    const minLat = request.body.minLat;
+    const minLon = request.body.minLon;
+    const maxLat = request.body.maxLat;
+    const maxLon = request.body.maxLon;
+
+    const res = await knex('items').whereBetween('longitude', [minLon, maxLon])
+      .andWhereBetween('latitude', [minLat, maxLat]);
+
+    response.status(200).send(res);
+});

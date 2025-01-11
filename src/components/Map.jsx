@@ -9,7 +9,6 @@ const center = {
   lat: 42.0521,
   lng: -87.6848,
 }
-
 const zoom = 17
 
 function Map() {
