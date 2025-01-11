@@ -2,12 +2,12 @@ import React from "react";
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
 
 const containerStyle = {
-    width: 'auto',
-    height: '100vh',
+  width: 'auto',
+  height: '100vh',
 }
 const center = {
-    lat: 42.0521,
-    lng: -87.6848,
+  lat: 42.0521,
+  lng: -87.6848,
 }
 
 const zoom = 17
@@ -35,8 +35,7 @@ function Map() {
           zoom={zoom}
           onLoad={onLoad}
           onUnmount={onUnmount}
-          options={{ disableDefaultUI: true }}
-        >
+          options={{ disableDefaultUI: true }}>
           <></>
         </GoogleMap>
       ) : (
