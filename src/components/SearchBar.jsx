@@ -2,6 +2,7 @@ import React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -42,12 +43,44 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchBar() {
-  const [query, setQuery] = React.useState('');
+async function fetchItems(bounds, query) {
+  const minLat = bounds.south;
+  const maxLat = bounds.north;
+  const minLon = bounds.west;
+  const maxLon = bounds.east;
 
-  const handleSearch = (e) => {
+  try {
+    const res = await axios.post(
+      "https://fetchitems-jbhycjd2za-uc.a.run.app",
+      {
+        minLat: minLat,
+        maxLat: maxLat,
+        minLon: minLon,
+        maxLon: maxLon,
+        query: query
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export default function SearchBar({mapBounds, setMapBounds, visibleItems, setVisibleItems}) {
+  const [query, setQuery] = React.useState("");
+  const handleSearch = async (e) => {
     e.preventDefault();
-    console.log('Search query:', query);
+    const items = await fetchItems(mapBounds, query);
+    if (items) {
+       setVisibleItems(items);
+    }
+
   };
 
   return (

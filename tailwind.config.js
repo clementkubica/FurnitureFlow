@@ -7,7 +7,12 @@ export default {
     "./page-section/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'app-purple': "#c106fa",
+        'app-purple-light': "#d669f8"
+      }
+    },
   },
   plugins: [],
 }
