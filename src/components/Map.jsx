@@ -49,44 +49,6 @@ const center = {
   lat: 42.0521,
   lng: -87.6848,
 };
-const tmpMarkers = [
-  {
-    id: 1,
-    price: 10.0,
-    position: { lat: 42.05, lng: -87.68 },
-    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-  },
-  {
-    id: 2,
-    price: 4.99,
-    position: { lat: 42.0525, lng: -87.6825 },
-    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-  },
-  {
-    id: 3,
-    price: 65.75,
-    position: { lat: 42.0575, lng: -87.685 },
-    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-  },
-  {
-    id: 4,
-    price: 28.42,
-    position: { lat: 42.0575, lng: -87.68 },
-    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-  },
-  {
-    id: 5,
-    price: 98.35,
-    position: { lat: 42.0575, lng: -87.6825 },
-    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-  },
-  {
-    id: 6,
-    price: 11.11,
-    position: { lat: 42.0575, lng: -87.685 },
-    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-  },
-];
 
 const createPriceMarker = (price) => {
   const svgMarker = `
@@ -225,7 +187,7 @@ const purp = [
   },
 ];
 
-const Map = () => {
+const Map = ({ visibleItems, setVisibleItems }) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [mapBounds, setMapBounds] = useState(null);
   const [gMap, setGMap] = useState(null);
@@ -239,12 +201,12 @@ const Map = () => {
       west: newBounds.getSouthWest().lng(),
     });
   }
-
   const handleActiveMarker = (marker) => {
     console.log("activemarker changed");
     if (marker === activeMarker) {
       return undefined;
     }
+
     setActiveMarker(marker);
   };
 
@@ -270,7 +232,7 @@ const Map = () => {
   };
 
   const handleZoomChange = () => {
-    if (gMap) {
+    if (gMap && gMap.getBounds()) {
       updateBounds(gMap.getBounds());
     }
   };
@@ -283,26 +245,27 @@ const Map = () => {
 
   useEffect(() => {
     if (mapBounds) {
-      const fetchData = async () => {
-        const items = await fetchItems(mapBounds);
-        if (items) {
-          const newMarkers = items.map((item) => {
-            return {
-              id: item.item_id,
-              price: item.price,
-              name: item.name,
-              position: {
-                lat: parseFloat(item.latitude),
-                lng: parseFloat(item.longitude),
-              },
-              description: item.description,
-            };
-          });
-          console.log("new markers:", newMarkers);
-          setMarkers(newMarkers);
+        const fetchData = async () => {
+            const items = await fetchItems(mapBounds);
+            if (items) {
+                const newMarkers = items.map((item) => {
+                    return {
+                        id: item.item_id,
+                        price: item.price,
+                        name: item.name,
+                        position: {
+                            lat: parseFloat(item.latitude),
+                            lng: parseFloat(item.longitude)
+                        },
+                        description: item.description,
+                        item: item
+                    }
+                }) 
+                setMarkers(newMarkers)
+                setVisibleItems(items)
+            }
         }
-      };
-      fetchData();
+        fetchData()
     }
   }, [mapBounds]);
 
@@ -333,11 +296,10 @@ const Map = () => {
         styles: purp,
       }}
     >
-      {markers.map(({ id, price, position, name, description }) => (
+      {markers.map(({ id, price, position, name, description, item }) => (
         <MarkerF
           key={id}
           position={position}
-          options={{ borderRadius: "100%" }}
           onClick={() => handleActiveMarker(id)}
           icon={{
             url: createPriceMarker(price),
@@ -357,11 +319,11 @@ const Map = () => {
             >
               <div style={{ padding: 0, margin: 0 }}>
                 <Carousel
-                  value={markers}
+                  value={[item.image_url]}
                   numVisible={1}
                   numScroll={1}
                   responsiveOptions={responsiveOptions}
-                  itemTemplate={(item) => (
+                  itemTemplate={(image_url) => (
                     <div
                       style={{
                         display: "flex",
@@ -372,8 +334,8 @@ const Map = () => {
                       }}
                     >
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={image_url}
+                        alt={"image"}
                         style={{
                           width: "100%",
                           height: "100%",

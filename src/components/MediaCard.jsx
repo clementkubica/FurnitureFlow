@@ -32,11 +32,26 @@ export default function MediaCard({
   date_posted,
   sellby_date,
   date_sold,
+  image,
 }) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${month}/${day}/${year}`;
+  }
+
+  const [flag, setFlag] = React.useState(true);
+
+  const handleClick = () => {
+    setFlag(!flag);
   };
 
   return (
@@ -48,26 +63,32 @@ export default function MediaCard({
         flexDirection: "column",
         justifyContent: "space-between",
         backgroundColor: "#E6DFF1",
+        transition: "background-color 0.3s ease-in-out",
+        "&:hover": {
+          backgroundColor: "#c0afdc",
+        },
       }}
     >
-      <CardMedia
-        sx={{ height: 200 }}
-        image="https://i5.walmartimages.com/seo/71-25-Modern-Chenille-Sofas-Couches-Living-Room-Deep-Seat-Sofa-Square-Armrest-Removable-Low-Back-Cushion-Detachable-Cover-Easy-Install-Blue_13bd9c8a-56bc-4dd5-89f2-2790e9f981be.7f4e9925e41fe68fbad9b786b7ff4747.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"
-        title="item card"
-        // className="w-5000"
-      />
+      <CardMedia sx={{ height: 200 }} image={image} title="item card" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {name} - ${price}
+          {name} - {price}
         </Typography>
         <Typography variant="subtitle1">Posted by: {user}</Typography>
         <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon className="hover:text-red-500" />
+        <IconButton
+          onClick={handleClick}
+          variant="contained"
+          color={flag ? "default" : "error"}
+          aria-label="add to favorites"
+        >
+          <FavoriteIcon className="hover:text-red-600" />
         </IconButton>
-        <Button size="small">Message</Button>
+        <Button size="small" className="hover:font-bold">
+          Message
+        </Button>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -80,17 +101,11 @@ export default function MediaCard({
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            <strong>Location:</strong> {location}
+            <strong>Date Posted:</strong> {formatDate(date_posted)}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            <strong>Status:</strong> {status}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            <strong>Date Posted:</strong> {date_posted}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
+          {/* <Typography variant="body2" color="text.secondary">
             <strong>Sell By:</strong> {sellby_date}
-          </Typography>
+          </Typography> */}
           {date_sold && (
             <Typography variant="body2" color="text.secondary">
               <strong>Date Sold:</strong> {date_sold}

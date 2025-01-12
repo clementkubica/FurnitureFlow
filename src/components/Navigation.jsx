@@ -100,7 +100,7 @@ function Navigation() {
       {/* Icons */}
       <div className="flex items-center space-x-4">
         <FaBell 
-          className="text-black text-xl hover:text-gray-400 cursor-pointer"
+          className="text-black text-xl hover:text-yellow-400 cursor-pointer"
           aria-label="Notifications"
           title="Notifications" 
           />
