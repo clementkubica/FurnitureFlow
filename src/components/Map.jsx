@@ -187,7 +187,7 @@ const purp = [
   },
 ];
 
-const Map = () => {
+const Map = ({ visibleItems, setVisibleItems }) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [mapBounds, setMapBounds] = useState(null);
   const [gMap, setGMap] = useState(null);
@@ -206,6 +206,7 @@ const Map = () => {
     if (marker === activeMarker) {
       return undefined;
     }
+
     setActiveMarker(marker);
   };
 
@@ -244,26 +245,26 @@ const Map = () => {
 
   useEffect(() => {
     if (mapBounds) {
-      const fetchData = async () => {
-        const items = await fetchItems(mapBounds);
-        if (items) {
-          const newMarkers = items.map((item) => {
-            return {
-              id: item.item_id,
-              price: item.price,
-              name: item.name,
-              position: {
-                lat: parseFloat(item.latitude),
-                lng: parseFloat(item.longitude),
-              },
-              description: item.description,
-            };
-          });
-          console.log("new markers:", newMarkers);
-          setMarkers(newMarkers);
+        const fetchData = async () => {
+            const items = await fetchItems(mapBounds);
+            if (items) {
+                const newMarkers = items.map((item) => {
+                    return {
+                        id: item.item_id,
+                        price: item.price,
+                        name: item.name,
+                        position: {
+                            lat: parseFloat(item.latitude),
+                            lng: parseFloat(item.longitude)
+                        },
+                        description: item.description
+                    }
+                }) 
+                setMarkers(newMarkers)
+                setVisibleItems(items)
+            }
         }
-      };
-      fetchData();
+        fetchData()
     }
   }, [mapBounds]);
 
