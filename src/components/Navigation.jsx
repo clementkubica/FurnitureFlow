@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import SearchBar from "./SearchBar";
 import { FaBell, FaUser, FaHeart } from "react-icons/fa"; 
-function Navigation() {
+function Navigation({mapBounds, setMapBounds, visibleItems, setVisibleItems}) {
   const [isFavorite, setIsFavorited] = useState(false);
 
   const toggleFavorite = () => {
@@ -21,7 +21,7 @@ function Navigation() {
       {/* Search Bar Center and Dropdowns*/}
       <div className="flex-1 flex items-center justify-center space-x-4 mx-4">
         <div className="flex-1 mx-4">
-          <SearchBar />
+          <SearchBar mapBounds={mapBounds} setMapBounds={setMapBounds } visibleItems={visibleItems} setVisibleItems={setVisibleItems}/>
         </div>
       {/* Dropdowns Buttons */}
       <div className="flex space-x-4">

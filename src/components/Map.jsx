@@ -187,9 +187,8 @@ const purp = [
   },
 ];
 
-const Map = ({ visibleItems, setVisibleItems }) => {
+const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
-  const [mapBounds, setMapBounds] = useState(null);
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
 
@@ -248,25 +247,29 @@ const Map = ({ visibleItems, setVisibleItems }) => {
         const fetchData = async () => {
             const items = await fetchItems(mapBounds);
             if (items) {
-                const newMarkers = items.map((item) => {
-                    return {
-                        id: item.item_id,
-                        price: item.price,
-                        name: item.name,
-                        position: {
-                            lat: parseFloat(item.latitude),
-                            lng: parseFloat(item.longitude)
-                        },
-                        description: item.description
-                    }
-                }) 
-                setMarkers(newMarkers)
                 setVisibleItems(items)
             }
         }
         fetchData()
     }
   }, [mapBounds]);
+
+  useEffect(() => {
+    const newMarkers = visibleItems.map((item) => {
+      return {
+        id: item.item_id,
+        price: item.price,
+        name: item.name,
+        position: {
+          lat: parseFloat(item.latitude), 
+          lng: parseFloat(item.longitude), 
+        },
+        description: item.description,
+        item:item
+      }
+    })
+    setMarkers(newMarkers);
+  }, [visibleItems]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
