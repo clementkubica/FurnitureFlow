@@ -357,15 +357,11 @@ const Map = () => {
             >
               <div style={{ padding: 0, margin: 0 }}>
                 <Carousel
-                  value={
-                    activeMarker
-                      ? markers.find((m) => m.id === activeMarker).images
-                      : []
-                  }
+                  value={markers}
                   numVisible={1}
                   numScroll={1}
                   responsiveOptions={responsiveOptions}
-                  itemTemplate={(imageUrl) => (
+                  itemTemplate={(item) => (
                     <div
                       style={{
                         display: "flex",
@@ -376,8 +372,8 @@ const Map = () => {
                       }}
                     >
                       <img
-                        src={imageUrl}
-                        alt="Property"
+                        src={item.image}
+                        alt={item.name}
                         style={{
                           width: "100%",
                           height: "100%",
