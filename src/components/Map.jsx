@@ -9,15 +9,14 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-function fetchItems(bounds) {
+async function fetchItems(bounds) {
     const minLat = bounds.south;
     const maxLat = bounds.north;
     const minLon = bounds.west;
     const maxLon = bounds.east;
-  
-    axios
-      .post(
-        "https://fetchitems-jbhycjd2za-uc.a.run.app",
+    
+    try {
+        const res = await axios.post("https://fetchitems-jbhycjd2za-uc.a.run.app",
         {
           minLat: minLat,
           maxLat: maxLat,
@@ -28,15 +27,13 @@ function fetchItems(bounds) {
           headers: {
             "Content-Type": "application/json",
           },
-        }
-      )
-      .then((res) => {
-        console.log("bounds:", bounds)
-        console.log("res:", res);
-      })
-      .catch((error) => {
-        console.error(error.response.data);
-      });
+        })
+
+        return res.data
+    }
+    catch(error) {
+        console.error(error)
+    }
   }
 
 const containerStyle = {
@@ -48,7 +45,7 @@ const center = {
   lat: 42.0521,
   lng: -87.6848,
 };
-const markers = [
+const tmpMarkers = [
   {
     id: 1,
     price: 10.0,
@@ -228,6 +225,7 @@ const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [mapBounds, setMapBounds] = useState(null)
   const [gMap, setGMap] = useState(null)
+  const [markers, setMarkers] = useState([])
 
   function updateBounds(newBounds) {
     setMapBounds({
@@ -247,8 +245,21 @@ const Map = () => {
   };
 
   const handleOnLoad = (map) => {
+    console.log("init bounds", map)
+    const topLeft = {
+        lat: 42.059275268799205, 
+        lng: -87.68953333051405
+    }
+
+    const botRight = {
+        lat: 42.0502366521107, 
+        lng: -87.67701760844375
+    }
     const bounds = new google.maps.LatLngBounds();
-    markers.forEach(({ position }) => bounds.extend(position));
+    bounds.extend(topLeft)
+    bounds.extend(center)
+    bounds.extend(botRight)
+
     map.fitBounds(bounds);
     updateBounds(bounds);
     setGMap(map);
@@ -268,7 +279,26 @@ const Map = () => {
 
   useEffect(() => {
     if (mapBounds) {
-      fetchItems(mapBounds);
+        const fetchData = async () => {
+            const items = await fetchItems(mapBounds);
+            if (items) {
+                const newMarkers = items.map((item) => {
+                    return {
+                        id: item.item_id,
+                        price: item.price,
+                        name: item.name,
+                        position: {
+                            lat: parseFloat(item.latitude),
+                            lng: parseFloat(item.longitude)
+                        },
+                        description: item.description
+                    }
+                }) 
+                console.log("new markers:", newMarkers)
+                setMarkers(newMarkers)
+            }
+        }
+        fetchData()
     }
   }, [mapBounds]);
 
@@ -282,7 +312,7 @@ const Map = () => {
       onLoad={handleOnLoad}
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={2}
+      zoom={16}
       onDragEnd={handleDragEnd}
       onZoomChanged={handleZoomChange}
       options={{
@@ -291,7 +321,7 @@ const Map = () => {
         styles: purp,
       }}
     >
-      {markers.map(({ id, price, position, image }) => (
+      {markers.map(({ id, price, position, name, description }) => (
         <MarkerF
           key={id}
           position={position}
