@@ -65,7 +65,7 @@ export default function MediaCard({
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+          <FavoriteIcon className="hover:text-red-500" />
         </IconButton>
         <Button size="small">Message</Button>
         <ExpandMore
