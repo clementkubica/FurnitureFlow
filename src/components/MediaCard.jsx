@@ -86,7 +86,9 @@ export default function MediaCard({
         >
           <FavoriteIcon className="hover:text-red-600" />
         </IconButton>
-        <Button size="small">Message</Button>
+        <Button size="small" className="hover:font-bold">
+          Message
+        </Button>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
