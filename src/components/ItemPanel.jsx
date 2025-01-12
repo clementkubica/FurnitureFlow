@@ -3,11 +3,11 @@ import MediaCard from "./MediaCard";
 
 function ItemPanel() {
   return (
-    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[90vh]">
+    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[80vh]">
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-row gap-4">
           <MediaCard
-            name="Brown Leather Couch"
+            name="Couch"
             price="10.00"
             user="dr.riesbeck"
             description="this is an amazing brown leather couch. barely used!"
