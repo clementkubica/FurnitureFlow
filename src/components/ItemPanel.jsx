@@ -17,11 +17,13 @@ function ItemPanel({ items }) {
             {row.map((item, itemIndex) => (
               <MediaCard
                 name={item.name}
+                image={item.image_url}
                 price={new Intl.NumberFormat("en-US", {
                   style: "currency",
                   currency: "USD",
                 }).format(Number(item.price))}
-                user="dr.riesbeck"
+                user={item.username}
+                date_posted={item.date_posted}
                 description={item.description}
                 className="flex-1"
               />
@@ -38,14 +40,12 @@ function ItemPanel({ items }) {
                 ))}
           </div>
         ))}
-        {rows.length == 0 ? (
+        {rows.length == 0 && (
           <div className="flex items-center justify-center h-full">
             <h1 className="text-black text-4xl font-bold text-center">
               NO LISTINGS IN THIS AREA
             </h1>
           </div>
-        ) : (
-          <></>
         )}
       </div>
     </div>
