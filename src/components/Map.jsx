@@ -11,8 +11,8 @@ import axios from 'axios';
 
 
 const containerStyle = {
-  width: '100%',
-  height: '100vh',
+  width: "100%",
+  height: "90vh",
 };
 
 const center = {
@@ -21,45 +21,41 @@ const center = {
 };
 const markers = [
   {
-      id: 1,
-      name: 'A',
-      position: { lat: 42.0500, lng: -87.6800 },
-      image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
+    id: 1,
+    name: "A",
+    position: { lat: 42.05, lng: -87.68 },
+    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
   },
   {
-    id:2,
-    name: 'B',
+    id: 2,
+    name: "B",
     position: { lat: 42.0525, lng: -87.6825 },
     image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-},
-{
-  id: 3,
-  name: 'C',
-  position: { lat: 42.0575, lng: -87.6850 },
-  image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-
-},
-{
-  id: 4,
-  name: 'D',
-  position: { lat: 42.0575, lng: -87.6800 },
-  image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-
-},
-{
-id:5,
-name: 'E',
-position: { lat: 42.0575, lng: -87.6825 },
-image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-
-},
-{
-id: 6,
-name: 'F',
-position: { lat: 42.0575, lng: -87.6850 },
-image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-
-},
+  },
+  {
+    id: 3,
+    name: "C",
+    position: { lat: 42.0575, lng: -87.685 },
+    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
+  },
+  {
+    id: 4,
+    name: "D",
+    position: { lat: 42.0575, lng: -87.68 },
+    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
+  },
+  {
+    id: 5,
+    name: "E",
+    position: { lat: 42.0575, lng: -87.6825 },
+    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
+  },
+  {
+    id: 6,
+    name: "F",
+    position: { lat: 42.0575, lng: -87.685 },
+    image: "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
+  },
 ];
 
 function fetchItems(bounds) {
@@ -86,6 +82,112 @@ function fetchItems(bounds) {
         console.error(error.response.data)
     })
 }
+const purp =
+
+  [
+    {
+        "featureType": "road",
+        "stylers": [
+            {
+                "hue": "#5e00ff"
+            },
+            {
+                "saturation": -79
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [
+            {
+                "saturation": -78
+            },
+            {
+                "hue": "#6600ff"
+            },
+            {
+                "lightness": 21
+            },
+            {
+                "visibility": "on"  // Enable icons for points of interest
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "stylers": [
+            {
+                "hue": "#e0aaff"
+            },
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "lightness": 22
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "stylers": [
+            {
+                "hue": "#6600ff"
+            },
+            {
+                "saturation": -5
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "stylers": [
+            {
+                "saturation": -65
+            },
+            {
+                "hue": "#1900ff"
+            },
+            {
+                "lightness": 8
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "weight": 1.3
+            },
+            {
+                "lightness": 30
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            },
+            {
+                "hue": "#5e00ff"
+            },
+            {
+                "saturation": -16
+            }
+        ]
+    },
+    {
+        "featureType": "transit.line",
+        "stylers": [
+            {
+                "saturation": -72
+            }
+        ]
+    }
+]
 
 const Map = () => {
     const [activeMarker, setActiveMarker] = useState(0 | null);
@@ -135,30 +237,41 @@ const Map = () => {
         }
     }, [mapBounds])
 
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyDs962Jh1sH_fkkOtdf2FNlYyomF-4n_F8",
-    });
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyDs962Jh1sH_fkkOtdf2FNlYyomF-4n_F8",
+  });
 
-    return isLoaded ? (
-        <GoogleMap
-            onLoad={handleOnLoad}
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={2}
+  return isLoaded ? (
+    <GoogleMap
+      onLoad={handleOnLoad}
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={2}
             onDragEnd={handleDragEnd}
             onZoomChanged={handleZoomChange}
+      options={{
+        streetViewControl: false,
+        styles: purp}}
+    >
+      {markers.map(({ id, name, position, image }) => (
+        <MarkerF
+          key={id}
+          position={position}
+          icon={{ url: image, scaledSize: new google.maps.Size(65, 65) }}
+          options={{ borderRadius: "100%"}}
+          onClick={() => handleActiveMarker(id)}
         >
-            {markers.map(({ id, name, position, image }) => (
-                <MarkerF key={id} position={position} icon={{url:image, scaledSize: new google.maps.Size(65, 65)}} options={{borderRadius:"100%"}} onClick={() => handleActiveMarker(id)}> // Adjust these numbers to change size
-                    {activeMarker === id ? (
-                        <InfoWindowF onCloseClick={() => setActiveMarker(undefined)}>
-                            <div key={id}>{name}</div>
-                        </InfoWindowF>
-                    ) : null}
-                </MarkerF>
-            ))}
-        </GoogleMap>
-    ) : null;
+          {" "}
+          // Adjust these numbers to change size
+          {activeMarker === id ? (
+            <InfoWindowF onCloseClick={() => setActiveMarker(undefined)}>
+              <div key={id}>{name}</div>
+            </InfoWindowF>
+          ) : null}
+        </MarkerF>
+      ))}
+    </GoogleMap>
+  ) : null;
 };
 export default Map;
