@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar";
 function Navigation() {
   return (
     <nav className="bg-white">
-      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-2 flex justify-between items-center font-bold">
         <a
           className="text-black text-lg hover:text-gray-300"
           href="https://google.com"
@@ -12,14 +12,14 @@ function Navigation() {
           Home
         </a>
         <a
-          className="text-black text-lg hover:text-gray-300"
+          className="text-black text-lg hover:text-gray-300 font-bold"
           href="https://google.com"
         >
           Messages
         </a>
         <SearchBar />
         <a
-          className="text-black text-lg hover:text-gray-300"
+          className="text-black hover:text-gray-300 font-bold"
           href="https://google.com"
         >
           Settings

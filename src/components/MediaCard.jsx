@@ -24,7 +24,7 @@ export default function MediaCard({
         image="/static/images/cards/contemplative-reptile.jpg"
         title="item card"
       />
-      <CardContent className="bg-blue-100">
+      <CardContent className="bg-white-100">
         <Typography gutterBottom variant="h5" component="div">
           {name} ${price}
         </Typography>
