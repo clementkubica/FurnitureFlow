@@ -58,7 +58,7 @@ export default function MediaCard({
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {name} - ${price}
+          {name} - {price}
         </Typography>
         <Typography variant="subtitle1">Posted by: {user}</Typography>
         <Typography variant="body2">{description}</Typography>

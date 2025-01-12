@@ -44,7 +44,7 @@ const App = () => {
         </Grid>
         <Grid item xs={4.7}>
           <Item>
-            <ItemPanel visibleItems={visibleItems} />
+            <ItemPanel items={visibleItems} />
           </Item>
         </Grid>
       </Grid>

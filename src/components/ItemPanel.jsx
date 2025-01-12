@@ -9,7 +9,7 @@ function ItemPanel({ items }) {
   for (let i = 0; i < items.length; i += cardsPerRow) {
     rows.push(items.slice(i, i + cardsPerRow));
   }
-
+  
   return (
     <div className="bg-white overflow-x-auto overflow-y-auto max-h-[90vh]">
       <div className="flex flex-col gap-4 p-4">
@@ -17,13 +17,15 @@ function ItemPanel({ items }) {
           <div key={rowIndex} className="flex flex-row gap-4">
             {row.map((item, itemIndex) => (
               <MediaCard
-                key={`${rowIndex}-${itemIndex}`}
-                name={item.name}
-                price={item.price}
-                user={item.user}
-                description={item.description}
-                className="flex-1"
-              />
+              name={item.name}
+              price={new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              }).format(Number(item.price))}
+              user="dr.riesbeck"
+              description={item.description}
+              className="flex-1"
+            />
             ))}
             {/* Add empty divs to fill the remaining spaces in the last row */}
             {row.length < cardsPerRow &&
