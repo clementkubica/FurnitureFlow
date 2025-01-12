@@ -25,6 +25,9 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const App = () => {
+
+  const [visibleItems, setVisibleItems] = useState([])
+
   return (
     <>
       <div>
@@ -36,12 +39,12 @@ const App = () => {
       <Grid container spacing={2}>
         <Grid item xs={7.3}>
           <Item>
-            <Map />
+            <Map visibleItems={visibleItems} setVisibleItems={setVisibleItems} />
           </Item>
         </Grid>
         <Grid item xs={4.7}>
           <Item>
-            <ItemPanel />
+            <ItemPanel visibleItems={visibleItems} />
           </Item>
         </Grid>
       </Grid>

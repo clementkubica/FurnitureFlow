@@ -221,7 +221,7 @@ const purp = [
   },
 ];
 
-const Map = () => {
+const Map = ({ visibleItems, setVisibleItems }) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [mapBounds, setMapBounds] = useState(null)
   const [gMap, setGMap] = useState(null)
@@ -241,6 +241,7 @@ const Map = () => {
     if (marker === activeMarker) {
       return undefined;
     }
+
     setActiveMarker(marker);
   };
 
@@ -294,8 +295,8 @@ const Map = () => {
                         description: item.description
                     }
                 }) 
-                console.log("new markers:", newMarkers)
                 setMarkers(newMarkers)
+                setVisibleItems(items)
             }
         }
         fetchData()
