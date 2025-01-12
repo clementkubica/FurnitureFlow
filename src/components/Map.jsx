@@ -286,6 +286,7 @@ const Map = () => {
       onDragEnd={handleDragEnd}
       onZoomChanged={handleZoomChange}
       options={{
+        fullscreenControl: false,
         clickableIcons: false,
         streetViewControl: false,
         styles: purp,
