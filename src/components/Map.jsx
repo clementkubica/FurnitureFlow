@@ -31,6 +31,7 @@ function fetchItems(bounds) {
         }
       )
       .then((res) => {
+        console.log("bounds:", bounds)
         console.log("res:", res);
       })
       .catch((error) => {
