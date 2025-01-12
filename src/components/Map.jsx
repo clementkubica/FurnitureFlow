@@ -12,14 +12,14 @@ import { Carousel } from "primereact/carousel";
 import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
 
-function fetchItems(bounds) {
+async function fetchItems(bounds) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
   const maxLon = bounds.east;
 
-  axios
-    .post(
+  try {
+    const res = await axios.post(
       "https://fetchitems-jbhycjd2za-uc.a.run.app",
       {
         minLat: minLat,
@@ -32,14 +32,12 @@ function fetchItems(bounds) {
           "Content-Type": "application/json",
         },
       }
-    )
-    .then((res) => {
-      console.log("bounds:", bounds);
-      console.log("res:", res);
-    })
-    .catch((error) => {
-      console.error(error.response.data);
-    });
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 const containerStyle = {
@@ -51,7 +49,7 @@ const center = {
   lat: 42.0521,
   lng: -87.6848,
 };
-const markers = [
+const tmpMarkers = [
   {
     id: 1,
     price: 10.0,
@@ -231,30 +229,8 @@ const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [mapBounds, setMapBounds] = useState(null);
   const [gMap, setGMap] = useState(null);
-  const productTemplate = (product) => {
-    return (
-      <div
-        className="border-1 surface-border border-round m-2 text-center py-5 px-1"
-        style={{ maxWidth: "400px", margin: "0 auto" }}
-      >
-        <div className="mb-3">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-20 shadow-2"
-          />
-        </div>
-        <div>
-          <h4 className="mb-1">{product.name}</h4>
-          <h6 className="mt-0 mb-3">${product.price}</h6>
-          <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
-            <Button icon="pi pi-search" rounded />
-            <Button icon="pi pi-star-fill" rounded severity="success" />
-          </div>
-        </div>
-      </div>
-    );
-  };
+  const [markers, setMarkers] = useState([]);
+
   function updateBounds(newBounds) {
     setMapBounds({
       north: newBounds.getNorthEast().lat(),
@@ -273,8 +249,21 @@ const Map = () => {
   };
 
   const handleOnLoad = (map) => {
+    console.log("init bounds", map);
+    const topLeft = {
+      lat: 42.059275268799205,
+      lng: -87.68953333051405,
+    };
+
+    const botRight = {
+      lat: 42.0502366521107,
+      lng: -87.67701760844375,
+    };
     const bounds = new google.maps.LatLngBounds();
-    markers.forEach(({ position }) => bounds.extend(position));
+    bounds.extend(topLeft);
+    bounds.extend(center);
+    bounds.extend(botRight);
+
     map.fitBounds(bounds);
     updateBounds(bounds);
     setGMap(map);
@@ -294,7 +283,26 @@ const Map = () => {
 
   useEffect(() => {
     if (mapBounds) {
-      fetchItems(mapBounds);
+      const fetchData = async () => {
+        const items = await fetchItems(mapBounds);
+        if (items) {
+          const newMarkers = items.map((item) => {
+            return {
+              id: item.item_id,
+              price: item.price,
+              name: item.name,
+              position: {
+                lat: parseFloat(item.latitude),
+                lng: parseFloat(item.longitude),
+              },
+              description: item.description,
+            };
+          });
+          console.log("new markers:", newMarkers);
+          setMarkers(newMarkers);
+        }
+      };
+      fetchData();
     }
   }, [mapBounds]);
 
@@ -315,16 +323,17 @@ const Map = () => {
       onLoad={handleOnLoad}
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={2}
+      zoom={16}
       onDragEnd={handleDragEnd}
       onZoomChanged={handleZoomChange}
       options={{
+        fullscreenControl: false,
         clickableIcons: false,
         streetViewControl: false,
         styles: purp,
       }}
     >
-      {markers.map(({ id, price, position, image }) => (
+      {markers.map(({ id, price, position, name, description }) => (
         <MarkerF
           key={id}
           position={position}
@@ -348,11 +357,15 @@ const Map = () => {
             >
               <div style={{ padding: 0, margin: 0 }}>
                 <Carousel
-                  value={markers}
+                  value={
+                    activeMarker
+                      ? markers.find((m) => m.id === activeMarker).images
+                      : []
+                  }
                   numVisible={1}
                   numScroll={1}
                   responsiveOptions={responsiveOptions}
-                  itemTemplate={(item) => (
+                  itemTemplate={(imageUrl) => (
                     <div
                       style={{
                         display: "flex",
@@ -363,8 +376,8 @@ const Map = () => {
                       }}
                     >
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={imageUrl}
+                        alt="Property"
                         style={{
                           width: "100%",
                           height: "100%",
