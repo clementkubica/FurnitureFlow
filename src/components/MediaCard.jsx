@@ -32,13 +32,21 @@ export default function MediaCard({
   date_posted,
   sellby_date,
   date_sold,
-  image
+  image,
 }) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${month}/${day}/${year}`;
+  }
 
   return (
     <Card
@@ -81,7 +89,7 @@ export default function MediaCard({
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            <strong>Date Posted:</strong> {date_posted}
+            <strong>Date Posted:</strong> {formatDate(date_posted)}
           </Typography>
           {/* <Typography variant="body2" color="text.secondary">
             <strong>Sell By:</strong> {sellby_date}
