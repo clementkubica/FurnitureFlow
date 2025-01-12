@@ -6,7 +6,37 @@ import {
   LoadScript,
   InfoBoxF,
 } from "@react-google-maps/api";
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
+
+function fetchItems(bounds) {
+    const minLat = bounds.south;
+    const maxLat = bounds.north;
+    const minLon = bounds.west;
+    const maxLon = bounds.east;
+  
+    axios
+      .post(
+        "https://fetchitems-jbhycjd2za-uc.a.run.app",
+        {
+          minLat: minLat,
+          maxLat: maxLat,
+          minLon: minLon,
+          maxLon: maxLon,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log("res:", res);
+      })
+      .catch((error) => {
+        console.error(error.response.data);
+      });
+  }
 
 const containerStyle = {
   width: "100%",
@@ -195,6 +225,18 @@ const purp = [
 
 const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
+  const [mapBounds, setMapBounds] = useState(null)
+  const [gMap, setGMap] = useState(null)
+
+  function updateBounds(newBounds) {
+    setMapBounds({
+        north: newBounds.getNorthEast().lat(),
+        east: newBounds.getNorthEast().lng(),
+        south: newBounds.getSouthWest().lat(),
+        west: newBounds.getSouthWest().lng(),
+    })
+  }
+
   const handleActiveMarker = (marker) => {
     console.log("activemarker changed");
     if (marker === activeMarker) {
@@ -202,11 +244,32 @@ const Map = () => {
     }
     setActiveMarker(marker);
   };
+
   const handleOnLoad = (map) => {
     const bounds = new google.maps.LatLngBounds();
     markers.forEach(({ position }) => bounds.extend(position));
     map.fitBounds(bounds);
+    updateBounds(bounds);
+    setGMap(map);
   };
+
+  const handleZoomChange = () => {
+    if (gMap) {
+      updateBounds(gMap.getBounds());
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (gMap) {
+      updateBounds(gMap.getBounds());
+    }
+  };
+
+  useEffect(() => {
+    if (mapBounds) {
+      fetchItems(mapBounds);
+    }
+  }, [mapBounds]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -219,6 +282,8 @@ const Map = () => {
       mapContainerStyle={containerStyle}
       center={center}
       zoom={2}
+      onDragEnd={handleDragEnd}
+      onZoomChanged={handleZoomChange}
       options={{
         clickableIcons: false,
         streetViewControl: false,
