@@ -13,7 +13,7 @@ const knex = require("knex") ({
     },
 });
 
-exports.filterByName = onRequest({cors: false}, async (request, response) => {
+exports.filterByName = onRequest({cors: true}, async (request, response) => {
     const minLat = request.body.minLat;
     const minLon = request.body.minLon;
     const maxLat = request.body.maxLat;
@@ -27,7 +27,7 @@ exports.filterByName = onRequest({cors: false}, async (request, response) => {
     response.status(200).send(res);
 })
 
-exports.fetchItems = onRequest({cors: false}, async (request, response) => {
+exports.fetchItems = onRequest({cors: true}, async (request, response) => {
     const minLat = request.body.minLat;
     const minLon = request.body.minLon;
     const maxLat = request.body.maxLat;
