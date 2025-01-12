@@ -1,59 +1,39 @@
 import React from "react";
 import MediaCard from "./MediaCard";
 
-function ItemPanel() {
+function ItemPanel({ items }) {
+  const cardsPerRow = 2; // Number of cards per row
+
+  // Split items into rows based on cardsPerRow
+  const rows = [];
+  for (let i = 0; i < items.length; i += cardsPerRow) {
+    rows.push(items.slice(i, i + cardsPerRow));
+  }
+
   return (
     <div className="bg-white overflow-x-auto overflow-y-auto max-h-[80vh]">
       <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-row gap-4">
-          <MediaCard
-            name="Couch"
-            price="10.00"
-            user="dr.riesbeck"
-            description="this is an amazing brown leather couch. barely used!"
-            className="flex-1"
-          />
-          <MediaCard
-            name="Plant"
-            price="12.00"
-            user="dr.hummel"
-            description="this is a beautiful monsterra"
-            className="flex-1"
-          />
-        </div>
-        <div className="flex flex-row gap-4">
-          <MediaCard
-            name="Black Chair"
-            price="5.00"
-            user="nustudent"
-            description="used chair with broken leg"
-            className="flex-1"
-          />
-          <MediaCard
-            name="Dining table"
-            price="30.00"
-            user="dr.riesbeck"
-            description="gently used dining tables"
-            className="flex-1"
-          />
-        </div>
-        <div className="flex flex-row gap-4">
-          <MediaCard
-            name="Dining table"
-            price="30.00"
-            user="dr.riesbeck"
-            description="gently used dining tables"
-            className="flex-1"
-          />
-          <MediaCard
-            name="Dining table"
-            price="30.00"
-            user="dr.riesbeck"
-            description="gently used dining tables"
-            className="flex-1"
-          />
-          <div className="flex-1" />
-        </div>
+        {rows.map((row, rowIndex) => (
+          <div key={rowIndex} className="flex flex-row gap-4">
+            {row.map((item, itemIndex) => (
+              <MediaCard
+                key={`${rowIndex}-${itemIndex}`}
+                name={item.name}
+                price={item.price}
+                user={item.user}
+                description={item.description}
+                className="flex-1"
+              />
+            ))}
+            {/* Add empty divs to fill the remaining spaces in the last row */}
+            {row.length < cardsPerRow &&
+              Array(cardsPerRow - row.length)
+                .fill(null)
+                .map((_, emptyIndex) => (
+                  <div key={`empty-${rowIndex}-${emptyIndex}`} className="flex-1" />
+                ))}
+          </div>
+        ))}
       </div>
     </div>
   );
