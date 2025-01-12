@@ -7,7 +7,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-function Navigation() {
+function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems }) {
   const [isFavorite, setIsFavorited] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [category, setCategory] = useState("");
