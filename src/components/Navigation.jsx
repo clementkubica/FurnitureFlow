@@ -20,13 +20,13 @@ function Navigation() {
           Home
         </a>
         <a
-          className="text-black text-lg hover:text-gray-300"
+          className="text-black text-lg hover:text-gray-300 font-bold"
           href="https://google.com"
         >
           Messages
         </a>
         <a
-          className="text-black text-lg hover:text-gray-300"
+          className="text-black hover:text-gray-300 font-bold"
           href="https://google.com"
         >
           Settings
