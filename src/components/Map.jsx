@@ -6,12 +6,11 @@ import {
   LoadScript,
   InfoBoxF,
 } from "@react-google-maps/api";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 
 const containerStyle = {
   width: "100%",
-  height: "90vh",
+  height: "100vh",
 };
 
 const center = {
@@ -57,34 +56,38 @@ const markers = [
   },
 ];
 
-function fetchItems(bounds) {
-  const minLat = bounds.south;
-  const maxLat = bounds.north;
-  const minLon = bounds.west;
-  const maxLon = bounds.east;
+const createPriceMarker = (price) => {
+  const svgMarker = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40">
+          <rect
+            x="15"
+            y="12.5"
+            width="50"
+            height="20"
+            rx="6"
+            ry="6"
+            fill="#DAB1DA"
+           
+          />
+          <text
+            x="40"
+            y="24"
+            font-family="Arial"
+            font-size="14"
+            font-weight="bold"
+            text-anchor="middle"
+            fill="black"
+            dominant-baseline="middle"
+          >
+            $${price}
+          </text>
+         
+        </svg>
+      `;
 
-  axios
-    .post(
-      "https://fetchitems-jbhycjd2za-uc.a.run.app",
-      {
-        minLat: minLat,
-        maxLat: maxLat,
-        minLon: minLon,
-        maxLon: maxLon,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-    .then((res) => {
-      console.log("res:", res);
-    })
-    .catch((error) => {
-      console.error(error.response.data);
-    });
-}
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgMarker)}`;
+};
+
 const purp = [
   {
     featureType: "road",
@@ -192,18 +195,6 @@ const purp = [
 
 const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
-  const [gMap, setGMap] = useState(null);
-  const [mapBounds, setMapBounds] = useState(null);
-
-  function updateBounds(newBounds) {
-    setMapBounds({
-      north: newBounds.getNorthEast().lat(),
-      east: newBounds.getNorthEast().lng(),
-      south: newBounds.getSouthWest().lat(),
-      west: newBounds.getSouthWest().lng(),
-    });
-  }
-
   const handleActiveMarker = (marker) => {
     console.log("activemarker changed");
     if (marker === activeMarker) {
@@ -211,32 +202,11 @@ const Map = () => {
     }
     setActiveMarker(marker);
   };
-
   const handleOnLoad = (map) => {
     const bounds = new google.maps.LatLngBounds();
     markers.forEach(({ position }) => bounds.extend(position));
     map.fitBounds(bounds);
-    updateBounds(bounds);
-    setGMap(map);
   };
-
-  const handleZoomChange = () => {
-    if (gMap) {
-      updateBounds(gMap.getBounds());
-    }
-  };
-
-  const handleDragEnd = () => {
-    if (gMap) {
-      updateBounds(gMap.getBounds());
-    }
-  };
-
-  useEffect(() => {
-    if (mapBounds) {
-      fetchItems(mapBounds);
-    }
-  }, [mapBounds]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -249,8 +219,6 @@ const Map = () => {
       mapContainerStyle={containerStyle}
       center={center}
       zoom={2}
-      onDragEnd={handleDragEnd}
-      onZoomChanged={handleZoomChange}
       options={{
         clickableIcons: false,
         streetViewControl: false,
