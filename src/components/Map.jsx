@@ -38,7 +38,7 @@ async function fetchItems(bounds) {
 
 const containerStyle = {
   width: "100%",
-  height: "100vh",
+  height: "80vh",
 };
 
 const center = {
@@ -316,6 +316,7 @@ const Map = () => {
       onDragEnd={handleDragEnd}
       onZoomChanged={handleZoomChange}
       options={{
+        fullscreenControl: false,
         clickableIcons: false,
         streetViewControl: false,
         styles: purp,
