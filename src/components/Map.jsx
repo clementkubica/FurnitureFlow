@@ -261,7 +261,6 @@ const Map = () => {
         <MarkerF
           key={id}
           position={position}
-          icon={{ url: image, scaledSize: new google.maps.Size(65, 65) }}
           options={{ borderRadius: "100%" }}
           onClick={() => handleActiveMarker(id)}
           icon={{
