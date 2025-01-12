@@ -8,7 +8,7 @@ function ItemPanel({ items }) {
   for (let i = 0; i < items.length; i += cardsPerRow) {
     rows.push(items.slice(i, i + cardsPerRow));
   }
-  
+
   return (
     <div className="bg-white overflow-x-auto overflow-y-auto max-h-[80vh]">
       <div className="flex flex-col gap-4 p-4">
@@ -33,10 +33,22 @@ function ItemPanel({ items }) {
               Array(cardsPerRow - row.length)
                 .fill(null)
                 .map((_, emptyIndex) => (
-                  <div key={`empty-${rowIndex}-${emptyIndex}`} className="flex-1" />
+                  <div
+                    key={`empty-${rowIndex}-${emptyIndex}`}
+                    className="flex-1"
+                  />
                 ))}
           </div>
         ))}
+        {rows.length == 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <h1 className="text-black text-4xl font-bold text-center">
+              NO LISTINGS IN THIS AREA
+            </h1>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
