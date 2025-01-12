@@ -251,6 +251,7 @@ const Map = () => {
             onDragEnd={handleDragEnd}
             onZoomChanged={handleZoomChange}
       options={{
+        clickableIcons: false,
         streetViewControl: false,
         styles: purp}}
     >
@@ -259,11 +260,9 @@ const Map = () => {
           key={id}
           position={position}
           icon={{ url: image, scaledSize: new google.maps.Size(65, 65) }}
-          options={{ borderRadius: "100%"}}
+          options={{ borderRadius: "100%" }}
           onClick={() => handleActiveMarker(id)}
         >
-          {" "}
-          // Adjust these numbers to change size
           {activeMarker === id ? (
             <InfoWindowF onCloseClick={() => setActiveMarker(undefined)}>
               <div key={id}>{name}</div>
