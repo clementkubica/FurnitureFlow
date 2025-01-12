@@ -57,6 +57,10 @@ export default function MediaCard({
         flexDirection: "column",
         justifyContent: "space-between",
         backgroundColor: "#E6DFF1",
+        transition: "background-color 0.3s ease-in-out",
+        "&:hover": {
+          backgroundColor: "#c0afdc",
+        },
       }}
     >
       <CardMedia
