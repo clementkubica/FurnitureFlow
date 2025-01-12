@@ -8,37 +8,41 @@ import {
 } from "@react-google-maps/api";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Carousel } from "primereact/carousel";
+import { Button } from "primereact/button";
+import { Tag } from "primereact/tag";
 
 async function fetchItems(bounds) {
-    const minLat = bounds.south;
-    const maxLat = bounds.north;
-    const minLon = bounds.west;
-    const maxLon = bounds.east;
-    
-    try {
-        const res = await axios.post("https://fetchitems-jbhycjd2za-uc.a.run.app",
-        {
-          minLat: minLat,
-          maxLat: maxLat,
-          minLon: minLon,
-          maxLon: maxLon,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+  const minLat = bounds.south;
+  const maxLat = bounds.north;
+  const minLon = bounds.west;
+  const maxLon = bounds.east;
 
-        return res.data
-    }
-    catch(error) {
-        console.error(error)
-    }
+  try {
+    const res = await axios.post(
+      "https://fetchitems-jbhycjd2za-uc.a.run.app",
+      {
+        minLat: minLat,
+        maxLat: maxLat,
+        minLon: minLon,
+        maxLon: maxLon,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
   }
+}
 
 const containerStyle = {
   width: "100%",
-  height: "80vh",
+  height: "90vh",
 };
 
 const center = {
@@ -223,17 +227,17 @@ const purp = [
 
 const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
-  const [mapBounds, setMapBounds] = useState(null)
-  const [gMap, setGMap] = useState(null)
-  const [markers, setMarkers] = useState([])
+  const [mapBounds, setMapBounds] = useState(null);
+  const [gMap, setGMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
   function updateBounds(newBounds) {
     setMapBounds({
-        north: newBounds.getNorthEast().lat(),
-        east: newBounds.getNorthEast().lng(),
-        south: newBounds.getSouthWest().lat(),
-        west: newBounds.getSouthWest().lng(),
-    })
+      north: newBounds.getNorthEast().lat(),
+      east: newBounds.getNorthEast().lng(),
+      south: newBounds.getSouthWest().lat(),
+      west: newBounds.getSouthWest().lng(),
+    });
   }
 
   const handleActiveMarker = (marker) => {
@@ -245,20 +249,20 @@ const Map = () => {
   };
 
   const handleOnLoad = (map) => {
-    console.log("init bounds", map)
+    console.log("init bounds", map);
     const topLeft = {
-        lat: 42.059275268799205, 
-        lng: -87.68953333051405
-    }
+      lat: 42.059275268799205,
+      lng: -87.68953333051405,
+    };
 
     const botRight = {
-        lat: 42.0502366521107, 
-        lng: -87.67701760844375
-    }
+      lat: 42.0502366521107,
+      lng: -87.67701760844375,
+    };
     const bounds = new google.maps.LatLngBounds();
-    bounds.extend(topLeft)
-    bounds.extend(center)
-    bounds.extend(botRight)
+    bounds.extend(topLeft);
+    bounds.extend(center);
+    bounds.extend(botRight);
 
     map.fitBounds(bounds);
     updateBounds(bounds);
@@ -279,26 +283,26 @@ const Map = () => {
 
   useEffect(() => {
     if (mapBounds) {
-        const fetchData = async () => {
-            const items = await fetchItems(mapBounds);
-            if (items) {
-                const newMarkers = items.map((item) => {
-                    return {
-                        id: item.item_id,
-                        price: item.price,
-                        name: item.name,
-                        position: {
-                            lat: parseFloat(item.latitude),
-                            lng: parseFloat(item.longitude)
-                        },
-                        description: item.description
-                    }
-                }) 
-                console.log("new markers:", newMarkers)
-                setMarkers(newMarkers)
-            }
+      const fetchData = async () => {
+        const items = await fetchItems(mapBounds);
+        if (items) {
+          const newMarkers = items.map((item) => {
+            return {
+              id: item.item_id,
+              price: item.price,
+              name: item.name,
+              position: {
+                lat: parseFloat(item.latitude),
+                lng: parseFloat(item.longitude),
+              },
+              description: item.description,
+            };
+          });
+          console.log("new markers:", newMarkers);
+          setMarkers(newMarkers);
         }
-        fetchData()
+      };
+      fetchData();
     }
   }, [mapBounds]);
 
@@ -307,6 +311,13 @@ const Map = () => {
     googleMapsApiKey: "AIzaSyDs962Jh1sH_fkkOtdf2FNlYyomF-4n_F8",
   });
 
+  const responsiveOptions = [
+    {
+      breakpoint: "575px",
+      numVisible: 1,
+      numScroll: 1,
+    },
+  ];
   return isLoaded ? (
     <GoogleMap
       onLoad={handleOnLoad}
@@ -335,8 +346,45 @@ const Map = () => {
           }}
         >
           {activeMarker === id ? (
-            <InfoWindowF onCloseClick={() => setActiveMarker(undefined)}>
-              <h1>A</h1>
+            <InfoWindowF
+              options={{
+                disableAutoPan: true,
+                maxWidth: 200,
+                pixelOffset: new google.maps.Size(0, -30),
+                closeButton: false,
+              }}
+              onCloseClick={() => setActiveMarker(undefined)}
+            >
+              <div style={{ padding: 0, margin: 0 }}>
+                <Carousel
+                  value={markers}
+                  numVisible={1}
+                  numScroll={1}
+                  responsiveOptions={responsiveOptions}
+                  itemTemplate={(item) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "150px",
+                        width: "100%",
+                      }}
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  )}
+                  verticalViewPortHeight="150px"
+                />
+              </div>
             </InfoWindowF>
           ) : null}
         </MarkerF>

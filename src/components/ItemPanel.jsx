@@ -11,7 +11,7 @@ function ItemPanel({ items }) {
   }
 
   return (
-    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[80vh]">
+    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[90vh]">
       <div className="flex flex-col gap-4 p-4">
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="flex flex-row gap-4">
