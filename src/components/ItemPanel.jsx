@@ -3,7 +3,7 @@ import MediaCard from "./MediaCard";
 
 function ItemPanel() {
   return (
-    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[80vh]">
+    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[90vh]">
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-row gap-4">
           <MediaCard
