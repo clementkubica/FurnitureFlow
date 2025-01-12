@@ -50,7 +50,7 @@ const center = {
   lng: -87.6848,
 };
 
-const createPriceMarker = (price) => {
+const createPriceMarker = (price, color) => {
   const svgMarker = `
         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40">
           <rect
@@ -60,7 +60,7 @@ const createPriceMarker = (price) => {
             height="20"
             rx="6"
             ry="6"
-            fill="#DAB1DA"
+            fill="${color}"
            
           />
           <text
@@ -304,7 +304,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
           position={position}
           onClick={() => handleActiveMarker(id)}
           icon={{
-            url: createPriceMarker(price),
+            url: activeMarker == id ? createPriceMarker(price, "#9E4B9E") : createPriceMarker(price, "#DAB1DA"),
             scaledSize: new google.maps.Size(80, 40),
             anchor: new google.maps.Point(40, 40),
           }}
