@@ -19,6 +19,7 @@
     "@react-google-maps/api": "^2.20.5",
     "@vis.gl/react-google-maps": "latest",
     "autoprefixer": "^10.4.20",
+    "axios": "^1.7.9",
     "firebase": "^11.1.0",
     "flowbite": "^2.5.2",
     "postcss": "^8.4.49",
