@@ -51,10 +51,7 @@ export default function MediaCard({
       }}
     >
       <CardMedia
-        sx={{ 
-          maxHeight: 120,
-          minHeight: 120,
-          height: 120 }}
+        sx={{ height: 200 }}
         image="https://i5.walmartimages.com/seo/71-25-Modern-Chenille-Sofas-Couches-Living-Room-Deep-Seat-Sofa-Square-Armrest-Removable-Low-Back-Cushion-Detachable-Cover-Easy-Install-Blue_13bd9c8a-56bc-4dd5-89f2-2790e9f981be.7f4e9925e41fe68fbad9b786b7ff4747.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"
         title="item card"
         // className="w-5000"
