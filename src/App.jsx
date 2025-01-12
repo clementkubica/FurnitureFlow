@@ -34,12 +34,12 @@ const App = () => {
         <SearchBar />
       </div> */}
       <Grid container spacing={2}>
-        <Grid item xs={8}>
+        <Grid item xs={7.3}>
           <Item>
             <Map />
           </Item>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={4.7}>
           <Item>
             <ItemPanel />
           </Item>
