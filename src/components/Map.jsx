@@ -56,6 +56,113 @@ const markers = [
   },
 ];
 
+const purp =
+
+  [
+    {
+        "featureType": "road",
+        "stylers": [
+            {
+                "hue": "#5e00ff"
+            },
+            {
+                "saturation": -79
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [
+            {
+                "saturation": -78
+            },
+            {
+                "hue": "#6600ff"
+            },
+            {
+                "lightness": 21
+            },
+            {
+                "visibility": "on"  // Enable icons for points of interest
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "stylers": [
+            {
+                "hue": "#e0aaff"
+            },
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "lightness": 22
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "stylers": [
+            {
+                "hue": "#6600ff"
+            },
+            {
+                "saturation": -5
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "stylers": [
+            {
+                "saturation": -65
+            },
+            {
+                "hue": "#1900ff"
+            },
+            {
+                "lightness": 8
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "weight": 1.3
+            },
+            {
+                "lightness": 30
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            },
+            {
+                "hue": "#5e00ff"
+            },
+            {
+                "saturation": -16
+            }
+        ]
+    },
+    {
+        "featureType": "transit.line",
+        "stylers": [
+            {
+                "saturation": -72
+            }
+        ]
+    }
+]
+
 const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const handleActiveMarker = (marker) => {
@@ -82,13 +189,16 @@ const Map = () => {
       mapContainerStyle={containerStyle}
       center={center}
       zoom={2}
+      options={{
+        streetViewControl: false,
+        styles: purp}}
     >
       {markers.map(({ id, name, position, image }) => (
         <MarkerF
           key={id}
           position={position}
           icon={{ url: image, scaledSize: new google.maps.Size(65, 65) }}
-          options={{ borderRadius: "100%" }}
+          options={{ borderRadius: "100%"}}
           onClick={() => handleActiveMarker(id)}
         >
           {" "}
