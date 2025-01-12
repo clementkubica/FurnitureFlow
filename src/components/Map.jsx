@@ -43,9 +43,8 @@ function fetchItems(bounds) {
 }
 
 const containerStyle = {
-  width: "90%",
-  height: "90vh",
-  marginLeft: "100px",
+  width: "100%",
+  height: "80vh",
 };
 
 const center = {
@@ -234,21 +233,20 @@ const Map = () => {
   const [gMap, setGMap] = useState(null);
   const productTemplate = (product) => {
     return (
-      <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
+      <div
+        className="border-1 surface-border border-round m-2 text-center py-5 px-1"
+        style={{ maxWidth: "400px", margin: "0 auto" }}
+      >
         <div className="mb-3">
           <img
             src={product.image}
             alt={product.name}
-            className="w-50 shadow-2"
+            className="w-20 shadow-2"
           />
         </div>
         <div>
           <h4 className="mb-1">{product.name}</h4>
           <h6 className="mt-0 mb-3">${product.price}</h6>
-          {/* <Tag
-            value={product.inventoryStatus}
-            severity={getSeverity(product)}
-          ></Tag> */}
           <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
             <Button icon="pi pi-search" rounded />
             <Button icon="pi pi-star-fill" rounded severity="success" />
@@ -339,15 +337,45 @@ const Map = () => {
           }}
         >
           {activeMarker === id ? (
-            <InfoWindowF onCloseClick={() => setActiveMarker(undefined)}>
-              <Carousel
-                value={markers}
-                numVisible={1}
-                numScroll={1}
-                responsiveOptions={responsiveOptions}
-                itemTemplate={productTemplate}
-                verticalViewPortHeight="10px"
-              />
+            <InfoWindowF
+              options={{
+                disableAutoPan: true,
+                maxWidth: 200,
+                pixelOffset: new google.maps.Size(0, -30),
+                closeButton: false,
+              }}
+              onCloseClick={() => setActiveMarker(undefined)}
+            >
+              <div style={{ padding: 0, margin: 0 }}>
+                <Carousel
+                  value={markers}
+                  numVisible={1}
+                  numScroll={1}
+                  responsiveOptions={responsiveOptions}
+                  itemTemplate={(item) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "150px",
+                        width: "100%",
+                      }}
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  )}
+                  verticalViewPortHeight="150px"
+                />
+              </div>
             </InfoWindowF>
           ) : null}
         </MarkerF>
