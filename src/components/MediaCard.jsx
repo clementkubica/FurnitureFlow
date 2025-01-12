@@ -39,6 +39,12 @@ export default function MediaCard({
     setExpanded(!expanded);
   };
 
+  const [flag, setFlag] = React.useState(true);
+
+  const handleClick = () => {
+    setFlag(!flag);
+  };
+
   return (
     <Card
       sx={{
@@ -54,7 +60,6 @@ export default function MediaCard({
         sx={{ height: 200 }}
         image="https://i5.walmartimages.com/seo/71-25-Modern-Chenille-Sofas-Couches-Living-Room-Deep-Seat-Sofa-Square-Armrest-Removable-Low-Back-Cushion-Detachable-Cover-Easy-Install-Blue_13bd9c8a-56bc-4dd5-89f2-2790e9f981be.7f4e9925e41fe68fbad9b786b7ff4747.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"
         title="item card"
-        // className="w-5000"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -64,8 +69,13 @@ export default function MediaCard({
         <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon className="hover:text-red-500" />
+        <IconButton
+          onClick={handleClick}
+          variant="contained"
+          color={flag ? "default" : "error"}
+          aria-label="add to favorites"
+        >
+          <FavoriteIcon className="hover:text-red-600" />
         </IconButton>
         <Button size="small">Message</Button>
         <ExpandMore
