@@ -8,40 +8,44 @@ import {
 } from "@react-google-maps/api";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Carousel } from "primereact/carousel";
+import { Button } from "primereact/button";
+import { Tag } from "primereact/tag";
 
 function fetchItems(bounds) {
-    const minLat = bounds.south;
-    const maxLat = bounds.north;
-    const minLon = bounds.west;
-    const maxLon = bounds.east;
-  
-    axios
-      .post(
-        "https://fetchitems-jbhycjd2za-uc.a.run.app",
-        {
-          minLat: minLat,
-          maxLat: maxLat,
-          minLon: minLon,
-          maxLon: maxLon,
+  const minLat = bounds.south;
+  const maxLat = bounds.north;
+  const minLon = bounds.west;
+  const maxLon = bounds.east;
+
+  axios
+    .post(
+      "https://fetchitems-jbhycjd2za-uc.a.run.app",
+      {
+        minLat: minLat,
+        maxLat: maxLat,
+        minLon: minLon,
+        maxLon: maxLon,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        console.log("bounds:", bounds)
-        console.log("res:", res);
-      })
-      .catch((error) => {
-        console.error(error.response.data);
-      });
-  }
+      }
+    )
+    .then((res) => {
+      console.log("bounds:", bounds);
+      console.log("res:", res);
+    })
+    .catch((error) => {
+      console.error(error.response.data);
+    });
+}
 
 const containerStyle = {
-  width: "100%",
-  height: "100vh",
+  width: "90%",
+  height: "90vh",
+  marginLeft: "100px",
 };
 
 const center = {
@@ -226,16 +230,40 @@ const purp = [
 
 const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
-  const [mapBounds, setMapBounds] = useState(null)
-  const [gMap, setGMap] = useState(null)
-
+  const [mapBounds, setMapBounds] = useState(null);
+  const [gMap, setGMap] = useState(null);
+  const productTemplate = (product) => {
+    return (
+      <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
+        <div className="mb-3">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-50 shadow-2"
+          />
+        </div>
+        <div>
+          <h4 className="mb-1">{product.name}</h4>
+          <h6 className="mt-0 mb-3">${product.price}</h6>
+          {/* <Tag
+            value={product.inventoryStatus}
+            severity={getSeverity(product)}
+          ></Tag> */}
+          <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
+            <Button icon="pi pi-search" rounded />
+            <Button icon="pi pi-star-fill" rounded severity="success" />
+          </div>
+        </div>
+      </div>
+    );
+  };
   function updateBounds(newBounds) {
     setMapBounds({
-        north: newBounds.getNorthEast().lat(),
-        east: newBounds.getNorthEast().lng(),
-        south: newBounds.getSouthWest().lat(),
-        west: newBounds.getSouthWest().lng(),
-    })
+      north: newBounds.getNorthEast().lat(),
+      east: newBounds.getNorthEast().lng(),
+      south: newBounds.getSouthWest().lat(),
+      west: newBounds.getSouthWest().lng(),
+    });
   }
 
   const handleActiveMarker = (marker) => {
@@ -277,6 +305,13 @@ const Map = () => {
     googleMapsApiKey: "AIzaSyDs962Jh1sH_fkkOtdf2FNlYyomF-4n_F8",
   });
 
+  const responsiveOptions = [
+    {
+      breakpoint: "575px",
+      numVisible: 1,
+      numScroll: 1,
+    },
+  ];
   return isLoaded ? (
     <GoogleMap
       onLoad={handleOnLoad}
@@ -305,7 +340,14 @@ const Map = () => {
         >
           {activeMarker === id ? (
             <InfoWindowF onCloseClick={() => setActiveMarker(undefined)}>
-              <h1>A</h1>
+              <Carousel
+                value={markers}
+                numVisible={1}
+                numScroll={1}
+                responsiveOptions={responsiveOptions}
+                itemTemplate={productTemplate}
+                verticalViewPortHeight="10px"
+              />
             </InfoWindowF>
           ) : null}
         </MarkerF>
