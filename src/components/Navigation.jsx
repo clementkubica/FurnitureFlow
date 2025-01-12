@@ -14,7 +14,7 @@ function Navigation() {
         />
         {/* Links to the right */}
         <div className="flex flex-grow justify-evenly ml-8">
-          <a className="text-black text-lg hover:text-gray-300"
+          <a className="text-black text-lg hover:text-gray-300 font-bold"
           href="https://google.com"
         >
           Home
@@ -26,7 +26,7 @@ function Navigation() {
           Messages
         </a>
         <a
-          className="text-black hover:text-gray-300 font-bold"
+          className="text-black text-lg hover:text-gray-300 font-bold"
           href="https://google.com"
         >
           Settings
