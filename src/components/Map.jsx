@@ -220,6 +220,7 @@ const Map = () => {
       center={center}
       zoom={2}
       options={{
+        clickableIcons: false,
         streetViewControl: false,
         styles: purp,
       }}
@@ -228,6 +229,7 @@ const Map = () => {
         <MarkerF
           key={id}
           position={position}
+          options={{ borderRadius: "100%" }}
           onClick={() => handleActiveMarker(id)}
           icon={{
             url: createPriceMarker(price),
