@@ -48,6 +48,12 @@ export default function MediaCard({
     return `${month}/${day}/${year}`;
   }
 
+  const [flag, setFlag] = React.useState(true);
+
+  const handleClick = () => {
+    setFlag(!flag);
+  };
+
   return (
     <Card
       sx={{
@@ -63,12 +69,7 @@ export default function MediaCard({
         },
       }}
     >
-      <CardMedia
-        sx={{ height: 200 }}
-        image={image}
-        title="item card"
-        // className="w-5000"
-      />
+      <CardMedia sx={{ height: 200 }} image={image} title="item card" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {name} - {price}
@@ -77,10 +78,17 @@ export default function MediaCard({
         <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon className="hover:text-red-500" />
+        <IconButton
+          onClick={handleClick}
+          variant="contained"
+          color={flag ? "default" : "error"}
+          aria-label="add to favorites"
+        >
+          <FavoriteIcon className="hover:text-red-600" />
         </IconButton>
-        <Button size="small">Message</Button>
+        <Button size="small" className="hover:font-bold">
+          Message
+        </Button>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

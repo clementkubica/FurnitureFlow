@@ -298,7 +298,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
         styles: purp,
       }}
     >
-      {markers.map(({ id, price, position, name, description }) => (
+      {markers.map(({ id, price, position, name, description, item }) => (
         <MarkerF
           key={id}
           position={position}
@@ -321,11 +321,11 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
             >
               <div style={{ padding: 0, margin: 0 }}>
                 <Carousel
-                  value={markers}
+                  value={[item.image_url]}
                   numVisible={1}
                   numScroll={1}
                   responsiveOptions={responsiveOptions}
-                  itemTemplate={(item) => (
+                  itemTemplate={(image_url) => (
                     <div
                       style={{
                         display: "flex",
@@ -336,8 +336,8 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
                       }}
                     >
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={image_url}
+                        alt={"image"}
                         style={{
                           width: "100%",
                           height: "100%",
