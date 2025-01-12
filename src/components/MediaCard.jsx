@@ -44,13 +44,10 @@ export default function MediaCard({
       sx={{
         maxWidth: "50%",
         minWidth: "50%",
-        minHeight: 300,
-        maxHeight: 300,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         backgroundColor: "#E6DFF1",
-        height: "100%",
       }}
     >
       <CardMedia
