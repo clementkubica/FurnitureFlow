@@ -10,7 +10,7 @@ import { useState } from "react";
 
 const containerStyle = {
   width: "100%",
-  height: "100vh",
+  height: "90vh",
 };
 
 const center = {
@@ -58,35 +58,140 @@ const markers = [
 
 const createPriceMarker = (price) => {
   const svgMarker = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40">
-        <rect
-          x="15"
-          y="12.5"
-          width="50"
-          height="20"
-          rx="6"
-          ry="6"
-          fill="#DAB1DA"
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40">
+          <rect
+            x="15"
+            y="12.5"
+            width="50"
+            height="20"
+            rx="6"
+            ry="6"
+            fill="#DAB1DA"
+           
+          />
+          <text
+            x="40"
+            y="24"
+            font-family="Arial"
+            font-size="14"
+            font-weight="bold"
+            text-anchor="middle"
+            fill="black"
+            dominant-baseline="middle"
+          >
+            $${price}
+          </text>
          
-        />
-        <text
-          x="40"
-          y="24"
-          font-family="Arial"
-          font-size="14"
-          font-weight="bold"
-          text-anchor="middle"
-          fill="black"
-          dominant-baseline="middle"
-        >
-          $${price}
-        </text>
-       
-      </svg>
-    `;
+        </svg>
+      `;
 
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgMarker)}`;
 };
+
+const purp = [
+  {
+    featureType: "road",
+    stylers: [
+      {
+        hue: "#5e00ff",
+      },
+      {
+        saturation: -79,
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    stylers: [
+      {
+        saturation: -78,
+      },
+      {
+        hue: "#6600ff",
+      },
+      {
+        lightness: 21,
+      },
+      {
+        visibility: "on", // Enable icons for points of interest
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    stylers: [
+      {
+        hue: "#e0aaff",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    stylers: [
+      {
+        lightness: 22,
+      },
+    ],
+  },
+  {
+    featureType: "landscape",
+    stylers: [
+      {
+        hue: "#6600ff",
+      },
+      {
+        saturation: -5,
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    stylers: [
+      {
+        saturation: -65,
+      },
+      {
+        hue: "#1900ff",
+      },
+      {
+        lightness: 8,
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    stylers: [
+      {
+        weight: 1.3,
+      },
+      {
+        lightness: 30,
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    stylers: [
+      {
+        visibility: "simplified",
+      },
+      {
+        hue: "#5e00ff",
+      },
+      {
+        saturation: -16,
+      },
+    ],
+  },
+  {
+    featureType: "transit.line",
+    stylers: [
+      {
+        saturation: -72,
+      },
+    ],
+  },
+];
 
 const Map = () => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
@@ -114,6 +219,10 @@ const Map = () => {
       mapContainerStyle={containerStyle}
       center={center}
       zoom={2}
+      options={{
+        streetViewControl: false,
+        styles: purp,
+      }}
     >
       {markers.map(({ id, price, position, image }) => (
         <MarkerF
