@@ -14,6 +14,7 @@ import { Tag } from "primereact/tag";
 import { Modal } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from "@mui/material/Typography";
+import * as React from "react";
 
 async function fetchItems(bounds) {
   const minLat = bounds.south;
@@ -371,10 +372,12 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
                        aria-describedby="modal-modal-description">
                   <Box sx={boxstyle}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                      Text in a modal
+                      {name}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                      {description}
+                      <Typography variant="subtitle1">Posted by: {name}</Typography>
+                      <Typography variant="body2">{description}</Typography>
                     </Typography>
                     <Button onClick={() => setOpen(false)}>click me</Button>
                   </Box>
