@@ -11,6 +11,9 @@ import { useState, useEffect } from "react";
 import { Carousel } from "primereact/carousel";
 import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
+import { Modal } from "@mui/material";
+import Box from '@mui/material/Box';
+import Typography from "@mui/material/Typography";
 
 async function fetchItems(bounds) {
   const minLat = bounds.south;
@@ -192,6 +195,20 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
 
+  const [open, setOpen] = useState(false);
+
+  const boxstyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
   function updateBounds(newBounds) {
     setMapBounds({
       north: newBounds.getNorthEast().lat(),
@@ -321,6 +338,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
             >
               <div style={{ padding: 0, margin: 0 }}>
                 <Carousel
+                  onClick={() => setOpen(true)}
                   value={[item.image_url]}
                   numVisible={1}
                   numScroll={1}
@@ -348,6 +366,19 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
                   )}
                   verticalViewPortHeight="150px"
                 />
+                <Modal open={open} onClose={() => setOpen(false)}
+                       aria-labelledby="modal-modal-title"
+                       aria-describedby="modal-modal-description">
+                  <Box sx={boxstyle}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                      Text in a modal
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                    <Button onClick={() => setOpen(false)}>click me</Button>
+                  </Box>
+                </Modal>
               </div>
             </InfoWindowF>
           ) : null}
