@@ -25,23 +25,27 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const App = () => {
+
+  const [visibleItems, setVisibleItems] = useState([])
+  const [bounds, setBounds] = useState(null)
+
   return (
     <>
       <div>
-        <Navigation />
+        <Navigation mapBounds={bounds} setMapBounds={setBounds} visibleItems={visibleItems} setVisibleItems={setVisibleItems}/>
       </div>
       {/* <div>
         <SearchBar />
       </div> */}
       <Grid container spacing={2}>
-        <Grid item xs={8}>
+        <Grid item xs={7.3}>
           <Item>
-            <Map />
+            <Map visibleItems={visibleItems} setVisibleItems={setVisibleItems} mapBounds={bounds} setMapBounds={setBounds} />
           </Item>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={4.7}>
           <Item>
-            <ItemPanel />
+            <ItemPanel items={visibleItems} />
           </Item>
         </Grid>
       </Grid>
