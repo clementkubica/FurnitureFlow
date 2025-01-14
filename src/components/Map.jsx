@@ -392,8 +392,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
                       {/*<Typography variant="subtitle1">Posted by: {name}</Typography>
                       <Typography variant="body2">{description}</Typography>*/}
                     </Typography>
-                    <Typography></Typography>
-                    <Button onClick={() => setOpen(false)}></Button>
+                    {/*<Button onClick={() => setOpen(false)}></Button>*/}
                   </Box>
                 </Modal>
               </div>
