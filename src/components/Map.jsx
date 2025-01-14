@@ -374,12 +374,26 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                       {name}
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      {description}
-                      <Typography variant="subtitle1">Posted by: {name}</Typography>
-                      <Typography variant="body2">{description}</Typography>
+                    <Typography id="modal-modal-description" sx={{mt: 2}}>
+                      Price: ${price}.00
                     </Typography>
-                    <Button onClick={() => setOpen(false)}>click me</Button>
+                    <img
+                        src={item.image_url}
+                        alt={name}
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          objectFit: "cover",
+                          marginBottom: "16px",
+                        }}
+                    />
+                    <Typography id="modal-modal-description" sx={{mt: 2}}>
+                      {description}
+                      {/*<Typography variant="subtitle1">Posted by: {name}</Typography>
+                      <Typography variant="body2">{description}</Typography>*/}
+                    </Typography>
+                    <Typography></Typography>
+                    <Button onClick={() => setOpen(false)}></Button>
                   </Box>
                 </Modal>
               </div>
