@@ -1,7 +1,7 @@
 import React from "react";
 import MediaCard from "./MediaCard";
 
-function ItemPanel({ items }) {
+function ItemPanel({ items = [] }) { // Default to an empty array
   const cardsPerRow = 2;
 
   const rows = [];
@@ -16,6 +16,7 @@ function ItemPanel({ items }) {
           <div key={rowIndex} className="flex flex-row gap-4">
             {row.map((item, itemIndex) => (
               <MediaCard
+                key={itemIndex} // Add a key for each MediaCard
                 name={item.name}
                 image={item.image_url}
                 price={new Intl.NumberFormat("en-US", {
@@ -28,7 +29,7 @@ function ItemPanel({ items }) {
                 className="flex-1"
               />
             ))}
-            {}
+            {/* Fill empty space if row has fewer cards */}
             {row.length < cardsPerRow &&
               Array(cardsPerRow - row.length)
                 .fill(null)
@@ -40,7 +41,7 @@ function ItemPanel({ items }) {
                 ))}
           </div>
         ))}
-        {rows.length == 0 && (
+        {rows.length === 0 && ( // Handle empty rows
           <div className="flex items-center justify-center h-full">
             <h1 className="text-black text-4xl font-bold text-center">
               NO LISTINGS IN THIS AREA
@@ -53,3 +54,4 @@ function ItemPanel({ items }) {
 }
 
 export default ItemPanel;
+
