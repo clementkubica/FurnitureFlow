@@ -1,55 +1,58 @@
-import { useState } from "react";
-import logo from "./logo.svg";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Map from "./components/Map";
-// import SearchBar from "./components/SearchBar";
-import MediaCard from "./components/MediaCard";
 import ItemPanel from "./components/ItemPanel";
-
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
 import Navigation from "./components/Navigation";
+import Login from "./components/Login";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./services/auth"; // Auth Context
 
-const App = () => {
+const HomePage = () => {
+  const user = useAuth();
+  const [visibleItems, setVisibleItems] = useState([]); // State for items
+  const [mapBounds, setMapBounds] = useState(null); // State for map bounds
 
-  const [visibleItems, setVisibleItems] = useState([])
-  const [bounds, setBounds] = useState(null)
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
-    <>
-      <div>
-        <Navigation mapBounds={bounds} setMapBounds={setBounds} visibleItems={visibleItems} setVisibleItems={setVisibleItems}/>
+    <div>
+      <Navigation 
+        mapBounds={mapBounds} 
+        setMapBounds={setMapBounds} 
+        visibleItems={visibleItems} 
+        setVisibleItems={setVisibleItems} 
+      />
+      <div style={{ display: "flex" }}>
+        <div style={{ flex: 2 }}>
+          <Map 
+            visibleItems={visibleItems} 
+            setVisibleItems={setVisibleItems} 
+            mapBounds={mapBounds} 
+            setMapBounds={setMapBounds} 
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <ItemPanel items={visibleItems} />
+        </div>
       </div>
-      {/* <div>
-        <SearchBar />
-      </div> */}
-      <Grid container spacing={2}>
-        <Grid item xs={7.3}>
-          <Item>
-            <Map visibleItems={visibleItems} setVisibleItems={setVisibleItems} mapBounds={bounds} setMapBounds={setBounds} />
-          </Item>
-        </Grid>
-        <Grid item xs={4.7}>
-          <Item>
-            <ItemPanel items={visibleItems} />
-          </Item>
-        </Grid>
-      </Grid>
-    </>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 
