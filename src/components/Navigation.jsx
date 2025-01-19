@@ -7,7 +7,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, showSearchBar = true}) {
+function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, setIsFavoritePage, showSearchBar = true,}) {
   const [isFavorite, setIsFavorited] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [category, setCategory] = useState("");
@@ -15,7 +15,8 @@ function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, sh
 
   const toggleFavorite = () => {
     setIsFavorited(!isFavorite);
-  }
+    setIsFavoritePage(!isFavorite);
+  };
 
   const handlePriceRange = (event, newValue) => {
     setPriceRange(newValue);
@@ -112,15 +113,22 @@ function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, sh
             />
         </a>
         <FaHeart
-          className={`text-xl cursor-pointer ${isFavorite ? "text-red-500" : "text-black hover:text-red-500"}`}
-          onClick={toggleFavorite}
-          title={isFavorite ? "Unfavorite" : "Favorite"}
-          aria-label={isFavorite ? "Unfavorite" : "Favorite"}
-          tabIndex="0"
-          onKeyPress={(e) => {
-            if (e.key == "Enter") toggleFavorite();
-          }}
-        />
+            className={`text-xl cursor-pointer ${
+              isFavorite ? "text-red-500" : "text-black hover:text-red-500"
+            }`}
+            onClick={() => {
+              toggleFavorite();
+            }}
+            title={isFavorite ? "Unfavorite" : "Favorite"}
+            aria-label={isFavorite ? "Unfavorite" : "Favorite"}
+            tabIndex="0"
+            onKeyPress={(e) => {
+              if (e.key == "Enter") {
+                toggleFavorite();
+                setIsFavoritePage(true);
+              }
+            }}
+          />
         <FaUser 
           className="text-black text-xl hover:text-gray-400 cursor-pointer"
           aria-label="User Profile"

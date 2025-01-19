@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Navigation from "../components/Navigation";
+import Favorites from "../components/Favorites";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -27,11 +28,13 @@ const Home = () => {
 
   const [visibleItems, setVisibleItems] = useState([])
   const [bounds, setBounds] = useState(null)
+  const [isFavoritePage, setIsFavoritePage] = useState(false);
+
 
   return (
     <>
       <div>
-        <Navigation mapBounds={bounds} setMapBounds={setBounds} visibleItems={visibleItems} setVisibleItems={setVisibleItems}/>
+        <Navigation mapBounds={bounds} setMapBounds={setBounds} visibleItems={visibleItems} setVisibleItems={setVisibleItems} setIsFavoritePage={setIsFavoritePage}/>
       </div>
       {/* <div>
         <SearchBar />
@@ -42,11 +45,20 @@ const Home = () => {
             <Map visibleItems={visibleItems} setVisibleItems={setVisibleItems} mapBounds={bounds} setMapBounds={setBounds} />
           </Item>
         </Grid>
-        <Grid item xs={4.7}>
-          <Item>
-            <ItemPanel items={visibleItems} />
-          </Item>
-        </Grid>
+        {isFavoritePage ? (
+          <Favorites 
+          mapBounds={bounds}
+          setMapBounds={setBounds}
+          visibleItems={visibleItems}
+          setVisibleItems={setVisibleItems}
+          />
+        ) : (
+          <Grid item xs={4.7}>
+            <Item>
+              <ItemPanel items={visibleItems} />
+            </Item>
+          </Grid>
+        )}
       </Grid>
     </>
   );

@@ -15,6 +15,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./services/auth"; // Auth Context
+import Home from "./Pages/Home";
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/inbox" element={<Inbox />} />
         </Routes>
       </Router>
