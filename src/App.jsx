@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Navigation from "./components/Navigation";
+import { Outlet } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -26,29 +27,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const App = () => {
 
-  const [visibleItems, setVisibleItems] = useState([])
-  const [bounds, setBounds] = useState(null)
-
   return (
     <>
-      <div>
-        <Navigation mapBounds={bounds} setMapBounds={setBounds} visibleItems={visibleItems} setVisibleItems={setVisibleItems}/>
-      </div>
-      {/* <div>
-        <SearchBar />
-      </div> */}
-      <Grid container spacing={2}>
-        <Grid item xs={7.3}>
-          <Item>
-            <Map visibleItems={visibleItems} setVisibleItems={setVisibleItems} mapBounds={bounds} setMapBounds={setBounds} />
-          </Item>
-        </Grid>
-        <Grid item xs={4.7}>
-          <Item>
-            <ItemPanel items={visibleItems} />
-          </Item>
-        </Grid>
-      </Grid>
+      <Outlet />
     </>
   );
 };
