@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import InboxItem from "./InboxItem";
+import { doc, getDoc } from "firebase/firestore"
+import { db } from "../firebase/FirebaseConfig";
 
 function InboxItemList() {
     const inboxItems = [
@@ -27,7 +29,15 @@ function InboxItemList() {
           timestamp: "2025-01-18T09:45:00Z",
           preview: "The item has been shipped. Let me know if you need anything else.",
         },
-      ];
+    ];
+    
+    const fetchInboxItems = async () => {
+      const docRef = doc(db, "inbox_items")
+    }
+
+    useEffect(() => {
+
+    }, [])
 
     return (
       <div className="p-4 max-h-full overflow-y-auto">
