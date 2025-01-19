@@ -5,6 +5,7 @@ import ItemPanel from "./components/ItemPanel";
 import Navigation from "./components/Navigation";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
+import Inbox from "./Pages/Inbox"
 
 import React from "react";
 import {
@@ -22,6 +23,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<HomePage />} />
+          <Route path="/inbox" element={<Inbox />} />
         </Routes>
       </Router>
     </AuthProvider>
