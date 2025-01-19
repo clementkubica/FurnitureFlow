@@ -10,14 +10,16 @@ function MessageBubble({text, timestamp, isSender}) {
         >
             <div
                 className={`p-3 max-w-xs rounded-lg shadow ${
-                    isSender ? "bg-purple-500 text-white" : "bg-gray-200 text-white"
+                    isSender ? "bg-purple-400 text-white" : "bg-gray-200 text-grey-300"
                 }`}
             >
                 <p>{text}</p>
-                <span className="block text-xs mt-1 text-gray-500">
+                <span className="block text-xs mt-1 text-gray-800">
                     {new Date(timestamp).toLocaleTimeString()}
                 </ span>
             </div>
         </ div>
     )
 }
+
+export default MessageBubble;
