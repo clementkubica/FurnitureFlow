@@ -13,8 +13,8 @@ function MessageBubble({ text, timestamp, isSender }) {
                     isSender ? "bg-purple-400 text-white" : "bg-gray-200 text-gray-800"
                 }`}
                 style={{
-                    wordWrap: "break-word", // Ensures long words wrap within the bubble
-                    overflowWrap: "break-word", // Handles text wrapping across all browsers
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
                 }}
             >
                 <p className="whitespace-pre-wrap">{text}</p> {/* Preserves line breaks */}

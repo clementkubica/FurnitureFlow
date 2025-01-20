@@ -8,7 +8,7 @@ function Inbox() {
   
     return (
       <div className="h-screen flex flex-col">
-        <Navigation showSearchBar={false} />
+        <Navigation showSearchBar={false} showFavorite={false}/>
         <div className="flex flex-1">
           <div className="w-1/3 border-r">
             <InboxItemList setSelectedConversation={setSelectedConversation} />
