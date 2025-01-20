@@ -10,14 +10,7 @@ import {auth} from "../firebase/FirebaseConfig";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../services/auth";
 
-function Navigation({
-  mapBounds,
-  setMapBounds,
-  visibleItems,
-  setVisibleItems,
-  setIsFavoritePage,
-  showSearchBar = true,
-}) {
+function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, setIsFavoritePage, showSearchBar = true, showFavorite = true}) {
   const [isFavorite, setIsFavorited] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [category, setCategory] = useState("");
@@ -151,16 +144,14 @@ function Navigation({
               aria-label="Notifications"
               title="Notifications"
             />
-          </a>
-
-          <a href="/favorites">
-            <FaHeart
+        </a>
+        {showFavorite && (
+          <FaHeart
               className={`text-xl cursor-pointer ${
                 isFavorite ? "text-red-500" : "text-black hover:text-red-500"
               }`}
               onClick={() => {
                 toggleFavorite();
-                console.log("favorites toggled");
               }}
               title={isFavorite ? "Unfavorite" : "Favorite"}
               aria-label={isFavorite ? "Unfavorite" : "Favorite"}
@@ -171,12 +162,12 @@ function Navigation({
                   setIsFavoritePage(true);
                 }
               }}
-            />
-          </a>
-          <FaUser
-            className="text-black text-xl hover:text-gray-400 cursor-pointer"
-            aria-label="User Profile"
-            title="User Profile"
+          />
+        )}
+        <FaUser 
+          className="text-black text-xl hover:text-gray-400 cursor-pointer"
+          aria-label="User Profile"
+          title="User Profile" 
           />
         {/* Logout Button */}
         { user && (

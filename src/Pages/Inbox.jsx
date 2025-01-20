@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Navigation from "../components/Navigation";
 import InboxItemList from "../components/InboxItemList";
 import MessagingPanel from "../components/MessagingPanel";
@@ -8,12 +8,18 @@ function Inbox() {
 
   return (
     <div className="h-screen flex flex-col">
-      <Navigation showSearchBar={false} />
-      <div className="flex flex-1">
-        <div className="w-1/3 border-r">
+      {/* Navigation */}
+      <Navigation showSearchBar={false} showFavorite={false} />
+
+      {/* Content Section */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Inbox Item List */}
+        <div className="w-1/3 border-r overflow-y-auto">
           <InboxItemList setSelectedConversation={setSelectedConversation} />
         </div>
-        <div className="w-2/3">
+
+        {/* Messaging Panel */}
+        <div className="w-2/3 overflow-y-auto">
           {selectedConversation ? (
             <MessagingPanel
               conversationId={selectedConversation.id}

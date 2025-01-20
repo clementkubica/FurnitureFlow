@@ -4,7 +4,6 @@ import "./App.css";
 // import ItemPanel from "./components/ItemPanel";
 // import Navigation from "./components/Navigation";
 import Login from "./components/Login";
-import HomePage from "./components/HomePage";
 import Inbox from "./Pages/Inbox";
 import Profile from "./Pages/Profile";
 
