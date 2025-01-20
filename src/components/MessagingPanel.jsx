@@ -86,7 +86,6 @@ function MessagingPanel({ conversationId, selectedConversation }) {
           overflowY: "auto",
         }}
       >
-        <h2 className="text-lg font-semibold mb-4">Conversation {conversationId}</h2>
         {messages.map((message) => (
           <MessageBubble
             key={message.id}
