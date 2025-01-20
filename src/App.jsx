@@ -18,18 +18,17 @@ import Home from "./Pages/Home";
 import FavoritesPage from "./Pages/FavoritesPage";
 
 const PrivateRoute = ({ children }) => {
-  const { user, authLoading} = useAuth();
+  const { user, authLoading } = useAuth();
 
   if (authLoading) {
     return <div>Loading...</div>;
   }
 
   return user ? children : <Navigate to="/login" replace />;
-
 };
 
 const PublicRoute = ({ children }) => {
-  const {user, authLoading} = useAuth();
+  const { user, authLoading } = useAuth();
 
   if (authLoading) {
     return <div>Loading...</div>;
@@ -40,24 +39,52 @@ const PublicRoute = ({ children }) => {
 
 const App = () => {
   return (
-
-  <AuthProvider>
-  <Router>
-    <Routes>
-      <Route
-      path="/login"
-      element={<PublicRoute><Login /></PublicRoute>}
-    />
-    <Route
-      path="/"
-      element={<PrivateRoute><HomePage/></PrivateRoute>}
-    />
-    <Route path="/inbox" element={<PrivateRoute><Inbox /></PrivateRoute>} />
-    <Route path="/favorites" element={<PrivateRoute><FavoritesPage /></PrivateRoute>} />
-    <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-    </Routes>
-  </Router>
-  </AuthProvider>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <PrivateRoute>
+                <Inbox />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/favorites"
+            element={
+              <PrivateRoute>
+                <FavoritesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 
