@@ -1,8 +1,14 @@
 import React from "react";
 import MediaCard from "./MediaCard";
-
-function ItemPanel({ items = [] }) { // Default to an empty array
+import { useNavigate } from "react-router";
+function ItemPanel({ items = [] }) {
+  // Default to an empty array
   const cardsPerRow = 2;
+
+  const navigate = useNavigate();
+  const handleNav = (path) => {
+    navigate(path);
+  };
 
   const rows = [];
   for (let i = 0; i < items.length; i += cardsPerRow) {
@@ -54,4 +60,3 @@ function ItemPanel({ items = [] }) { // Default to an empty array
 }
 
 export default ItemPanel;
-
