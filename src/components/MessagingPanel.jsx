@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { collection, query, where, orderBy, getDocs, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "../firebase/FirebaseConfig";
 import MessageBubble from "./MessageBubble";
+import Button from "@mui/material/Button";
+import SendIcon from "@mui/icons-material/Send";
 
 function MessagingPanel({ conversationId, selectedConversation }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef(null);
 
-  // Fetch messages for the selected conversation
   const fetchMessages = async () => {
     if (!conversationId) return;
 
@@ -36,34 +38,54 @@ function MessagingPanel({ conversationId, selectedConversation }) {
     }
   };
 
-  // Handle sending a new message
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation?.users) return;
 
     const newMsg = {
       inbox_item_id: conversationId,
-      sender_id: selectedConversation.users[0], // Use User 0 as sender_id
+      sender_id: selectedConversation.users[0],
       text: newMessage,
       timestamp: Timestamp.now(),
     };
 
     try {
-      await addDoc(collection(db, "messages"), newMsg); // Add message to Firestore
-      setMessages((prev) => [...prev, { id: Date.now(), ...newMsg }]); // Update UI optimistically
-      setNewMessage(""); // Clear input field
+      await addDoc(collection(db, "messages"), newMsg);
+      setMessages((prev) => [...prev, { id: Date.now(), ...newMsg }]);
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
     }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     fetchMessages();
   }, [conversationId]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     <div className="flex flex-col h-full bg-gray-100">
       {/* Messages Display */}
-      <div className="flex-1 p-4 overflow-y-auto">
+      <div
+        className="flex-1 p-4 overflow-y-auto"
+        style={{
+          maxHeight: "70vh",
+          overflowY: "auto",
+        }}
+      >
         <h2 className="text-lg font-semibold mb-4">Conversation {conversationId}</h2>
         {messages.map((message) => (
           <MessageBubble
@@ -71,13 +93,14 @@ function MessagingPanel({ conversationId, selectedConversation }) {
             text={message.text}
             sender={message.sender_id}
             timestamp={
-                message.timestamp?.toDate
-                  ? message.timestamp.toDate().toLocaleString() // Convert Firestore Timestamp to readable format
-                  : "No timestamp available"
-              }
-            isSender={message.sender_id === selectedConversation.users[0]} // Highlight messages from User 0
+              message.timestamp?.toDate
+                ? message.timestamp.toDate().toLocaleString()
+                : "No timestamp available"
+            }
+            isSender={message.sender_id === selectedConversation.users[0]}
           />
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Message Input Bar */}
@@ -88,13 +111,16 @@ function MessagingPanel({ conversationId, selectedConversation }) {
           placeholder="Type your message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<SendIcon />}
           onClick={handleSendMessage}
         >
           Send
-        </button>
+        </Button>
       </div>
     </div>
   );

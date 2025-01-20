@@ -1,7 +1,7 @@
 import React from "react";
-import "../styles/MessageBubble.css"
+import "../styles/MessageBubble.css";
 
-function MessageBubble({text, timestamp, isSender}) {
+function MessageBubble({ text, timestamp, isSender }) {
     return (
         <div
             className={`flex ${
@@ -9,17 +9,21 @@ function MessageBubble({text, timestamp, isSender}) {
             } my-2`}
         >
             <div
-                className={`p-3 max-w-xs rounded-lg shadow ${
-                    isSender ? "bg-purple-400 text-white" : "bg-gray-200 text-grey-300"
+                className={`p-3 max-w-xs md:max-w-md lg:max-w-lg rounded-lg shadow ${
+                    isSender ? "bg-purple-400 text-white" : "bg-gray-200 text-gray-800"
                 }`}
+                style={{
+                    wordWrap: "break-word", // Ensures long words wrap within the bubble
+                    overflowWrap: "break-word", // Handles text wrapping across all browsers
+                }}
             >
-                <p>{text}</p>
+                <p className="whitespace-pre-wrap">{text}</p> {/* Preserves line breaks */}
                 <span className="block text-xs mt-1 text-gray-800">
                     {new Date(timestamp).toLocaleTimeString()}
-                </ span>
+                </span>
             </div>
-        </ div>
-    )
+        </div>
+    );
 }
 
 export default MessageBubble;
