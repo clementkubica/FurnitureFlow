@@ -59,6 +59,7 @@ export default function MediaCard({
       sx={{
         maxWidth: "50%",
         minWidth: "50%",
+        maxHeight: "20%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",

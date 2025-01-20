@@ -90,3 +90,34 @@ exports.fetchItems = onRequest({cors: true}, async (request, response) => {
         response.status(200).send(res);
     }
 });
+
+exports.getUserFavorites = onRequest({ cors: true }, async (request, response) => {
+    const userId = request.body.user_id;
+
+    const res = await knex('favorites')
+        .join('items', 'favorites.item_id', '=', 'items.item_id')
+        .join('users', 'items.user_id', '=', 'users.user_id')
+        .leftJoin('image_urls', 'image_urls.item_id', '=', 'items.item_id') // Join with image_urls
+        .where('favorites.user_id', userId)
+        .select(
+            'items.item_id',
+            'items.name',
+            'items.description',
+            'items.user_id',
+            'items.price',
+            'items.longitude',
+            'items.latitude',
+            'items.status',
+            'items.date_posted',
+            'items.date_sellby',
+            'items.date_sold', // All columns except `address`
+            'users.username',
+            'users.email',
+            'image_urls.url as image_url',
+            'image_urls.path as image_path'
+        )
+        .orderBy('favorites.time_stamp', 'desc');
+
+    response.status(200).send(res);
+});
+

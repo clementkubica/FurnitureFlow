@@ -10,6 +10,7 @@ const HomePage = () => {
   const {user} = useAuth();
   const [visibleItems, setVisibleItems] = useState([]); // State for items
   const [mapBounds, setMapBounds] = useState(null); // State for map bounds
+  const [isFavoritePage, setIsFavoritePage] = useState(false);
 
   // if (!user) {
   //   return <Navigate to="/login" replace />;

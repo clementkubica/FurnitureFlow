@@ -5,6 +5,7 @@ import "./App.css";
 // import Navigation from "./components/Navigation";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
+import Inbox from "./Pages/Inbox"
 
 import {
   BrowserRouter as Router,
@@ -13,6 +14,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./services/auth"; // Auth Context
+import Home from "./Pages/Home";
 
 const PrivateRoute = ({ children }) => {
   const { user, authLoading} = useAuth();
@@ -48,6 +50,7 @@ const App = () => {
       path="/"
       element={<PrivateRoute><HomePage/></PrivateRoute>}
     />
+    <Route path="/inbox" element={<PrivateRoute><Inbox /></PrivateRoute>} />
     </Routes>
   </Router>
   </AuthProvider>

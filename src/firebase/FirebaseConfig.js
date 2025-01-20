@@ -25,6 +25,4 @@ setPersistence(auth, browserLocalPersistence)
     console.error("Error setting auth persistence:", error);
   });
 
-export { auth, db, googleProvider };
-
-
+export { app, auth, db, googleProvider };
