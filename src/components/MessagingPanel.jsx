@@ -3,7 +3,7 @@ import { collection, query, where, orderBy, getDocs, addDoc, Timestamp } from "f
 import { db } from "../firebase/FirebaseConfig";
 import MessageBubble from "./MessageBubble";
 
-function MessagingPanel({ conversationId }) {
+function MessagingPanel({ conversationId, selectedConversation }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -14,14 +14,22 @@ function MessagingPanel({ conversationId }) {
     try {
       const q = query(
         collection(db, "messages"),
-        where("conversation_id", "==", conversationId), // Match with item_id
+        where("inbox_item_id", "==", conversationId),
         orderBy("timestamp", "asc")
       );
       const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.log("No messages found for conversationId:", conversationId);
+        setMessages([]);
+        return;
+      }
+
       const fetchedMessages = [];
       querySnapshot.forEach((doc) => {
         fetchedMessages.push({ id: doc.id, ...doc.data() });
       });
+
       setMessages(fetchedMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -30,19 +38,19 @@ function MessagingPanel({ conversationId }) {
 
   // Handle sending a new message
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !selectedConversation?.users) return;
 
     const newMsg = {
-      conversation_id: conversationId,
+      inbox_item_id: conversationId,
+      sender_id: selectedConversation.users[0], // Use User 0 as sender_id
       text: newMessage,
-      sender_id: "You", // Replace with dynamic user ID
       timestamp: Timestamp.now(),
     };
 
     try {
-      await addDoc(collection(db, "messages"), newMsg);
-      setMessages((prev) => [...prev, { id: Date.now(), ...newMsg }]);
-      setNewMessage(""); // Clear the input
+      await addDoc(collection(db, "messages"), newMsg); // Add message to Firestore
+      setMessages((prev) => [...prev, { id: Date.now(), ...newMsg }]); // Update UI optimistically
+      setNewMessage(""); // Clear input field
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -54,6 +62,7 @@ function MessagingPanel({ conversationId }) {
 
   return (
     <div className="flex flex-col h-full bg-gray-100">
+      {/* Messages Display */}
       <div className="flex-1 p-4 overflow-y-auto">
         <h2 className="text-lg font-semibold mb-4">Conversation {conversationId}</h2>
         {messages.map((message) => (
@@ -61,13 +70,17 @@ function MessagingPanel({ conversationId }) {
             key={message.id}
             text={message.text}
             sender={message.sender_id}
-            timestamp={message.timestamp?.toDate().toLocaleTimeString()}
-            isSender={message.sender_id === "You"}
+            timestamp={
+                message.timestamp?.toDate
+                  ? message.timestamp.toDate().toLocaleString() // Convert Firestore Timestamp to readable format
+                  : "No timestamp available"
+              }
+            isSender={message.sender_id === selectedConversation.users[0]} // Highlight messages from User 0
           />
         ))}
       </div>
 
-      {/* Input Bar */}
+      {/* Message Input Bar */}
       <div className="p-4 border-t bg-white flex items-center space-x-4">
         <input
           type="text"
@@ -88,7 +101,3 @@ function MessagingPanel({ conversationId }) {
 }
 
 export default MessagingPanel;
-
-
-
-
