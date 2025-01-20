@@ -121,32 +121,3 @@ exports.getUserFavorites = onRequest({ cors: true }, async (request, response) =
     response.status(200).send(res);
 });
 
-exports.fetchUserById = onRequest({cors: true}, async (request, response) => {
-    const user_id = request.body.user_id
-
-    if (user_id) {
-        const userRes = await knex('users').where('user_id', user_id)
-
-        if (userRes.length === 0) {
-            response.status(404).send(
-                {
-                    msg: "user not found"
-                }
-            )
-        }
-        else {
-            response.status(200).send(
-                {
-                    user: userRes[0]
-                }
-            )
-        }
-    }
-    else {
-        response.status(403).send(
-            {
-                msg: "please enter user_id"
-            }
-        )
-    }
-})
