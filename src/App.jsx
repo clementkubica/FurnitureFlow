@@ -6,6 +6,7 @@ import "./App.css";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 import Inbox from "./Pages/Inbox";
+import Profile from "./Pages/Profile";
 
 import {
   BrowserRouter as Router,
@@ -54,6 +55,7 @@ const App = () => {
     />
     <Route path="/inbox" element={<PrivateRoute><Inbox /></PrivateRoute>} />
     <Route path="/favorites" element={<PrivateRoute><FavoritesPage /></PrivateRoute>} />
+    <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
     </Routes>
   </Router>
   </AuthProvider>

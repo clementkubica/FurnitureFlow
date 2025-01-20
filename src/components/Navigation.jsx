@@ -152,6 +152,7 @@ function Navigation({
               title="Notifications"
             />
           </a>
+
           <a href="/favorites">
             <FaHeart
               className={`text-xl cursor-pointer ${
