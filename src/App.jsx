@@ -5,7 +5,7 @@ import ItemPanel from "./components/ItemPanel";
 import Navigation from "./components/Navigation";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
-import Inbox from "./Pages/Inbox"
+import Inbox from "./Pages/Inbox";
 
 import React from "react";
 import {
@@ -16,6 +16,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./services/auth"; // Auth Context
 import Home from "./Pages/Home";
+import FavoritesPage from "./Pages/FavoritesPage";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/" element={<Home />} />
           <Route path="/inbox" element={<Inbox />} />
         </Routes>
