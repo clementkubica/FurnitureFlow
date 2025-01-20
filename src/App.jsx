@@ -5,7 +5,8 @@ import ItemPanel from "./components/ItemPanel";
 import Navigation from "./components/Navigation";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
-import Inbox from "./Pages/Inbox"
+import Inbox from "./Pages/Inbox";
+import Profile from "./Pages/Profile";
 
 import React from "react";
 import {
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/inbox" element={<Inbox />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </AuthProvider>
