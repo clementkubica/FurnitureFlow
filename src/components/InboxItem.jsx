@@ -54,6 +54,45 @@ function InboxItem({
     fetchInboxItemDetails();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div
+        className="flex gap-4 items-center px-4 py-3 shadow-sm cursor-pointer hover:bg-gray-100"
+      >
+        {/* Image */}
+        <Skeleton variant="rounded" width={64} height={64} />
+  
+        {/* Text Content */}
+        <div className="flex flex-col">
+          {/* Receiver Name */}
+          <Skeleton variant="text">
+            <p className="font-bold text-lg">{"fdfdd"}</p>
+          </Skeleton>
+          
+          
+          <Skeleton variant="text">
+            <p className="text-sm">
+              <strong>Item:</strong> {"brown leather couch"}
+            </p>
+          </Skeleton>
+          
+          
+          {/* Timestamp */}
+          <Skeleton variant="text">
+            <p className="text-xs font-semibold text-gray-600">{"timestamp"}</p>
+          </Skeleton>
+          
+  
+          {/* Preview */}
+          <Skeleton variant="text">
+            <p className="text-sm text-gray-500 mt-2">{"preview"}</p>
+          </Skeleton>
+          
+        </div>
+      </div>
+    )
+  }
+
   if (itemDetails && userDetails) {
     return (
       <div
