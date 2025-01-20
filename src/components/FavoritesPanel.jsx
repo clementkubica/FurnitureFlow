@@ -1,14 +1,8 @@
 import React from "react";
 import MediaCard from "./MediaCard";
-import { useNavigate } from "react-router";
-function ItemPanel({ items = [] }) {
-  // Default to an empty array
-  const cardsPerRow = 2;
 
-  const navigate = useNavigate();
-  const handleNav = (path) => {
-    navigate(path);
-  };
+function FavoritesPanel({ items = [] }) {
+  const cardsPerRow = 4;
 
   const rows = [];
   for (let i = 0; i < items.length; i += cardsPerRow) {
@@ -16,10 +10,10 @@ function ItemPanel({ items = [] }) {
   }
 
   return (
-    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[90vh]">
+    <div className="bg-white overflow-y-auto max-h-[90vh]">
       <div className="flex flex-col gap-4 p-4">
         {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex flex-row gap-4">
+          <div key={rowIndex} className="flex flex-wrap gap-4">
             {row.map((item, itemIndex) => (
               <MediaCard
                 key={itemIndex} // Add a key for each MediaCard
@@ -59,4 +53,4 @@ function ItemPanel({ items = [] }) {
   );
 }
 
-export default ItemPanel;
+export default FavoritesPanel;
