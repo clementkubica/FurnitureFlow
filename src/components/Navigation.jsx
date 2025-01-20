@@ -33,13 +33,15 @@ function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, sh
     <nav className="bg-white shadow w-full">
       <div className="flex items-center justify-between px-4 py-4">
         {/* Left Hand image logo */}
-        <div className="flex-shrink-0">
-        <img
-          src="/images/logo_with_name.PNG"
-          alt="App Logo with Title"
-          className="h-12"
-        />
-      </div>
+        <a href="/">
+          <div className="flex-shrink-0">
+            <img
+              src="/images/logo_with_name.PNG"
+              alt="App Logo with Title"
+              className="h-12"
+            />
+          </div>
+      </a>
       {/* Search Bar Center and Dropdowns*/}
       {showSearchBar && (
         <div className="flex-1 flex items-center justify-center space-x-4 mx-4">

@@ -27,6 +27,36 @@ exports.filterByName = onRequest({cors: true}, async (request, response) => {
     response.status(200).send(res);
 })
 
+exports.fetchUserById = onRequest({cors: true}, async (request, response) => {
+    const user_firebase_id = request.body.user_firebase_id
+
+    if (user_firebase_id) {
+        const userRes = await knex('users').where('firebase_id', user_firebase_id)
+
+        if (userRes.length === 0) {
+            response.status(404).send(
+                {
+                    msg: "user not found"
+                }
+            )
+        }
+        else {
+            response.status(200).send(
+                {
+                    user: userRes[0]
+                }
+            )
+        }
+    }
+    else {
+        response.status(403).send(
+            {
+                msg: "please enter user_firebase_id"
+            }
+        )
+    }
+})
+
 exports.fetchItemById = onRequest({cors: true}, async (request, response) => {
     const item_id = request.body.item_id
     
@@ -34,23 +64,33 @@ exports.fetchItemById = onRequest({cors: true}, async (request, response) => {
         const itemReq = knex('items').where('item_id', item_id)
         const itemImagesReq = knex('image_urls').where('item_id', item_id)
         
-        const res = await Promise.all(itemReq, itemImagesReq)
+        const res = await Promise.all([itemReq, itemImagesReq])
         const itemRes = res[0]
         const itemImagesRes = res[1]
 
-        response.status(200).send(
+        if (itemRes.length === 0) {
+            response.status(404).send(
+                {
+                    msg: "item not found"
+                }
+            )
+        }
+        else {
+            response.status(200).send(
+                {
+                    item: itemRes,
+                    itemImages: itemImagesRes
+                }
+            )
+        }
+    }
+    else {
+        response.status(403).send(
             {
-                item: itemRes,
-                itemImages: itemImagesRes
+                msg: "please enter an item_id"
             }
         )
     }
-
-    response.status(404).send(
-        {
-            msg: "item not found"
-        }
-    )
 
 })
 
