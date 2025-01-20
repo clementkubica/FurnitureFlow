@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Navigation from "../components/Navigation";
 import Favorites from "../components/Favorites";
+import { useAuth } from "../services/auth";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -28,7 +29,7 @@ const Home = () => {
   const [visibleItems, setVisibleItems] = useState([]);
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
-  const [userId, setUserId] = React.useState("");
+  const user = useAuth();
 
   return (
     <>
@@ -55,19 +56,11 @@ const Home = () => {
             />
           </Item>
         </Grid>
-        {isFavoritePage ? (
-          <Grid item xs={4.7}>
-            <Item>
-              <Favorites userId={1} />
-            </Item>
-          </Grid>
-        ) : (
-          <Grid item xs={4.7}>
-            <Item>
-              <ItemPanel items={visibleItems} />
-            </Item>
-          </Grid>
-        )}
+        <Grid item xs={4.7}>
+          <Item>
+            <ItemPanel items={visibleItems} />
+          </Item>
+        </Grid>
       </Grid>
     </>
   );
