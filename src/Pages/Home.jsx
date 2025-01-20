@@ -29,6 +29,7 @@ const Home = () => {
   const [visibleItems, setVisibleItems] = useState([])
   const [bounds, setBounds] = useState(null)
   const [isFavoritePage, setIsFavoritePage] = useState(false);
+  const [userId, setUserId] = React.useState("");
 
 
   return (
@@ -46,12 +47,11 @@ const Home = () => {
           </Item>
         </Grid>
         {isFavoritePage ? (
-          <Favorites 
-          mapBounds={bounds}
-          setMapBounds={setBounds}
-          visibleItems={visibleItems}
-          setVisibleItems={setVisibleItems}
-          />
+          <Grid item xs={4.7}>
+          <Item>
+            <Favorites userId={1} />
+          </Item>
+        </Grid>
         ) : (
           <Grid item xs={4.7}>
             <Item>
