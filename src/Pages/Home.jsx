@@ -49,7 +49,7 @@ const Home = () => {
         {isFavoritePage ? (
           <Grid item xs={4.7}>
           <Item>
-            <Favorites userId={1} />
+            <Favorites userId={'4oOruPMAdJYCyb3JBj1UPg3pFyL2'} />
           </Item>
         </Grid>
         ) : (
