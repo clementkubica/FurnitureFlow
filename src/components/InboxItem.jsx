@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Skeleton } from "@mui/material";
 
 function InboxItem({ receiverUid, itemId, timestamp, preview, onClick}) {
 
     const [userDetails, setUserDetails] = useState(null)
     const [itemDetails, setItemDetails] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
 
     const fetchInboxItemDetails = async () => {
+      setIsLoading(true)
+
       const itemReq = await axios.post(
         "https://fetchitembyid-jbhycjd2za-uc.a.run.app",
         {
@@ -44,49 +48,88 @@ function InboxItem({ receiverUid, itemId, timestamp, preview, onClick}) {
           imageUrl: itemData.itemImages[0].url
         })
       }
+
+      setIsLoading(false)
     }
 
     useEffect(() => {
       fetchInboxItemDetails()
     }, [])
-
-    if (itemDetails && userDetails) {
-
-    return (
+    
+    if (isLoading) {
+      return (
         <div
           className="flex gap-4 items-center px-4 py-3 shadow-sm cursor-pointer hover:bg-gray-100"
-          onClick={onClick}
         >
           {/* Image */}
-          <img
-            className="h-16 w-16 object-contain"
-            src={itemDetails.imageUrl}
-            alt={"item image"}
-          />
+          <Skeleton variant="rounded" width={64} height={64} />
     
           {/* Text Content */}
           <div className="flex flex-col">
             {/* Receiver Name */}
-            <p className="font-bold text-lg">{userDetails.username}</p>
+            <Skeleton variant="text">
+              <p className="font-bold text-lg">{"fdfdd"}</p>
+            </Skeleton>
             
-            {/* Item Name */}
-            <p className="text-sm">
-              <strong>Item:</strong> {itemDetails.item.name}
-            </p>
+            
+            <Skeleton variant="text">
+              <p className="text-sm">
+                <strong>Item:</strong> {"brown leather couch"}
+              </p>
+            </Skeleton>
+            
             
             {/* Timestamp */}
-            <p className="text-xs font-semibold text-gray-600">{timestamp}</p>
+            <Skeleton variant="text">
+              <p className="text-xs font-semibold text-gray-600">{"timestamp"}</p>
+            </Skeleton>
+            
     
             {/* Preview */}
-            <p className="text-sm text-gray-500 mt-2">{preview}</p>
+            <Skeleton variant="text">
+              <p className="text-sm text-gray-500 mt-2">{"preview"}</p>
+            </Skeleton>
+            
           </div>
         </div>
-      );
+      )
     }
 
-    return (
-      <>
-      </>
+    if (itemDetails && userDetails) {
+      return (
+          <div
+            className="flex gap-4 items-center px-4 py-3 shadow-sm cursor-pointer hover:bg-gray-100"
+            onClick={onClick}
+          >
+            {/* Image */}
+            <img
+              className="h-16 w-16 object-contain"
+              src={itemDetails.imageUrl}
+              alt={"item image"}
+            />
+      
+            {/* Text Content */}
+            <div className="flex flex-col">
+              {/* Receiver Name */}
+              <p className="font-bold text-lg">{userDetails.username}</p>
+              
+              {/* Item Name */}
+              <p className="text-sm">
+                <strong>Item:</strong> {itemDetails.item.name}
+              </p>
+              
+              {/* Timestamp */}
+              <p className="text-xs font-semibold text-gray-600">{timestamp}</p>
+      
+              {/* Preview */}
+              <p className="text-sm text-gray-500 mt-2">{preview}</p>
+            </div>
+          </div>
+        );
+    }
+
+    return(
+      <></>
     )
 }
 
