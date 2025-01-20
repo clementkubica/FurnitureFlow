@@ -1,8 +1,9 @@
-function InboxItem({ imageUrl, receiverName, itemName, preview, timestamp }) {
+function InboxItem({ imageUrl, receiverName, itemName, preview, timestamp, onClick}) {
 
     return (
         <div
           className="flex gap-4 items-center px-4 py-3 shadow-sm cursor-pointer hover:bg-gray-100"
+          onClick={onClick}
         >
           {/* Image */}
           <img

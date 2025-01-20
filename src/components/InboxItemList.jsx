@@ -34,7 +34,9 @@ function InboxItemList({ setSelectedConversation }) {
             itemName={`Item ${item.item_id || "N/A"}`}
             timestamp={new Date(item.timestamp).toLocaleString()}
             preview={item.preview || "No preview available"}
-            onClick={() => setSelectedConversation(item)}
+            onClick={() => {
+              console.log("Selected Conversation:", item);
+              setSelectedConversation(item)}}
           />
         ))
       ) : (
