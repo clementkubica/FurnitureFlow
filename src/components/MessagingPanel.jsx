@@ -82,7 +82,7 @@ function MessagingPanel({ conversationId, selectedConversation }) {
       <div
         className="flex-1 p-4 overflow-y-auto"
         style={{
-          maxHeight: "70vh",
+          maxHeight: "100%",
           overflowY: "auto",
         }}
       >
