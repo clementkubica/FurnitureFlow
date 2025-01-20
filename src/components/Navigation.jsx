@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import SearchBar from "./SearchBar";
 import { FaBell, FaUser, FaHeart, FaSignOutAlt } from "react-icons/fa"; 
 import Slider from "@mui/material/Slider";
@@ -10,7 +10,14 @@ import {auth} from "../firebase/FirebaseConfig";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../services/auth";
 
-function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, setIsFavoritePage, showSearchBar = true,}) {
+function Navigation({
+  mapBounds,
+  setMapBounds,
+  visibleItems,
+  setVisibleItems,
+  setIsFavoritePage,
+  showSearchBar = true,
+}) {
   const [isFavorite, setIsFavorited] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [category, setCategory] = useState("");
@@ -31,10 +38,11 @@ function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, se
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
-  
+
   const handleDateNeeded = (event) => {
     setDateNeeded(event.target.value);
   };
+
 
   const handleLogout = async () => {
     try {
@@ -58,97 +66,116 @@ function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, se
               className="h-12"
             />
           </div>
-      </a>
-      {/* Search Bar Center and Dropdowns*/}
-      {showSearchBar && (
-        <div className="flex-1 flex items-center justify-center space-x-4 mx-4">
-          <div className="flex-1 mx-4">
-            <SearchBar mapBounds={mapBounds} setMapBounds={setMapBounds } visibleItems={visibleItems} setVisibleItems={setVisibleItems}/>
-          </div>
-        {/* Dropdowns Buttons */}
-        <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-          <FormControl variant="outlined" size="small" className="w-40">
-            <InputLabel id="category-label" sx={{ fontSize: '0.875rem' }}>Categories</InputLabel>
-            <Select
-              labelId="category-label"
-              id="category-select"
-              value={category}
-              onChange={handleCategoryChange}
-              label="Categories"
-              sx={{ fontSize: '0.875rem' }}
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              <MenuItem value="couch">Couch</MenuItem>
-              <MenuItem value="dresser">Dresser</MenuItem>
-            </Select>
-          </FormControl>
-          {/* Price Slider */}
-          <div className="w-36 md:w-40">
-            <label className="block text-[0.75rem] font-medium text-gray-700 mb-1">
-              Prices (${priceRange[0]} - ${priceRange[1]})
-            </label>
-            <Slider
-              value={priceRange}
-              onChange={handlePriceRange}
-              valueLabelDisplay="auto"
-              min={0}
-              max={2000}
-              step={10}
-              aria-labelledby="price-slider"
-            />
-          </div>
-          {/* Date Needed By */}
-          <FormControl variant="outlined" size="small" className="w-40">
-            <InputLabel id="date-needed-label" sx={{ fontSize: '0.875rem' }}>Date Needed</InputLabel>
-            <Select 
-              labelId="date-needed-label"
-              id="date-needed-select"
-              value={dateNeeded}
-              onChange={handleDateNeeded}
-              label="Date Needed"
-              sx={{ fontSize: '0.875rem' }}
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              <MenuItem value="today">Today</MenuItem>
-              <MenuItem value="this-week">This Week</MenuItem>
-              <MenuItem value="this-month">This Month</MenuItem>
-              <MenuItem value="this-quarter">This Quarter</MenuItem>
-            </Select>
-          </FormControl>
-          </div>
-        </div>
-      )}
-
-      {/* Icons */}
-      <div className="flex items-center space-x-4">
-        <a href="/inbox">
-          <FaBell 
-            className="text-black text-xl hover:text-yellow-400 cursor-pointer"
-            aria-label="Notifications"
-            title="Notifications" 
-            />
         </a>
-        <FaHeart
-            className={`text-xl cursor-pointer ${
-              isFavorite ? "text-red-500" : "text-black hover:text-red-500"
-            }`}
-            onClick={() => {
-              toggleFavorite();
-            }}
-            title={isFavorite ? "Unfavorite" : "Favorite"}
-            aria-label={isFavorite ? "Unfavorite" : "Favorite"}
-            tabIndex="0"
-            onKeyPress={(e) => {
-              if (e.key == "Enter") {
+        {/* Search Bar Center and Dropdowns*/}
+        {showSearchBar && (
+          <div className="flex-1 flex items-center justify-center space-x-4 mx-4">
+            <div className="flex-1 mx-4">
+              <SearchBar
+                mapBounds={mapBounds}
+                setMapBounds={setMapBounds}
+                visibleItems={visibleItems}
+                setVisibleItems={setVisibleItems}
+              />
+            </div>
+            {/* Dropdowns Buttons */}
+            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+              <FormControl variant="outlined" size="small" className="w-40">
+                <InputLabel id="category-label" sx={{ fontSize: "0.875rem" }}>
+                  Categories
+                </InputLabel>
+                <Select
+                  labelId="category-label"
+                  id="category-select"
+                  value={category}
+                  onChange={handleCategoryChange}
+                  label="Categories"
+                  sx={{ fontSize: "0.875rem" }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="couch">Couch</MenuItem>
+                  <MenuItem value="dresser">Dresser</MenuItem>
+                </Select>
+              </FormControl>
+              {/* Price Slider */}
+              <div className="w-36 md:w-40">
+                <label className="block text-[0.75rem] font-medium text-gray-700 mb-1">
+                  Prices (${priceRange[0]} - ${priceRange[1]})
+                </label>
+                <Slider
+                  value={priceRange}
+                  onChange={handlePriceRange}
+                  valueLabelDisplay="auto"
+                  min={0}
+                  max={2000}
+                  step={10}
+                  aria-labelledby="price-slider"
+                />
+              </div>
+              {/* Date Needed By */}
+              <FormControl variant="outlined" size="small" className="w-40">
+                <InputLabel
+                  id="date-needed-label"
+                  sx={{ fontSize: "0.875rem" }}
+                >
+                  Date Needed
+                </InputLabel>
+                <Select
+                  labelId="date-needed-label"
+                  id="date-needed-select"
+                  value={dateNeeded}
+                  onChange={handleDateNeeded}
+                  label="Date Needed"
+                  sx={{ fontSize: "0.875rem" }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="today">Today</MenuItem>
+                  <MenuItem value="this-week">This Week</MenuItem>
+                  <MenuItem value="this-month">This Month</MenuItem>
+                  <MenuItem value="this-quarter">This Quarter</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          </div>
+        )}
+
+        {/* Icons */}
+        <div className="flex items-center space-x-4">
+          <a href="/inbox">
+            <FaBell
+              className="text-black text-xl hover:text-yellow-400 cursor-pointer"
+              aria-label="Notifications"
+              title="Notifications"
+            />
+          </a>
+          <a href="/favorites">
+            <FaHeart
+              className={`text-xl cursor-pointer ${
+                isFavorite ? "text-red-500" : "text-black hover:text-red-500"
+              }`}
+              onClick={() => {
                 toggleFavorite();
-                setIsFavoritePage(true);
-              }
-            }}
-          />
-        <FaUser 
-          className="text-black text-xl hover:text-gray-400 cursor-pointer"
-          aria-label="User Profile"
-          title="User Profile" 
+                console.log("favorites toggled");
+              }}
+              title={isFavorite ? "Unfavorite" : "Favorite"}
+              aria-label={isFavorite ? "Unfavorite" : "Favorite"}
+              tabIndex="0"
+              onKeyPress={(e) => {
+                if (e.key == "Enter") {
+                  toggleFavorite();
+                  setIsFavoritePage(true);
+                }
+              }}
+            />
+          </a>
+          <FaUser
+            className="text-black text-xl hover:text-gray-400 cursor-pointer"
+            aria-label="User Profile"
+            title="User Profile"
           />
         {/* Logout Button */}
         { user && (
@@ -164,7 +191,7 @@ function Navigation({ mapBounds, setMapBounds, visibleItems, setVisibleItems, se
         )}
         </div>
       </div>
-  </nav>
+    </nav>
   );
 }
 

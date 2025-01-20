@@ -5,7 +5,7 @@ import "./App.css";
 // import Navigation from "./components/Navigation";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
-import Inbox from "./Pages/Inbox"
+import Inbox from "./Pages/Inbox";
 
 import {
   BrowserRouter as Router,
@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./services/auth"; // Auth Context
 import Home from "./Pages/Home";
+import FavoritesPage from "./Pages/FavoritesPage";
 
 const PrivateRoute = ({ children }) => {
   const { user, authLoading} = useAuth();
@@ -39,6 +40,7 @@ const PublicRoute = ({ children }) => {
 
 const App = () => {
   return (
+
   <AuthProvider>
   <Router>
     <Routes>
@@ -51,6 +53,7 @@ const App = () => {
       element={<PrivateRoute><HomePage/></PrivateRoute>}
     />
     <Route path="/inbox" element={<PrivateRoute><Inbox /></PrivateRoute>} />
+    <Route path="/favorites" element={<PrivateRoute><FavoritesPage /></PrivateRoute>} />
     </Routes>
   </Router>
   </AuthProvider>
