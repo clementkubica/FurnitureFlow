@@ -9,16 +9,33 @@ function InboxItemList({ setSelectedConversation }) {
 
   const fetchInboxItems = async () => {
     try {
+      // right now we're fetching all of the inbox_items from the collection
+      // soon, we need to change it so that we're fetching all of the inbox_items where the current user's id is in the users array
       const querySnapshot = await getDocs(collection(db, "inbox_items"));
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push({ id: doc.id, ...doc.data() });
       });
+      console.log(typeof(items[0].timestamp))
+      console.log(items[0].timestamp)
       setInboxItems(items);
     } catch (error) {
       console.error("Error fetching inbox items:", error);
     }
   };
+
+  const formatTimestamp = (timestamp) => {
+    const epochTime = timestamp.seconds; // Example Epoch time in seconds
+
+    // Create a Date object using the Epoch time (in milliseconds)
+    const date = new Date(epochTime * 1000); 
+
+    // Format the date object into a readable string
+    const formattedDate = date.toLocaleDateString(); // "03/10/2023"
+    const formattedTime = date.toLocaleTimeString(); // "12:00:00 AM" 
+
+    return formattedTime + ", " + formattedDate
+  }
 
   const handleItemClick = (item) => {
     setSelectedItemId(item.id);
@@ -48,7 +65,7 @@ function InboxItemList({ setSelectedConversation }) {
             itemName={`Item ${item.item_id || "N/A"}`}
             receiverUid={item.users[0]}
             itemId={item.item_id}
-            timestamp={new Date(item.timestamp).toLocaleString()}
+            timestamp={formatTimestamp(item.timestamp)}
             preview={item.preview || "No preview available"}
             isSelected={selectedItemId === item.id}
             onClick={() => handleItemClick(item)}

@@ -13,7 +13,7 @@ function Inbox() {
           <div className="w-1/3 border-r">
             <InboxItemList setSelectedConversation={setSelectedConversation} />
           </div>
-          <div className="w-2/3">
+          <div className="h-full w-2/3">
             {selectedConversation ? (
               <MessagingPanel
                 conversationId={selectedConversation.id}
