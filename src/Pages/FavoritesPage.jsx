@@ -1,7 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import ItemPanel from "../components/ItemPanel";
 import axios from "axios";
+import { useAuth } from "../services/auth";
+import Navigation from "../components/Navigation";
+import FavoritesPanel from "../components/FavoritesPanel";
 
 async function fetchFavorites(user_id) {
   try {
@@ -25,29 +27,31 @@ async function fetchFavorites(user_id) {
 
 export default function FavoritesPage({ userId }) {
   const [favorites, setFavorites] = useState([]);
+  const user = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!userId) {
+      if (!user) {
         console.error("User ID not found");
         return;
       }
-      const items = await fetchFavorites(userId);
+      const items = await fetchFavorites(user.uid);
       if (items) {
         setFavorites(items);
       }
     };
 
     fetchData();
-  }, [userId]);
+  }, [user]);
 
   return (
     <div>
+      <Navigation showSearchBar={false} />
       <h1>Favorites</h1>
       {favorites.length === 0 ? (
         <p>No favorites found.</p>
       ) : (
-        <ItemPanel items={favorites} />
+        <FavoritesPanel items={favorites} />
       )}
     </div>
   );
