@@ -3,24 +3,17 @@ import "../App.css";
 import Map from "./Map";
 import ItemPanel from "./ItemPanel";
 import Navigation from "./Navigation";
-
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { AuthProvider, useAuth } from "../services/auth"; // Auth Context
+import {useAuth } from "../services/auth"; // Auth Context
 
-export default function HomePage() {
-  const user = useAuth();
+const HomePage = () => {
+  const {user} = useAuth();
   const [visibleItems, setVisibleItems] = useState([]); // State for items
   const [mapBounds, setMapBounds] = useState(null); // State for map bounds
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  // if (!user) {
+  //   return <Navigate to="/login" replace />;
+  // }
 
   return (
     <div>
@@ -45,4 +38,6 @@ export default function HomePage() {
       </div>
     </div>
   );
-}
+};
+
+export default HomePage;

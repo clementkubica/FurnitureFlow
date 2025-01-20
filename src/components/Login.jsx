@@ -4,6 +4,7 @@ import { auth, googleProvider } from "../firebase/FirebaseConfig";
 import { saveUserData } from "../services/firestore";
 import { useNavigate } from "react-router-dom"; 
 import GoogleIcon from "@mui/icons-material/Google";
+import { useAuth } from "../services/auth";
 
 const Login = () => {
   const navigate = useNavigate(); // Initialize navigate
@@ -21,6 +22,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Error during sign-in:", error.message);
+      alert("Please use your Northwestern email to sign in. Please try again.");
     }
   };
 

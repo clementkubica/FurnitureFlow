@@ -3,31 +3,34 @@ import { db } from "../firebase/FirebaseConfig";
 
 // Save user data to FireStore
 export const saveUserData = async (user) => {
-  const userRef = doc(db, "users", user.uid);
-  const userData = {
-    name: user.displayName,
-    email: user.email,
-    photoURL: user.photoURL,
-    lastLogin: new Date(),
-  };
-
   try {
-    await setDoc(userRef, userData);
-    console.log("User data saved:", userData);
+    await setDoc(
+        doc(db, "users", user.uid), 
+        {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL
+    },
+    { merge: true}
+    );
+    console.log("User data saved successfully");
   } catch (error) {
-    console.error("Error saving user data:", error.message);
+    console.error("Error saving user data:", error);
   }
 };
 
 // Get user data from Firestore
 export const getUserData = async (uid) => {
-  const userRef = doc(db, "users", uid);
-  const docSnap = await getDoc(userRef);
-
-  if (docSnap.exists()) {
-    return docSnap.data();
-  } else {
-    console.error("No user data found");
-    return null;
+  try {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (userDoc.exists()) {
+        return userDoc.data();
+    } else {
+        console.log("No user document!");
+        return {};
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return {};
   }
-};scroll
+};
