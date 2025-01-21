@@ -1,14 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
-import { collection, query, where, orderBy, getDocs, addDoc, Timestamp } from "firebase/firestore";
+import { collection, query, where, orderBy, getDocs, addDoc, Timestamp, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/FirebaseConfig";
 import MessageBubble from "./MessageBubble";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
+import { useAuth } from "../services/auth";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#BA68C8",
+    },
+  },
+});
 
 function MessagingPanel({ conversationId, selectedConversation }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isFirstMsg, setIsFirstMsg] = useState(false)
   const messagesEndRef = useRef(null);
+
+  const { user } = useAuth()
 
   const fetchMessages = async () => {
     if (!conversationId) return;
@@ -43,10 +56,35 @@ function MessagingPanel({ conversationId, selectedConversation }) {
 
     const newMsg = {
       inbox_item_id: conversationId,
-      sender_id: selectedConversation.users[0],
+      sender_id: user.uid,
       text: newMessage,
       timestamp: Timestamp.now(),
     };
+
+    if (isFirstMsg) {
+      try {
+        await setDoc(doc(db, "inbox_items", conversationId), {
+          item_id: selectedConversation.item_id,
+          users: selectedConversation.users,
+          preview: newMsg.text,
+          timestamp: newMsg.timestamp,
+        })
+      }
+      catch(error) {
+        console.error("Error creating new conversation:", error)
+      }
+    }
+    else {
+      try {
+        await updateDoc(doc(db, "inbox_items", conversationId), {
+          preview: newMsg.text,
+          timestamp: newMsg.timestamp, 
+        })
+      }
+      catch(error) {
+        console.error("Error updating conversation", error)
+      }
+    }
 
     try {
       await addDoc(collection(db, "messages"), newMsg);
@@ -55,6 +93,7 @@ function MessagingPanel({ conversationId, selectedConversation }) {
     } catch (error) {
       console.error("Error sending message:", error);
     }
+
   };
 
   const handleKeyDown = (e) => {
@@ -74,6 +113,13 @@ function MessagingPanel({ conversationId, selectedConversation }) {
 
   useEffect(() => {
     scrollToBottom();
+
+    if (messages.length === 0) {
+      setIsFirstMsg(true)
+    }
+    else {
+      setIsFirstMsg(false)
+    }
   }, [messages]);
 
   return (
@@ -86,20 +132,28 @@ function MessagingPanel({ conversationId, selectedConversation }) {
           overflowY: "auto",
         }}
       >
-        {messages.map((message) => (
-          <MessageBubble
-            key={message.id}
-            text={message.text}
-            sender={message.sender_id}
-            timestamp={
-              message.timestamp?.toDate
-                ? message.timestamp.toDate().toLocaleString()
-                : "No timestamp available"
-            }
-            isSender={message.sender_id === selectedConversation.users[0]}
-          />
-        ))}
-        <div ref={messagesEndRef} />
+        {isFirstMsg ?
+        <div className="text-gray-500 flex items-center justify-center text-center h-full">
+          Send your first message!
+        </div>
+        :
+        <>
+          {messages.map((message) => (
+            <MessageBubble
+              key={message.id}
+              text={message.text}
+              sender={message.sender_id}
+              timestamp={
+                message.timestamp?.toDate
+                  ? message.timestamp.toDate().toLocaleString()
+                  : "No timestamp available"
+              }
+              isSender={message.sender_id === selectedConversation.users[0]}
+            />
+          ))}
+          <div ref={messagesEndRef} />
+        </>
+        }
       </div>
 
       {/* Message Input Bar */}
@@ -112,14 +166,16 @@ function MessagingPanel({ conversationId, selectedConversation }) {
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<SendIcon />}
-          onClick={handleSendMessage}
-        >
-          Send
-        </Button>
+        <ThemeProvider theme={theme}>
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<SendIcon />}
+            onClick={handleSendMessage}
+          >
+            Send
+          </Button>
+        </ThemeProvider>
       </div>
     </div>
   );
