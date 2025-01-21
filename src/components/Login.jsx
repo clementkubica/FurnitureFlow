@@ -16,7 +16,6 @@ const Login = () => {
       const user = result.user;
 
       if (user.email.endsWith("@u.northwestern.edu")) {
-        await saveUserData(user); // Save user data to Firestore
         navigate("/"); // Navigate to the homepage
       } else {
         alert("Only Northwestern emails are allowed");

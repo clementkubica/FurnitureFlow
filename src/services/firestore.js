@@ -1,19 +1,20 @@
 import { doc, setDoc, getDoc, collection, query, getDocs, where } from "firebase/firestore";
 import { db } from "../firebase/FirebaseConfig";
+import axios from "axios";
+import { use } from "react";
 
 // Save user data to FireStore
 export const saveUserData = async (user) => {
   try {
-    await setDoc(
-        doc(db, "users", user.uid), 
-        {
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL
-    },
-    { merge: true}
-    );
+    const res = await axios.post("https://adduser-jbhycjd2za-uc.a.run.app", {
+      user_id: user.uid,
+      email: user.email,
+      photoURL: user.photoUrl
+    }, {
+      headers: { "Content-Type": "application/json" } 
+    })
     console.log("User data saved successfully");
+    return res.data.user
   } catch (error) {
     console.error("Error saving user data:", error);
   }
