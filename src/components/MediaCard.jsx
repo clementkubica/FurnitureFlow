@@ -60,7 +60,7 @@ export default function MediaCard({
     const fetchFavoriteStatus = async () => {
       if (!loggedInUser) {
         console.error("User not logged in");
-        setLoading(false); // Stop loading even if the user isn't logged in
+        setLoading(false);
         return;
       }
 
@@ -72,9 +72,9 @@ export default function MediaCard({
         );
         setIsFavorite(res.data);
       } catch (error) {
-        console.error("Error fetching favorite status:", error);
+        console.error(error);
       } finally {
-        setLoading(false); // Mark loading as complete
+        setLoading(false); 
       }
     };
 
@@ -119,8 +119,8 @@ export default function MediaCard({
     return (
       <Card
         sx={{
-          maxWidth: "25%",
-          minWidth: "25%",
+          maxWidth: "50%",
+          minWidth: "50%",
           maxHeight: "20%",
           display: "flex",
           justifyContent: "center",
