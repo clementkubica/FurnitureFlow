@@ -136,8 +136,8 @@ export default function MediaCard({
   return (
     <Card
       sx={{
-        maxWidth: "25%",
-        minWidth: "25%",
+        maxWidth: "24.55%",
+        minWidth: "24.55%",
         maxHeight: "20%",
         display: "flex",
         flexDirection: "column",
