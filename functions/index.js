@@ -121,3 +121,35 @@ exports.getUserFavorites = onRequest({ cors: true }, async (request, response) =
     response.status(200).send(res);
 });
 
+exports.checkFavoriteStatus = onRequest({ cors: true }, async (request, response) => {
+    const user_id = request.body.user_id;
+    const item_id = request.body.item_id;
+
+    const res = await knex('favorites')
+        .where({ user_id, item_id })
+        .select('fav_id')
+        .first();
+    response.status(200).send(res);
+
+});
+
+exports.removeUserFavorite = onRequest({ cors: true }, async (request, response) => {
+    const { user_id, item_id } = request.body;
+
+    await knex('favorites')
+        .where({ user_id, item_id })
+        .del();
+
+    response.status(204).send();
+});
+
+exports.addUserFavorite = onRequest({ cors: true }, async (request, response) => {
+    const { user_id, item_id } = request.body;
+
+    await knex('favorites').insert({user_id, item_id,});
+
+    response.status(204).send();
+});
+
+
+

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -10,6 +11,8 @@ import IconButton from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
+import { useAuth } from "../services/auth";
+import axios from "axios";
 import { Link } from "react-router-dom";
 
 const ExpandMore = styled((props) => {
@@ -27,6 +30,9 @@ export default function MediaCard({
   item
 }) {
   const [expanded, setExpanded] = React.useState(false);
+  const loggedInUser = useAuth();
+  const [isFavorite, setIsFavorite] = React.useState(false);
+  const [loading, setLoading] = React.useState(true); // Track loading status
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -39,7 +45,7 @@ export default function MediaCard({
     const year = String(date.getFullYear()).slice(-2);
     return `${month}/${day}/${year}`;
   }
-
+  
   function formatPrice(price) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -47,11 +53,82 @@ export default function MediaCard({
     }).format(Number(price))
   }
 
-  const [flag, setFlag] = React.useState(true);
+  useEffect(() => {
+    const fetchFavoriteStatus = async () => {
+      if (!loggedInUser) {
+        console.error("User not logged in");
+        setLoading(false);
+        return;
+      }
 
-  const handleClick = () => {
-    setFlag(!flag);
+      try {
+        const res = await axios.post(
+          "https://checkfavoritestatus-jbhycjd2za-uc.a.run.app",
+          { user_id: loggedInUser.user.uid, item_id: item_id },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        setIsFavorite(res.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false); 
+      }
+    };
+
+    fetchFavoriteStatus();
+  }, [loggedInUser, item_id]);
+
+  const handleFavoriteToggle = async () => {
+    if (!loggedInUser) {
+      console.error("User not logged in");
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await axios.delete(
+          "https://removeuserfavorite-jbhycjd2za-uc.a.run.app",
+          {
+            data: {
+              user_id: loggedInUser.user.uid,
+              item_id: item_id,
+            },
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      } else {
+        await axios.post(
+          "https://adduserfavorite-jbhycjd2za-uc.a.run.app",
+          {
+            user_id: loggedInUser.user.uid,
+            item_id: item_id,
+          },
+          { headers: { "Content-Type": "application/json" } }
+        );
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error toggling favorite status:", error);
+    }
   };
+
+  if (loading) {
+    return (
+      <Card
+        sx={{
+          maxWidth: "50%",
+          minWidth: "50%",
+          maxHeight: "20%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#E6DFF1",
+        }}
+      >
+        <Typography variant="h6">Loading...</Typography>
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -79,12 +156,12 @@ export default function MediaCard({
       </CardContent>
       <CardActions disableSpacing>
         <IconButton
-          onClick={handleClick}
+          onClick={handleFavoriteToggle}
           variant="contained"
-          color={flag ? "default" : "error"}
+          color={isFavorite ? "error" : "default"}
           aria-label="add to favorites"
         >
-          <FavoriteIcon className="hover:text-red-600" />
+          <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
         </IconButton>
         <Link to="/inbox" state={{ item: item }}>
           <Button size="small" className="hover:font-bold">
@@ -105,9 +182,6 @@ export default function MediaCard({
           <Typography variant="body2" color="text.secondary">
             <strong>Date Posted:</strong> {formatDate(item.date_posted)}
           </Typography>
-          {/* <Typography variant="body2" color="text.secondary">
-            <strong>Sell By:</strong> {sellby_date}
-          </Typography> */}
           {item.date_sold && (
             <Typography variant="body2" color="text.secondary">
               <strong>Date Sold:</strong> {item.date_sold}
