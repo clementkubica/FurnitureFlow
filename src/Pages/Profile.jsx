@@ -30,7 +30,8 @@ export default function Profile() {
           className="w-3/4 max-w-[500px] mt-[20px] mb-[-65px]"
           onClick={handleHome}
         />
-        <div className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[590px] w-3/4 max-w-[500px] mt-[100px] mb-10 rounded-[45px] bg-[#d6c3dc]">
+        {/*590px*/}
+        <div className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[auto] w-3/4 max-w-[500px] mt-[100px] mb-10 pb-7 rounded-[45px] bg-[#d6c3dc]">
           <div className="mt-[30px] flex items-center pb-[10px]">
             {user.photoURL ? (
               <img
