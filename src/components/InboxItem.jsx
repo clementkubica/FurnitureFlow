@@ -122,10 +122,10 @@ function InboxItem({
           </p>
 
           {/* Timestamp */}
-          <p className="text-xs font-semibold text-gray-600">{timestamp}</p>
+          <p className="text-xs font-semibold text-gray-600">{timestamp ? timestamp : ""}</p>
 
           {/* Preview */}
-          <p className="text-sm text-gray-500 mt-2">{preview}</p>
+          <p className="text-sm text-gray-500 mt-2">{preview ? preview : ""}</p>
         </div>
       </div>
     );
