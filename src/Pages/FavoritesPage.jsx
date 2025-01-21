@@ -62,9 +62,13 @@ export default function FavoritesPage() {
   return (
     <div>
       <Navigation showSearchBar={false} />
-      <h1>Favorites</h1>
+      <h1 style={{ textAlign: "center", marginTop: "15px", fontSize: "2.2rem", fontWeight: "bold" }}>Favorites</h1>
       {favorites.length === 0 ? (
-        <p>No favorites found.</p>
+        <p
+        style={{ textAlign: "center", fontSize: "3rem", marginTop: "20px", color: "grey", fontStyle: "italic"}}
+      >
+        No favorites found. Start adding items to your favorites!
+      </p>
       ) : (
         <Grid item xs={4.7}>
           <Item>
