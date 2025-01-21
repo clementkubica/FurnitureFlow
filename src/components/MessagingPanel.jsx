@@ -5,6 +5,15 @@ import MessageBubble from "./MessageBubble";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 import { useAuth } from "../services/auth";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#BA68C8",
+    },
+  },
+});
 
 function MessagingPanel({ conversationId, selectedConversation }) {
   const [messages, setMessages] = useState([]);
@@ -157,14 +166,16 @@ function MessagingPanel({ conversationId, selectedConversation }) {
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<SendIcon />}
-          onClick={handleSendMessage}
-        >
-          Send
-        </Button>
+        <ThemeProvider theme={theme}>
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<SendIcon />}
+            onClick={handleSendMessage}
+          >
+            Send
+          </Button>
+        </ThemeProvider>
       </div>
     </div>
   );
