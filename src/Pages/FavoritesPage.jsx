@@ -4,6 +4,21 @@ import axios from "axios";
 import { useAuth } from "../services/auth";
 import Navigation from "../components/Navigation";
 import FavoritesPanel from "../components/FavoritesPanel";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
+
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
 
 async function fetchFavorites(user_id) {
   try {
@@ -25,7 +40,7 @@ async function fetchFavorites(user_id) {
   }
 }
 
-export default function FavoritesPage({ userId }) {
+export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
   const user = useAuth();
 
@@ -51,7 +66,11 @@ export default function FavoritesPage({ userId }) {
       {favorites.length === 0 ? (
         <p>No favorites found.</p>
       ) : (
-        <FavoritesPanel items={favorites} />
+        <Grid item xs={4.7}>
+          <Item>
+          <FavoritesPanel items={favorites} />
+          </Item>
+        </Grid>
       )}
     </div>
   );

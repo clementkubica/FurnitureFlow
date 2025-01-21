@@ -1,5 +1,5 @@
 import React from "react";
-import MediaCard from "./MediaCard";
+import MediaCard from "./FavoritesCard";
 
 function FavoritesPanel({ items = [] }) {
   const cardsPerRow = 4;
@@ -13,10 +13,11 @@ function FavoritesPanel({ items = [] }) {
     <div className="bg-white overflow-y-auto max-h-[90vh]">
       <div className="flex flex-col gap-4 p-4">
         {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex flex-wrap gap-4">
+          <div key={rowIndex} className="flex flex-row gap-4">
             {row.map((item, itemIndex) => (
               <MediaCard
                 key={itemIndex} // Add a key for each MediaCard
+                id={item.id}
                 name={item.name}
                 image={item.image_url}
                 price={new Intl.NumberFormat("en-US", {
@@ -41,10 +42,10 @@ function FavoritesPanel({ items = [] }) {
                 ))}
           </div>
         ))}
-        {rows.length === 0 && ( // Handle empty rows
+        {items.length === 0 && ( // Handle empty rows
           <div className="flex items-center justify-center h-full">
             <h1 className="text-black text-4xl font-bold text-center">
-              NO LISTINGS IN THIS AREA
+              NO FAVORITES
             </h1>
           </div>
         )}
