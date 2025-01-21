@@ -184,7 +184,7 @@ function Navigation({
             onClick={handleProfile}
           />
           {/* Logout Button */}
-          {user && (
+          {/* {user && (
             <button
               onClick={handleLogout}
               className="flex items-cetner text-black hover:text-red-500 cursor-pointer"
@@ -194,7 +194,7 @@ function Navigation({
               <FaSignOutAlt className="text-[25px] mr-1 ml-0" />
               <h5 className="mt-[-2px] text-[20px]">log out</h5>
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </nav>

@@ -30,7 +30,8 @@ export default function Profile() {
           className="w-3/4 max-w-[500px] mt-[20px] mb-[-65px]"
           onClick={handleHome}
         />
-        <div className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[590px] w-3/4 max-w-[500px] mt-[100px] mb-10 rounded-[45px] bg-[#d6c3dc]">
+        {/*590px*/}
+        <div className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[auto] w-3/4 max-w-[500px] mt-[100px] mb-10 pb-7 rounded-[45px] bg-[#d6c3dc]">
           <div className="mt-[30px] flex items-center pb-[10px]">
             {user.photoURL ? (
               <img
@@ -49,12 +50,12 @@ export default function Profile() {
           <h1 className="text-center text-[auto] mt-[10px]">
             {user.email || "Email"}
           </h1>
-          <div className="flex flex-col justify-center items-center border border-[#b4a3c4] border-[5px] h-[150px] w-[90%] mt-5 rounded-[30px] ">
+          {/* <div className="flex flex-col justify-center items-center border border-[#b4a3c4] border-[5px] h-[150px] w-[90%] mt-5 rounded-[30px] ">
             <h1>TEMP YOUR POSTS</h1>
           </div>
           <div className="flex flex-col justify-center items-center border border-[#b4a3c4] border-[5px] h-[150px] w-[90%] mt-5 rounded-[30px] ">
             <h1>TEMP YOUR LIKES</h1>
-          </div>
+          </div> */}
 
           <div className="mt-5">
             {user && (
