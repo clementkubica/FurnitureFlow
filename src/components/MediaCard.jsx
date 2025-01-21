@@ -64,7 +64,7 @@ export default function MediaCard({
       try {
         const res = await axios.post(
           "https://checkfavoritestatus-jbhycjd2za-uc.a.run.app",
-          { user_id: loggedInUser.user.uid, item_id: item_id },
+          { user_id: loggedInUser.user.uid, item_id: item.item_id },
           { headers: { "Content-Type": "application/json" } }
         );
         setIsFavorite(res.data);
@@ -76,7 +76,7 @@ export default function MediaCard({
     };
 
     fetchFavoriteStatus();
-  }, [loggedInUser, item_id]);
+  }, [loggedInUser, item.item_id]);
 
   const handleFavoriteToggle = async () => {
     if (!loggedInUser) {
@@ -91,7 +91,7 @@ export default function MediaCard({
           {
             data: {
               user_id: loggedInUser.user.uid,
-              item_id: item_id,
+              item_id: item.item_id,
             },
             headers: { "Content-Type": "application/json" },
           }
@@ -101,7 +101,7 @@ export default function MediaCard({
           "https://adduserfavorite-jbhycjd2za-uc.a.run.app",
           {
             user_id: loggedInUser.user.uid,
-            item_id: item_id,
+            item_id: item.item_id,
           },
           { headers: { "Content-Type": "application/json" } }
         );

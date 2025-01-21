@@ -47,6 +47,7 @@ function InboxItem({
       setIsLoading(false)
     } catch (error) {
       console.error("Error fetching inbox item details:", error);
+      setIsLoading(false)
     }
   };
 

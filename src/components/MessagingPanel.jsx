@@ -20,11 +20,16 @@ function MessagingPanel({ conversationId, selectedConversation }) {
   const [newMessage, setNewMessage] = useState("");
   const [isFirstMsg, setIsFirstMsg] = useState(false)
   const messagesEndRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true)
 
   const { user } = useAuth()
 
   const fetchMessages = async () => {
-    if (!conversationId) return;
+    setIsLoading(true)
+    if (!conversationId) {
+      setIsLoading(false)
+      return
+    }
 
     try {
       const q = query(
@@ -46,9 +51,13 @@ function MessagingPanel({ conversationId, selectedConversation }) {
       });
 
       setMessages(fetchedMessages);
+      setIsLoading(false)
     } catch (error) {
       console.error("Error fetching messages:", error);
+      setIsLoading(false)
     }
+
+    
   };
 
   const handleSendMessage = async () => {
@@ -108,6 +117,7 @@ function MessagingPanel({ conversationId, selectedConversation }) {
   };
 
   useEffect(() => {
+    setIsLoading(true)
     fetchMessages();
   }, [conversationId]);
 
@@ -132,51 +142,61 @@ function MessagingPanel({ conversationId, selectedConversation }) {
           overflowY: "auto",
         }}
       >
-        {isFirstMsg ?
-        <div className="text-gray-500 flex items-center justify-center text-center h-full">
-          Send your first message!
-        </div>
-        :
-        <>
-          {messages.map((message) => (
-            <MessageBubble
-              key={message.id}
-              text={message.text}
-              sender={message.sender_id}
-              timestamp={
-                message.timestamp?.toDate
-                  ? message.timestamp.toDate().toLocaleString()
-                  : "No timestamp available"
-              }
-              isSender={message.sender_id === selectedConversation.users[0]}
-            />
-          ))}
-          <div ref={messagesEndRef} />
-        </>
+        {isLoading ?
+          <div className="text-gray-500 flex items-center justify-center text-center h-full">
+            Loading...
+          </div>
+          :
+          <>
+            {isFirstMsg ?
+            <div className="text-gray-500 flex items-center justify-center text-center h-full">
+              Send your first message!
+            </div>
+            :
+            <>
+              {messages.map((message) => (
+                <MessageBubble
+                  key={message.id}
+                  text={message.text}
+                  sender={message.sender_id}
+                  timestamp={
+                    message.timestamp?.toDate
+                      ? message.timestamp.toDate().toLocaleString()
+                      : "No timestamp available"
+                  }
+                  isSender={message.sender_id === selectedConversation.users[0]}
+                />
+              ))}
+              <div ref={messagesEndRef} />
+            </>
+            }
+          </>
         }
       </div>
 
       {/* Message Input Bar */}
-      <div className="p-4 border-t bg-white flex items-center space-x-4">
-        <input
-          type="text"
-          className="flex-1 p-2 border rounded"
-          placeholder="Type your message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <ThemeProvider theme={theme}>
-          <Button
-            variant="contained"
-            color="primary"
-            endIcon={<SendIcon />}
-            onClick={handleSendMessage}
-          >
-            Send
-          </Button>
-        </ThemeProvider>
-      </div>
+      {!isLoading && 
+        <div className="p-4 border-t bg-white flex items-center space-x-4">
+          <input
+            type="text"
+            className="flex-1 p-2 border rounded"
+            placeholder="Type your message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <ThemeProvider theme={theme}>
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<SendIcon />}
+              onClick={handleSendMessage}
+            >
+              Send
+            </Button>
+          </ThemeProvider>
+        </div>
+      }
     </div>
   );
 }
