@@ -13,6 +13,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 import { useAuth } from "../services/auth";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -26,17 +27,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function MediaCard({
-  item_id,
-  name,
-  description,
-  user,
-  price,
-  location,
-  status,
-  date_posted,
-  sellby_date,
-  date_sold,
-  image,
+  item
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const loggedInUser = useAuth();
@@ -54,9 +45,15 @@ export default function MediaCard({
     const year = String(date.getFullYear()).slice(-2);
     return `${month}/${day}/${year}`;
   }
+  
+  function formatPrice(price) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(Number(price))
+  }
 
   useEffect(() => {
-
     const fetchFavoriteStatus = async () => {
       if (!loggedInUser) {
         console.error("User not logged in");
@@ -149,13 +146,13 @@ export default function MediaCard({
         },
       }}
     >
-      <CardMedia sx={{ height: 200 }} image={image} title="item card" />
+      <CardMedia sx={{ height: 200 }} image={item.image_url} title="item card" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {name} - {price}
+          {item.name} - {formatPrice(item.price)}
         </Typography>
-        <Typography variant="subtitle1">Posted by: {user}</Typography>
-        <Typography variant="body2">{description}</Typography>
+        <Typography variant="subtitle1">Posted by: {item.username}</Typography>
+        <Typography variant="body2">{item.description}</Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton
@@ -166,9 +163,11 @@ export default function MediaCard({
         >
           <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
         </IconButton>
-        <Button size="small" className="hover:font-bold">
-          Message
-        </Button>
+        <Link to="/inbox" state={{ item: item }}>
+          <Button size="small" className="hover:font-bold">
+            Message
+          </Button>
+        </Link>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -181,11 +180,11 @@ export default function MediaCard({
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            <strong>Date Posted:</strong> {formatDate(date_posted)}
+            <strong>Date Posted:</strong> {formatDate(item.date_posted)}
           </Typography>
-          {date_sold && (
+          {item.date_sold && (
             <Typography variant="body2" color="text.secondary">
-              <strong>Date Sold:</strong> {date_sold}
+              <strong>Date Sold:</strong> {item.date_sold}
             </Typography>
           )}
         </CardContent>
