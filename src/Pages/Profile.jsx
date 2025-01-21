@@ -49,12 +49,12 @@ export default function Profile() {
           <h1 className="text-center text-[auto] mt-[10px]">
             {user.email || "Email"}
           </h1>
-          <div className="flex flex-col justify-center items-center border border-[#b4a3c4] border-[5px] h-[150px] w-[90%] mt-5 rounded-[30px] ">
+          {/* <div className="flex flex-col justify-center items-center border border-[#b4a3c4] border-[5px] h-[150px] w-[90%] mt-5 rounded-[30px] ">
             <h1>TEMP YOUR POSTS</h1>
           </div>
           <div className="flex flex-col justify-center items-center border border-[#b4a3c4] border-[5px] h-[150px] w-[90%] mt-5 rounded-[30px] ">
             <h1>TEMP YOUR LIKES</h1>
-          </div>
+          </div> */}
 
           <div className="mt-5">
             {user && (
