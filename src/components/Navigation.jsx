@@ -44,6 +44,10 @@ function Navigation({
     setDateNeeded(event.target.value);
   };
 
+  const handleProfile = () => {
+    navigate("/profile");
+  };
+
   const handleLogout = async () => {
     try {
       await auth.signOut();
@@ -177,6 +181,7 @@ function Navigation({
             className="text-black text-xl hover:text-gray-400 cursor-pointer"
             aria-label="User Profile"
             title="User Profile"
+            onClick={handleProfile}
           />
           {/* Logout Button */}
           {user && (
@@ -186,8 +191,8 @@ function Navigation({
               aria-label="Logout"
               title="Logout"
             >
-              <FaSignOutAlt className="text-xl mr-1" />
-              Logout
+              <FaSignOutAlt className="text-[25px] mr-1 ml-0" />
+              <h5 className="mt-[-2px] text-[20px]">log out</h5>
             </button>
           )}
         </div>

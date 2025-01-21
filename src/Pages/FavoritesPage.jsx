@@ -35,7 +35,7 @@ export default function FavoritesPage({ userId }) {
         console.error("User ID not found");
         return;
       }
-      const items = await fetchFavorites(user.uid);
+      const items = await fetchFavorites(user.user.uid);
       if (items) {
         setFavorites(items);
       }

@@ -9,7 +9,7 @@ function Inbox() {
   return (
     <div className="h-screen flex flex-col">
       {/* Navigation */}
-      <Navigation showSearchBar={false} showFavorite={false} />
+      <Navigation showSearchBar={false}/>
 
       {/* Content Section */}
       <div className="flex flex-1 overflow-hidden">
