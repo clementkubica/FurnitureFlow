@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -11,7 +12,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 import { useAuth } from "../services/auth";
-
+import axios from "axios";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -25,6 +26,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function MediaCard({
+  item_id,
   name,
   description,
   user,
@@ -37,6 +39,9 @@ export default function MediaCard({
   image,
 }) {
   const [expanded, setExpanded] = React.useState(false);
+  const loggedInUser = useAuth();
+  const [isFavorite, setIsFavorite] = React.useState(false);
+  const [loading, setLoading] = React.useState(true); // Track loading status
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -50,11 +55,83 @@ export default function MediaCard({
     return `${month}/${day}/${year}`;
   }
 
-  const [flag, setFlag] = React.useState(true);
+  useEffect(() => {
 
-  const handleClick = () => {
-    setFlag(!flag);
+    const fetchFavoriteStatus = async () => {
+      if (!loggedInUser) {
+        console.error("User not logged in");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await axios.post(
+          "https://checkfavoritestatus-jbhycjd2za-uc.a.run.app",
+          { user_id: loggedInUser.user.uid, item_id: item_id },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        setIsFavorite(res.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false); 
+      }
+    };
+
+    fetchFavoriteStatus();
+  }, [loggedInUser, item_id]);
+
+  const handleFavoriteToggle = async () => {
+    if (!loggedInUser) {
+      console.error("User not logged in");
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await axios.delete(
+          "https://removeuserfavorite-jbhycjd2za-uc.a.run.app",
+          {
+            data: {
+              user_id: loggedInUser.user.uid,
+              item_id: item_id,
+            },
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      } else {
+        await axios.post(
+          "https://adduserfavorite-jbhycjd2za-uc.a.run.app",
+          {
+            user_id: loggedInUser.user.uid,
+            item_id: item_id,
+          },
+          { headers: { "Content-Type": "application/json" } }
+        );
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error toggling favorite status:", error);
+    }
   };
+
+  if (loading) {
+    return (
+      <Card
+        sx={{
+          maxWidth: "25%",
+          minWidth: "25%",
+          maxHeight: "20%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#E6DFF1",
+        }}
+      >
+        <Typography variant="h6">Loading...</Typography>
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -82,12 +159,12 @@ export default function MediaCard({
       </CardContent>
       <CardActions disableSpacing>
         <IconButton
-          onClick={handleClick}
+          onClick={handleFavoriteToggle}
           variant="contained"
-          color={flag ? "default" : "error"}
+          color={isFavorite ? "error" : "default"}
           aria-label="add to favorites"
         >
-          <FavoriteIcon className="hover:text-red-600" />
+          <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
         </IconButton>
         <Button size="small" className="hover:font-bold">
           Message
@@ -106,9 +183,6 @@ export default function MediaCard({
           <Typography variant="body2" color="text.secondary">
             <strong>Date Posted:</strong> {formatDate(date_posted)}
           </Typography>
-          {/* <Typography variant="body2" color="text.secondary">
-            <strong>Sell By:</strong> {sellby_date}
-          </Typography> */}
           {date_sold && (
             <Typography variant="body2" color="text.secondary">
               <strong>Date Sold:</strong> {date_sold}

@@ -23,6 +23,7 @@ function ItemPanel({ items = [] }) {
             {row.map((item, itemIndex) => (
               <MediaCard
                 key={itemIndex} // Add a key for each MediaCard
+                item_id={item.item_id}
                 name={item.name}
                 image={item.image_url}
                 price={new Intl.NumberFormat("en-US", {
