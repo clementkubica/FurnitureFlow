@@ -151,5 +151,51 @@ exports.addUserFavorite = onRequest({ cors: true }, async (request, response) =>
     response.status(204).send();
 });
 
+exports.addUser = onRequest({ cors: true }, async (request, response) => {
+    const { user_id, email, photoURL } = request.body;
 
+    if (user_id === null) {
+        response.status(400).send(
+            {msg: "please include user_id"}
+        )
 
+        return
+    }
+
+    if (email === null) {
+        response.status(400).send(
+            {msg: "please include email"}
+        )
+
+        return
+    }
+
+    if (photoURL === null) {
+        response.status(400).send(
+            {msg: "please include photoUrl"}
+        )
+
+        return
+    }
+
+    const username = email.split("@")[0]
+    const date_created = new Date()
+
+    await knex('users').insert({ 
+        user_id: user_id, 
+        email: email, 
+        username: username, 
+        date_created: date_created, 
+        photourl: photoURL,
+    });
+    
+    response.status(200).send({
+        user: {
+            email: email,
+            username: username,
+            date_created: date_created,
+            photoURL: photoURL
+        }
+    });
+    
+});
