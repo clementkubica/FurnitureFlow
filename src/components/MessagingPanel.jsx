@@ -164,7 +164,7 @@ function MessagingPanel({ conversationId, selectedConversation }) {
                       ? message.timestamp.toDate().toLocaleString()
                       : "No timestamp available"
                   }
-                  isSender={message.sender_id === selectedConversation.users[0]}
+                  isSender={message.sender_id === user.uid}
                 />
               ))}
               <div ref={messagesEndRef} />
