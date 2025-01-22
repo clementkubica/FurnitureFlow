@@ -42,6 +42,7 @@ function MessagingPanel({ conversationId, selectedConversation }) {
       if (querySnapshot.empty) {
         console.log("No messages found for conversationId:", conversationId);
         setMessages([]);
+        setIsLoading(false)
         return;
       }
 
