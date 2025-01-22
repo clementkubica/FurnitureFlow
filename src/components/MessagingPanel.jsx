@@ -143,11 +143,6 @@ function MessagingPanel({ conversationId, selectedConversation }) {
           overflowY: "auto",
         }}
       >
-        {isLoading ?
-          <div className="text-gray-500 flex items-center justify-center text-center h-full">
-            Loading...
-          </div>
-          :
           <>
             {isFirstMsg ?
             <div className="text-gray-500 flex items-center justify-center text-center h-full">
@@ -172,7 +167,6 @@ function MessagingPanel({ conversationId, selectedConversation }) {
             </>
             }
           </>
-        }
       </div>
 
       {/* Message Input Bar */}
