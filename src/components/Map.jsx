@@ -16,11 +16,12 @@ import Box from '@mui/material/Box';
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
-async function fetchItems(bounds) {
+async function fetchItems(bounds, priceRange) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
   const maxLon = bounds.east;
+  const [minPrice, maxPrice] = priceRange;
 
   try {
     const res = await axios.post(
@@ -30,6 +31,8 @@ async function fetchItems(bounds) {
         maxLat: maxLat,
         minLon: minLon,
         maxLon: maxLon,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
       },
       {
         headers: {
@@ -191,11 +194,11 @@ const purp = [
   },
 ];
 
-const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
+const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRange}) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-
+  
   const [open, setOpen] = useState(false);
 
   const boxstyle = {
@@ -263,7 +266,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
   useEffect(() => {
     if (mapBounds) {
         const fetchData = async () => {
-            const items = await fetchItems(mapBounds);
+            const items = await fetchItems(mapBounds, priceRange);
             if (items) {
                 setVisibleItems(items)
             }

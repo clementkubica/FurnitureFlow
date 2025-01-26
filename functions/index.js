@@ -27,22 +27,27 @@ exports.filterByName = onRequest({cors: true}, async (request, response) => {
     response.status(200).send(res);
 })
 
-exports.fetchItems = onRequest({cors: true}, async (request, response) => {
-    const minLat = request.body.minLat;
-    const minLon = request.body.minLon;
-    const maxLat = request.body.maxLat;
-    const maxLon = request.body.maxLon;
+exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
+    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, query } = request.body;
 
-    if ("query" in request.body) {
-        const query = request.body.query
-        
-        const res = await knex('items')
-        .join('users', 'items.user_id', '=', 'users.user_id') // Join with users
-        .leftJoin('image_urls', 'image_urls.item_id', '=', 'items.item_id') // Join with image_urls
-        .whereILike('name', `%${query}%`)
-        .andWhereBetween('items.longitude', [minLon, maxLon]) // Longitude filter
-        .andWhereBetween('items.latitude', [minLat, maxLat]) // Latitude filter
-        .select(
+    // Validate price inputs
+    // if (minPrice == null || maxPrice == null) {
+    //     return response.status(400).send({ msg: "Please include minPrice and maxPrice" });
+    // }
+
+    try {
+        let queryBuilder = knex('items')
+            .join('users', 'items.user_id', '=', 'users.user_id') // Join with users
+            .leftJoin('image_urls', 'image_urls.item_id', '=', 'items.item_id') // Join with image_urls
+            .whereBetween('items.longitude', [minLon, maxLon]) // Longitude filter
+            .andWhereBetween('items.latitude', [minLat, maxLat]) // Latitude filter
+            .andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
+
+        if (query) {
+            queryBuilder = queryBuilder.whereILike('items.name', `%${query}%`);
+        }
+
+        const res = await queryBuilder.select(
             'items.item_id',
             'items.name',
             'items.description',
@@ -53,43 +58,20 @@ exports.fetchItems = onRequest({cors: true}, async (request, response) => {
             'items.status',
             'items.date_posted',
             'items.date_sellby',
-            'items.date_sold', // All columns except `address`
+            'items.date_sold',
             'users.username',
             'users.email',
             'image_urls.url as image_url',
             'image_urls.path as image_path'
-        )
+        );
 
         response.status(200).send(res);
-
-    }
-    else {
-        const res = await knex('items')
-        .join('users', 'items.user_id', '=', 'users.user_id') // Join with users
-        .leftJoin('image_urls', 'image_urls.item_id', '=', 'items.item_id') // Join with image_urls
-        .whereBetween('items.longitude', [minLon, maxLon]) // Longitude filter
-        .andWhereBetween('items.latitude', [minLat, maxLat]) // Latitude filter
-        .select(
-            'items.item_id',
-            'items.name',
-            'items.description',
-            'items.user_id',
-            'items.price',
-            'items.longitude',
-            'items.latitude',
-            'items.status',
-            'items.date_posted',
-            'items.date_sellby',
-            'items.date_sold', // All columns except `address`
-            'users.username',
-            'users.email',
-            'image_urls.url as image_url',
-            'image_urls.path as image_path'
-        )
-
-        response.status(200).send(res);
+    } catch (error) {
+        console.error("Error fetching items:", error);
+        response.status(500).send({ msg: "Internal Server Error" });
     }
 });
+
 
 exports.getUserFavorites = onRequest({ cors: true }, async (request, response) => {
     const userId = request.body.user_id;
