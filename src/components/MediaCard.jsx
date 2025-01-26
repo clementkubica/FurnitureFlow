@@ -27,7 +27,8 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function MediaCard({
-  item
+  item,
+  size
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const loggedInUser = useAuth();
@@ -116,8 +117,8 @@ export default function MediaCard({
     return (
       <Card
         sx={{
-          maxWidth: "50%",
-          minWidth: "50%",
+          maxWidth: `${size}%`,
+          minWidth: `${size}%`,
           maxHeight: "20%",
           display: "flex",
           justifyContent: "center",
@@ -133,8 +134,8 @@ export default function MediaCard({
   return (
     <Card
       sx={{
-        maxWidth: "50%",
-        minWidth: "50%",
+        maxWidth: `${size}%`,
+        minWidth: `${size}%`,
         maxHeight: "20%",
         display: "flex",
         flexDirection: "column",
