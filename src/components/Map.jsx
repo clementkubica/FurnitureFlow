@@ -3,14 +3,10 @@ import {
   useJsApiLoader,
   MarkerF,
   InfoWindowF,
-  LoadScript,
-  InfoBoxF,
 } from "@react-google-maps/api";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Carousel } from "primereact/carousel";
-import { Button } from "primereact/button";
-import { Tag } from "primereact/tag";
 import { Modal } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -200,6 +196,7 @@ const Map = ({
   mapBounds,
   setMapBounds,
   priceRange,
+  category,
 }) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
@@ -272,14 +269,14 @@ const Map = ({
   useEffect(() => {
     if (mapBounds) {
       const fetchData = async () => {
-        const items = await fetchItems(mapBounds, priceRange);
+        const items = await fetchItems(mapBounds, priceRange, category);
         if (items) {
           setVisibleItems(items);
         }
       
       fetchData();
     }
-  }, [mapBounds]);
+  }, [mapBounds, category]);
 
   useEffect(() => {
     const newMarkers = visibleItems.map((item) => {
