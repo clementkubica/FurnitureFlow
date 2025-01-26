@@ -18,6 +18,8 @@ function Navigation({
   setIsFavoritePage,
   showSearchBar = true,
   showFavorite = true,
+  query,
+  setQuery,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
@@ -80,6 +82,8 @@ function Navigation({
                 setMapBounds={setMapBounds}
                 visibleItems={visibleItems}
                 setVisibleItems={setVisibleItems}
+                query={query}
+                setQuery={setQuery}
               />
             </div>
             {/* Dropdowns Buttons */}

@@ -16,7 +16,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
-async function fetchItems(bounds, priceRange) {
+async function fetchItems(bounds, priceRange, query) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
@@ -33,6 +33,7 @@ async function fetchItems(bounds, priceRange) {
         maxLon: maxLon,
         minPrice: minPrice,
         maxPrice: maxPrice,
+        query: query,
       },
       {
         headers: {
@@ -200,6 +201,7 @@ const Map = ({
   mapBounds,
   setMapBounds,
   priceRange,
+  query,
 }) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
@@ -272,10 +274,11 @@ const Map = ({
   useEffect(() => {
     if (mapBounds) {
       const fetchData = async () => {
-        const items = await fetchItems(mapBounds, priceRange);
+        const items = await fetchItems(mapBounds, priceRange, query);
         if (items) {
           setVisibleItems(items);
         }
+      }
       
       fetchData();
     }
