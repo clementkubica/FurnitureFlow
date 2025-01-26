@@ -18,9 +18,10 @@ function Navigation({
   setIsFavoritePage,
   showSearchBar = true,
   showFavorite = true,
+  priceRange,
+  setPriceRange,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [category, setCategory] = useState("");
   const [dateNeeded, setDateNeeded] = useState("");
 
@@ -33,6 +34,7 @@ function Navigation({
   };
 
   const handlePriceRange = (event, newValue) => {
+    console.log("Price Range Changed:", newValue);
     setPriceRange(newValue);
   };
 

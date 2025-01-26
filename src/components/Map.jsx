@@ -43,7 +43,8 @@ async function fetchItems(bounds, priceRange) {
 
     return res.data;
   } catch (error) {
-    console.error(error);
+    console.error("Error in fetchItems:", error);
+    return [];
   }
 }
 
@@ -266,18 +267,18 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRang
   };
 
   useEffect(() => {
-    if (mapBounds) {
-        const fetchData = async () => {
-            const items = await fetchItems(mapBounds, priceRange);
-            if (items) {
-                setVisibleItems(items)
-            }
-
+    if (mapBounds && priceRange) {
+      const fetchData = async () => {
+        console.log("Map component useEffect triggered with priceRange:", priceRange);
+        const items = await fetchItems(mapBounds, priceRange);
+        if (items) {
+          setVisibleItems(items);
         }
-      };
+      }
+      
       fetchData();
     }
-  }, [mapBounds]);
+  }, [mapBounds, priceRange]);
 
   useEffect(() => {
     const newMarkers = visibleItems.map((item) => {

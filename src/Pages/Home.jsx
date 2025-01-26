@@ -32,6 +32,11 @@ const Home = () => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const user = useAuth();
 
+  React.useEffect(() => {
+    console.log("Current Price range in Home.jsx:", priceRange);
+
+  }, [priceRange]);
+
   return (
     <>
       <div>
@@ -41,7 +46,7 @@ const Home = () => {
           visibleItems={visibleItems}
           setVisibleItems={setVisibleItems}
           setIsFavoritePage={setIsFavoritePage}
-          // priceRange={priceRange}
+          priceRange={priceRange}
           setPriceRange={setPriceRange}
         />
       </div>
