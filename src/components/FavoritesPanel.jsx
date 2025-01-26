@@ -20,7 +20,7 @@ function FavoritesPanel({ items = [] }) {
               <MediaCard
                 key={itemIndex} // Add a key for each MediaCard
                 item={item}
-                size={(1 / cardsPerRow)*100}
+                size={((1 / cardsPerRow)*100)-0.65}
                 className="flex-1"
               />
             ))}
