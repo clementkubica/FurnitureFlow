@@ -29,6 +29,7 @@ const Home = () => {
   const [visibleItems, setVisibleItems] = useState([]);
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const user = useAuth();
 
   return (
@@ -40,6 +41,8 @@ const Home = () => {
           visibleItems={visibleItems}
           setVisibleItems={setVisibleItems}
           setIsFavoritePage={setIsFavoritePage}
+          // priceRange={priceRange}
+          setPriceRange={setPriceRange}
         />
       </div>
       {/* <div>
@@ -53,6 +56,7 @@ const Home = () => {
               setVisibleItems={setVisibleItems}
               mapBounds={bounds}
               setMapBounds={setBounds}
+              priceRange={priceRange}
             />
           </Item>
         </Grid>
