@@ -274,7 +274,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRang
             }
 
         }
-      };
+      
       fetchData();
     }
   }, [mapBounds]);
