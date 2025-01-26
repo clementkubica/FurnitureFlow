@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/FirebaseConfig";
+import Navigation from "../components/Navigation";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -24,13 +25,7 @@ export default function Profile() {
   return (
     <>
       <div className="flex flex-col justify-center items-center">
-        <img
-          src="/images/logo_with_name.PNG"
-          alt="App Logo with Title"
-          className="w-3/4 max-w-[500px] mt-[20px] mb-[-65px]"
-          onClick={handleHome}
-        />
-        {/*590px*/}
+        <Navigation showSearchBar={false} />
         <div className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[auto] w-3/4 max-w-[500px] mt-[100px] mb-10 pb-7 rounded-[45px] bg-[#d6c3dc]">
           <div className="mt-[30px] flex items-center pb-[10px]">
             {user.photoURL ? (
