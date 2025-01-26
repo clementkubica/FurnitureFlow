@@ -199,3 +199,46 @@ exports.addUser = onRequest({ cors: true }, async (request, response) => {
     });
     
 });
+
+exports.addItem = onRequest({ cors: true }, async (req, res) => {
+    const {
+      name,
+      description,
+      price,
+      address,
+      longitude,
+      latitude,
+      category,
+      user_id,
+      status = "FOR_SALE",
+      date_sellby,
+    } = req.body;
+  
+    if (!name || !description || !price || !address || !category || !user_id) {
+      res.status(400).send({ error: "Missing required fields" });
+      return;
+    }
+  
+    try {
+      const [item_id] = await db("items")
+        .insert({
+          name,
+          description,
+          price,
+          address,
+          longitude,
+          latitude,
+          category,
+          user_id,
+          status,
+          date_posted: new Date(),
+          date_sellby,
+        })
+        .returning("item_id");
+  
+      res.status(201).send({ success: true, item_id });
+    } catch (error) {
+      console.error("Error adding item:", error);
+      res.status(500).send({ error: "Failed to add item" });
+    }
+  });

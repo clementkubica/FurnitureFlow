@@ -16,6 +16,7 @@ import {
 import { AuthProvider, useAuth } from "./services/auth"; // Auth Context
 import Home from "./Pages/Home";
 import FavoritesPage from "./Pages/FavoritesPage";
+import Post from "./Pages/Post";
 
 const PrivateRoute = ({ children }) => {
   const { user, authLoading } = useAuth();
@@ -79,6 +80,14 @@ const App = () => {
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/post"
+            element={
+              <PrivateRoute>
+                <Post />
               </PrivateRoute>
             }
           />
