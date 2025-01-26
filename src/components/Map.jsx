@@ -194,12 +194,16 @@ const purp = [
   },
 ];
 
-
-const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRange}) => {
+const Map = ({
+  visibleItems,
+  setVisibleItems,
+  mapBounds,
+  setMapBounds,
+  priceRange,
+}) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  
 
   const [open, setOpen] = useState(false);
 
@@ -267,12 +271,10 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRang
 
   useEffect(() => {
     if (mapBounds) {
-        const fetchData = async () => {
-            const items = await fetchItems(mapBounds, priceRange);
-            if (items) {
-                setVisibleItems(items)
-            }
-
+      const fetchData = async () => {
+        const items = await fetchItems(mapBounds, priceRange);
+        if (items) {
+          setVisibleItems(items);
         }
       
       fetchData();
