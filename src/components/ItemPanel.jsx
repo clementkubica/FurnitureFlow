@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 function ItemPanel({ items = [] }) {
   // Default to an empty array
   const cardsPerRow = 2;
+  console.log((1/cardsPerRow)*100);
+
 
   const navigate = useNavigate();
   const handleNav = (path) => {
@@ -15,6 +17,7 @@ function ItemPanel({ items = [] }) {
     rows.push(items.slice(i, i + cardsPerRow));
   }
 
+
   return (
     <div className="bg-white overflow-x-auto overflow-y-auto max-h-[90vh]">
       <div className="flex flex-col gap-4 p-4">
@@ -24,6 +27,7 @@ function ItemPanel({ items = [] }) {
               <MediaCard
                 key={itemIndex} // Add a key for each MediaCard
                 item={item}
+                size={(1/cardsPerRow)*100}
                 className="flex-1"
               />
             ))}
