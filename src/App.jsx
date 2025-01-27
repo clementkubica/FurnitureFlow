@@ -1,5 +1,7 @@
 import React from "react";
 import "./App.css";
+import LoadingScreen from "./components/Loading";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -21,8 +23,16 @@ const GOOGLE_MAPS_LIBRARIES = ["places", "geometry"];
 const PrivateRoute = ({ children }) => {
   const { user, authLoading } = useAuth();
 
-  if (authLoading) {
-    return <div>Loading...</div>;
+  if (location.pathname == "/inbox" && authLoading) {
+    return <LoadingScreen text={"Loading Messages..."}/>;
+  }
+
+  else if (location.pathname == "/favorites" && authLoading) {
+    return <LoadingScreen text={"Loading your Favorites..."}/>;
+  }
+
+  else if (authLoading) {
+    return <LoadingScreen text={"Loading..."}/>;
   }
 
   return user ? children : <Navigate to="/login" replace />;
@@ -32,14 +42,13 @@ const PublicRoute = ({ children }) => {
   const { user, authLoading } = useAuth();
 
   if (authLoading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen text={"Loading..."}/>;
   }
 
   return !user ? children : <Navigate to="/" replace />;
 };
 
 const App = () => {
-  // Load Google Maps API once here
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,

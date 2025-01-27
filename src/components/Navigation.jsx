@@ -20,6 +20,8 @@ function Navigation({
   setIsFavoritePage,
   showSearchBar = true,
   showFavorite = true,
+  query,
+  setQuery,
   category,
   setCategory,
   // setPriceRange,
@@ -88,6 +90,8 @@ function Navigation({
                 setMapBounds={setMapBounds}
                 visibleItems={visibleItems}
                 setVisibleItems={setVisibleItems}
+                query={query}
+                setQuery={setQuery}
               />
             </div>
             {/* Dropdowns Buttons */}
