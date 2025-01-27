@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
-async function fetchItems(bounds, priceRange) {
+async function fetchItems(bounds, priceRange, category) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
@@ -29,6 +29,7 @@ async function fetchItems(bounds, priceRange) {
         maxLon: maxLon,
         minPrice: minPrice,
         maxPrice: maxPrice,
+        category: category,
       },
       {
         headers: {

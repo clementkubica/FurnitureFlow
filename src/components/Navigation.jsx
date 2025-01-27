@@ -101,9 +101,9 @@ function Navigation({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="couch">couch</MenuItem>
-                  <MenuItem value="dresser">dresser</MenuItem>
-                  <MenuItem value="dresser">table</MenuItem>
+                  <MenuItem value="Couch">Couch</MenuItem>
+                  <MenuItem value="Dresser">Dresser</MenuItem>
+                  <MenuItem value="Table">Table</MenuItem>
                 </Select>
               </FormControl>
               {/* Price Slider */}
