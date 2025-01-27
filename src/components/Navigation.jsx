@@ -33,9 +33,9 @@ function Navigation({
   setDateRange,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [dateNeeded, setDateNeeded] = useState("");
-  const [category, setCategory] = useState("");
+  // const [priceRange, setPriceRange] = useState([0, 1000]);
+  // const [dateNeeded, setDateNeeded] = useState("");
+  // const [category, setCategory] = useState("");
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -126,7 +126,7 @@ function Navigation({
                   </MenuItem>
                   <MenuItem value="couch">couch</MenuItem>
                   <MenuItem value="dresser">dresser</MenuItem>
-                  <MenuItem value="dresser">table</MenuItem>
+                  <MenuItem value="table">table</MenuItem>
                 </Select>
               </FormControl>
               {/* Price Slider */}
