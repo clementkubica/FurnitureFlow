@@ -92,8 +92,7 @@ export default function SearchBar({mapBounds, setVisibleItems, query, setQuery})
         <StyledInputBase
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
-          value={query}
-          onChange={(e) => setQuery("couch")}
+          onChange={(e) => setQuery(e.target.value)}
         />
       </Search>
     </form>
