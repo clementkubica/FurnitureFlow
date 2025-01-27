@@ -28,12 +28,7 @@ exports.filterByName = onRequest({cors: true}, async (request, response) => {
 })
 
 exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
-    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, dateNeeded, query } = request.body;
-
-    // Validate price inputs
-    // if (minPrice == null || maxPrice == null) {
-    //     return response.status(400).send({ msg: "Please include minPrice and maxPrice" });
-    // }
+    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, endDate, query } = request.body;
 
     try {
         let queryBuilder = knex('items')
@@ -42,49 +37,13 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             .whereBetween('items.longitude', [minLon, maxLon]) // Longitude filter
             .andWhereBetween('items.latitude', [minLat, maxLat]) // Latitude filter
             .andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
-        
-            // Handle dateNeeded
-    if (dateNeeded) {
-        const currentDate = new Date();
-        let startDate = new Date();
-        let endDate = new Date();
-  
-        switch (dateNeeded) {
-          case "today":
-            startDate.setHours(0, 0, 0, 0);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case "this-week":
-            const day = currentDate.getDay(); // 0 (Sun) to 6 (Sat)
-            const diffToMonday = currentDate.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-            startDate = new Date(currentDate.setDate(diffToMonday));
-            startDate.setHours(0, 0, 0, 0);
-            endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 6);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case "this-month":
-            startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-            endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case "this-quarter":
-            const currentMonth = currentDate.getMonth(); // 0-11
-            const quarter = Math.floor(currentMonth / 3);
-            startDate = new Date(currentDate.getFullYear(), quarter * 3, 1);
-            endDate = new Date(currentDate.getFullYear(), quarter * 3 + 3, 0);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          default:
-            // If dateNeeded is not recognized, do not apply date filter
-            break;
+ 
+        // Handle custom date range
+        if (endDate) {
+            console.log(`Applying end date filter: date_sellby <= ${endDate}`);
+            queryBuilder = queryBuilder
+                .andWhere("items.date_sellby", "<=", endDate);
         }
-  
-        if (dateNeeded === "today" || dateNeeded === "this-week" || dateNeeded === "this-month" || dateNeeded === "this-quarter") {
-          queryBuilder = queryBuilder.andWhere('items.date_sellby', '>=', startDate)
-                                       .andWhere('items.date_sellby', '<=', endDate);
-        }
-      }
         if (query) {
             queryBuilder = queryBuilder.whereILike('items.name', `%${query}%`);
         }

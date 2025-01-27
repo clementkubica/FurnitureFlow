@@ -11,7 +11,6 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Navigation from "../components/Navigation";
-import Favorites from "../components/Favorites";
 import { useAuth } from "../services/auth";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -30,7 +29,7 @@ const Home = () => {
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [dateNeeded, setDateNeeded] = useState("")
+  const [dateRange, setDateRange] = useState([null, null]);
   const user = useAuth();
 
   return (
@@ -44,8 +43,8 @@ const Home = () => {
           setIsFavoritePage={setIsFavoritePage}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
-          dateNeeded={dateNeeded}
-          setDateNeeded={setDateNeeded}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
         />
       </div>
       {/* <div>
@@ -60,7 +59,7 @@ const Home = () => {
               mapBounds={bounds}
               setMapBounds={setBounds}
               priceRange={priceRange}
-              setDateNeeded={dateNeeded}
+              dateRange={dateRange}
             />
           </Item>
         </Grid>

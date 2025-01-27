@@ -15,13 +15,15 @@ import { Modal } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { Box as MuiBox } from "@mui/material";
 
-async function fetchItems(bounds, priceRange, dateNeeded) {
+async function fetchItems(bounds, priceRange, dateRange) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
   const maxLon = bounds.east;
   const [minPrice, maxPrice] = priceRange;
+  const [startDate, endDate] = dateRange;
   
 
   try {
@@ -34,7 +36,8 @@ async function fetchItems(bounds, priceRange, dateNeeded) {
         maxLon: maxLon,
         minPrice: minPrice,
         maxPrice: maxPrice,
-        dateNeeded: dateNeeded,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString(): null,
       },
       {
         headers: {
@@ -198,7 +201,7 @@ const purp = [
 ];
 
 
-const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRange, dateNeeded}) => {
+const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRange, dateRange}) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -271,8 +274,8 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRang
   useEffect(() => {
     if (mapBounds && priceRange) {
       const fetchData = async () => {
-        console.log("Map component useEffect triggered with priceRange:", priceRange);
-        const items = await fetchItems(mapBounds, priceRange, dateNeeded);
+        console.log("Map component useEffect triggered with dateNeeded:", dateRange);
+        const items = await fetchItems(mapBounds, priceRange, dateRange);
         if (items) {
           console.log("Fetched Items:", items);
           setVisibleItems(items);
@@ -281,7 +284,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRang
       
       fetchData();
     }
-  }, [mapBounds, priceRange]);
+  }, [mapBounds, priceRange, dateRange]);
 
   useEffect(() => {
     const newMarkers = visibleItems.map((item) => {

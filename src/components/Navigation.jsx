@@ -9,6 +9,11 @@ import MenuItem from "@mui/material/MenuItem";
 import { auth } from "../firebase/FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../services/auth";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 
 function Navigation({
   mapBounds,
@@ -20,8 +25,8 @@ function Navigation({
   showFavorite = true,
   priceRange,
   setPriceRange,
-  dateNeeded,
-  setDateNeeded,
+  dateRange,
+  setDateRange,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
   const [category, setCategory] = useState("");
@@ -43,12 +48,21 @@ function Navigation({
     setCategory(event.target.value);
   };
 
-  const handleDateNeeded = (event) => {
-    setDateNeeded(event.target.value);
-  };
-
   const handleProfile = () => {
     navigate("/profile");
+  };
+  // Handlers for Date Pickers
+  const handleStartDateChange = (newValue) => {
+    setDateRange([newValue, dateRange[1]]);
+    console.log("Start Date Changed:", newValue);
+  };
+  const handleEndDateChange = (newValue) => {
+    if (dateRange[0] && newValue < dateRange[0]) {
+      alert("End date cannot be before start date.");
+      return;
+    }
+    setDateRange([dateRange[0], newValue]);
+    console.log("End Date Changed:", newValue);
   };
 
   const handleLogout = async () => {
@@ -121,31 +135,38 @@ function Navigation({
                   aria-labelledby="price-slider"
                 />
               </div>
-              {/* Date Needed By */}
-              <FormControl variant="outlined" size="small" className="w-40">
-                <InputLabel
-                  id="date-needed-label"
-                  sx={{ fontSize: "0.875rem" }}
-                >
-                  Date Needed
-                </InputLabel>
-                <Select
-                  labelId="date-needed-label"
-                  id="date-needed-select"
-                  value={dateNeeded}
-                  onChange={handleDateNeeded}
-                  label="Date Needed"
-                  sx={{ fontSize: "0.875rem" }}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="today">Today</MenuItem>
-                  <MenuItem value="this-week">This Week</MenuItem>
-                  <MenuItem value="this-month">This Month</MenuItem>
-                  <MenuItem value="this-quarter">This Quarter</MenuItem>
-                </Select>
-              </FormControl>
+              {/* Date Pickers */}
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <DatePicker
+                    label="Start Date"
+                    value={dateRange[0]}
+                    onChange={handleStartDateChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        variant="outlined"
+                        sx={{ width: 150, fontSize: "0.875rem" }}
+                      />
+                    )}
+                  />
+                  <Box sx={{ mx: 2 }}> to </Box>
+                  <DatePicker
+                    label="End Date"
+                    value={dateRange[1]}
+                    onChange={handleEndDateChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        variant="outlined"
+                        sx={{ width: 150, fontSize: "0.875rem" }}
+                      />
+                    )}
+                  />
+                </Box>
+              </LocalizationProvider>
             </div>
           </div>
         )}
