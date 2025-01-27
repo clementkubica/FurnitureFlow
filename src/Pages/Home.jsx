@@ -30,12 +30,8 @@ const Home = () => {
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [dateNeeded, setDateNeeded] = useState("")
   const user = useAuth();
-
-  React.useEffect(() => {
-    console.log("Current Price range in Home.jsx:", priceRange);
-
-  }, [priceRange]);
 
   return (
     <>
@@ -48,6 +44,8 @@ const Home = () => {
           setIsFavoritePage={setIsFavoritePage}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
+          dateNeeded={dateNeeded}
+          setDateNeeded={setDateNeeded}
         />
       </div>
       {/* <div>
@@ -62,6 +60,7 @@ const Home = () => {
               mapBounds={bounds}
               setMapBounds={setBounds}
               priceRange={priceRange}
+              setDateNeeded={dateNeeded}
             />
           </Item>
         </Grid>

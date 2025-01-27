@@ -20,10 +20,11 @@ function Navigation({
   showFavorite = true,
   priceRange,
   setPriceRange,
+  dateNeeded,
+  setDateNeeded,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
   const [category, setCategory] = useState("");
-  const [dateNeeded, setDateNeeded] = useState("");
 
   const { user } = useAuth();
   const navigate = useNavigate();
