@@ -56,6 +56,19 @@ export default function MediaCard({
     return `${month}/${day}/${year}`;
   }
 
+  function formatDateManually(inputDate) {
+    if (!inputDate) {
+      return "N/A";
+    }
+
+    const dateParts = inputDate.split("T")[0].split("-");
+    const month = dateParts[1];
+    const day = dateParts[2];
+    const year = dateParts[0].slice(-2);
+
+    return `${month}/${day}/${year}`;
+  }
+
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
       if (!loggedInUser) {
@@ -187,7 +200,8 @@ export default function MediaCard({
             <strong>Category: </strong> {category || "N/A"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>Sell by: </strong> {formatDate(sellby_date) || "N/A"}
+            <strong>Sell by: </strong>
+            {formatDateManually(sellby_date) || "N/A"}
           </Typography>
           {date_sold && (
             <Typography variant="body2" color="text.secondary">

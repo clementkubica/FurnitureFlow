@@ -28,12 +28,7 @@ exports.filterByName = onRequest({cors: true}, async (request, response) => {
 })
 
 exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
-    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, query, category } = request.body;
-
-    // Validate price inputs
-    // if (minPrice == null || maxPrice == null) {
-    //     return response.status(400).send({ msg: "Please include minPrice and maxPrice" });
-    // }
+    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, endDate, query, category } = request.body;
 
     try {
         let queryBuilder = knex('items')
@@ -42,7 +37,13 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             .whereBetween('items.longitude', [minLon, maxLon]) // Longitude filter
             .andWhereBetween('items.latitude', [minLat, maxLat]) // Latitude filter
             .andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
-
+ 
+        // Handle custom date range
+        if (endDate) {
+            console.log(`Applying end date filter: date_sellby <= ${endDate}`);
+            queryBuilder = queryBuilder
+                .andWhere("items.date_sellby", "<=", endDate);
+        }
         if (query) {
             queryBuilder = queryBuilder.whereILike('items.name', `%${query}%`);
         }

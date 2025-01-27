@@ -11,7 +11,6 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Navigation from "../components/Navigation";
-import Favorites from "../components/Favorites";
 import { useAuth } from "../services/auth";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -27,10 +26,12 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Home = () => {
   const [visibleItems, setVisibleItems] = useState([]);
+  const [query, setQuery] = useState("");
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [category, setCategory] = useState("");
+  const [dateRange, setDateRange] = useState([null, null]);
   const user = useAuth();
 
   return (
@@ -42,15 +43,17 @@ const Home = () => {
           visibleItems={visibleItems}
           setVisibleItems={setVisibleItems}
           setIsFavoritePage={setIsFavoritePage}
-          // priceRange={priceRange}
-          setPriceRange={setPriceRange}
+          query={query}
+          setQuery={setQuery}
           category={category}
           setCategory={setCategory}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
         />
       </div>
-      {/* <div>
-        <SearchBar />
-      </div> */}
+
       <Grid container spacing={2}>
         <Grid item xs={7.3}>
           <Item>
@@ -60,7 +63,9 @@ const Home = () => {
               mapBounds={bounds}
               setMapBounds={setBounds}
               priceRange={priceRange}
+              query={query}
               category={category}
+              dateRange={dateRange}
             />
           </Item>
         </Grid>
