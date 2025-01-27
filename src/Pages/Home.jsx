@@ -27,6 +27,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Home = () => {
   const [visibleItems, setVisibleItems] = useState([]);
+  const [query, setQuery] = useState("");
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
@@ -42,15 +43,15 @@ const Home = () => {
           visibleItems={visibleItems}
           setVisibleItems={setVisibleItems}
           setIsFavoritePage={setIsFavoritePage}
+          query={query}
+          setQuery={setQuery}
           // priceRange={priceRange}
           setPriceRange={setPriceRange}
           category={category}
           setCategory={setCategory}
         />
       </div>
-      {/* <div>
-        <SearchBar />
-      </div> */}
+
       <Grid container spacing={2}>
         <Grid item xs={7.3}>
           <Item>
@@ -60,6 +61,7 @@ const Home = () => {
               mapBounds={bounds}
               setMapBounds={setBounds}
               priceRange={priceRange}
+              query={query}
               category={category}
             />
           </Item>

@@ -57,6 +57,8 @@ async function fetchItems(bounds, query) {
         maxLat: maxLat,
         minLon: minLon,
         maxLon: maxLon,
+        minPrice: 0,
+        maxPrice: 200,
         query: query,
       },
       {
@@ -72,13 +74,7 @@ async function fetchItems(bounds, query) {
   }
 }
 
-export default function SearchBar({
-  mapBounds,
-  setMapBounds,
-  visibleItems,
-  setVisibleItems,
-}) {
-  const [query, setQuery] = React.useState("");
+export default function SearchBar({mapBounds, setVisibleItems, query, setQuery}) {
   const handleSearch = async (e) => {
     e.preventDefault();
     const items = await fetchItems(mapBounds, query);
