@@ -3,7 +3,6 @@ import MediaCard from "./MediaCard";
 
 function FavoritesPanel({ items = [] }) {
   const cardsPerRow = 4;
-  console.log((1 / cardsPerRow) * 100);
 
   const rows = [];
   for (let i = 0; i < items.length; i += cardsPerRow) {
