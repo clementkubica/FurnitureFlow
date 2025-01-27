@@ -81,7 +81,7 @@ function MessagingPanel({ conversationId, selectedConversation }) {
 
   useEffect(() => {
     setIsLoading(true)
-    setIsLoading(true)
+
     if (!conversationId) {
       setIsLoading(false)
       return
@@ -107,7 +107,6 @@ function MessagingPanel({ conversationId, selectedConversation }) {
         fetchedMessages.push({ id: doc.id, ...doc.data() });
       });
 
-
       setMessages(fetchedMessages);
       setIsLoading(false)
     }, (error) => {
@@ -122,7 +121,6 @@ function MessagingPanel({ conversationId, selectedConversation }) {
 
   useEffect(() => {
     scrollToBottom();
-
     if (messages.length === 0) {
       setIsFirstMsg(true)
     }
