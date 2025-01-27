@@ -35,9 +35,6 @@ function Navigation({
   setDateRange,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
-  // const [priceRange, setPriceRange] = useState([0, 1000]);
-  // const [dateNeeded, setDateNeeded] = useState("");
-  // const [category, setCategory] = useState("");
 
   const { user } = useAuth();
   const navigate = useNavigate();

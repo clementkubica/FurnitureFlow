@@ -28,7 +28,7 @@ exports.filterByName = onRequest({cors: true}, async (request, response) => {
 })
 
 exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
-    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, endDate, query, category } = request.body;
+    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, endDate, startDate, query, category } = request.body;
 
     try {
         let queryBuilder = knex('items')
@@ -39,10 +39,10 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             .andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
  
         // Handle custom date range
-        if (endDate) {
-            console.log(`Applying end date filter: date_sellby <= ${endDate}`);
+        if (startDate && endDate) {
+            console.log(`Applying custom date filter from ${startDate} to ${endDate}`);
             queryBuilder = queryBuilder
-                .andWhere("items.date_sellby", "<=", endDate);
+            .andWhereBetween("items.date_sellby", [startDate, endDate]);
         }
         if (query) {
             queryBuilder = queryBuilder.whereILike('items.name', `%${query}%`);
