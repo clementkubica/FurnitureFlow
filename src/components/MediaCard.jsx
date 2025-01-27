@@ -44,6 +44,18 @@ export default function MediaCard({ item, size }) {
     return `${month}/${day}/${year}`;
   }
 
+  function formatDateManually(inputDate) {
+    if (!inputDate) {
+      return "N/A";
+    }
+
+    const dateParts = inputDate.split("T")[0].split("-");
+    const month = dateParts[1];
+    const day = dateParts[2];
+    const year = dateParts[0].slice(-2);
+
+    return `${month}/${day}/${year}`;
+  }
   function formatPrice(price) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -189,7 +201,8 @@ export default function MediaCard({ item, size }) {
             <strong>Category:</strong> {item.category || "N/A"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>Sell by:</strong> {formatDate(item.date_sellby) || "N/A"}
+            <strong>Sell by:</strong>
+            {formatDateManually(item.date_sellby) || "N/A"}
           </Typography>
           {item.date_sold && (
             <Typography variant="body2" color="text.secondary">
