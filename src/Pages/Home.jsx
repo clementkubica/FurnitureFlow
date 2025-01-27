@@ -13,6 +13,7 @@ import Grid from "@mui/material/Grid";
 import Navigation from "../components/Navigation";
 import Favorites from "../components/Favorites";
 import { useAuth } from "../services/auth";
+import { useMediaQuery } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -31,26 +32,27 @@ const Home = () => {
   const [isFavoritePage, setIsFavoritePage] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const user = useAuth();
-
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const handleIsMobile = () => {
+    console.log("MOBILE!!!");
+  };
   return (
     <>
-      <div>
-        <Navigation
-          mapBounds={bounds}
-          setMapBounds={setBounds}
-          visibleItems={visibleItems}
-          setVisibleItems={setVisibleItems}
-          setIsFavoritePage={setIsFavoritePage}
-          // priceRange={priceRange}
-          setPriceRange={setPriceRange}
-        />
-      </div>
-      {/* <div>
-        <SearchBar />
-      </div> */}
-      <Grid container spacing={2}>
-        <Grid item xs={7.3}>
-          <Item>
+      {isMobile ? (
+        <>
+          {/* MOBILE VIEW */}
+          <div>
+            <Navigation
+              mapBounds={bounds}
+              setMapBounds={setBounds}
+              visibleItems={visibleItems}
+              setVisibleItems={setVisibleItems}
+              setIsFavoritePage={setIsFavoritePage}
+              // priceRange={priceRange}
+              setPriceRange={setPriceRange}
+            />
+          </div>
+          <div className="mx-3 mt-4">
             <Map
               visibleItems={visibleItems}
               setVisibleItems={setVisibleItems}
@@ -58,14 +60,46 @@ const Home = () => {
               setMapBounds={setBounds}
               priceRange={priceRange}
             />
-          </Item>
-        </Grid>
-        <Grid item xs={4.7}>
-          <Item>
-            <ItemPanel items={visibleItems} />
-          </Item>
-        </Grid>
-      </Grid>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* DESKTOP VIEW */}
+          <div>
+            <Navigation
+              mapBounds={bounds}
+              setMapBounds={setBounds}
+              visibleItems={visibleItems}
+              setVisibleItems={setVisibleItems}
+              setIsFavoritePage={setIsFavoritePage}
+              // priceRange={priceRange}
+              setPriceRange={setPriceRange}
+            />
+          </div>
+          {/* <div>
+        <SearchBar />
+      </div> */}
+          <Grid container spacing={2}>
+            <Grid item xs={7.3}>
+              <Item>
+                <Map
+                  visibleItems={visibleItems}
+                  setVisibleItems={setVisibleItems}
+                  mapBounds={bounds}
+                  setMapBounds={setBounds}
+                  priceRange={priceRange}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={4.7}>
+              <Item>
+                <ItemPanel items={visibleItems} />
+                {handleIsMobile}
+              </Item>
+            </Grid>
+          </Grid>
+        </>
+      )}
     </>
   );
 };
