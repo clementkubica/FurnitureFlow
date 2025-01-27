@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { collection, query, where, orderBy, getDocs, addDoc, Timestamp, setDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, orderBy, getDocs, addDoc, Timestamp, setDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/FirebaseConfig";
 import MessageBubble from "./MessageBubble";
 import Button from "@mui/material/Button";
@@ -23,43 +23,6 @@ function MessagingPanel({ conversationId, selectedConversation }) {
   const [isLoading, setIsLoading] = useState(true)
 
   const { user } = useAuth()
-
-  const fetchMessages = async () => {
-    setIsLoading(true)
-    if (!conversationId) {
-      setIsLoading(false)
-      return
-    }
-
-    try {
-      const q = query(
-        collection(db, "messages"),
-        where("inbox_item_id", "==", conversationId),
-        orderBy("timestamp", "asc")
-      );
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        console.log("No messages found for conversationId:", conversationId);
-        setMessages([]);
-        setIsLoading(false)
-        return;
-      }
-
-      const fetchedMessages = [];
-      querySnapshot.forEach((doc) => {
-        fetchedMessages.push({ id: doc.id, ...doc.data() });
-      });
-
-      setMessages(fetchedMessages);
-      setIsLoading(false)
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-      setIsLoading(false)
-    }
-
-    
-  };
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation?.users) return;
@@ -98,7 +61,6 @@ function MessagingPanel({ conversationId, selectedConversation }) {
 
     try {
       await addDoc(collection(db, "messages"), newMsg);
-      setMessages((prev) => [...prev, { id: Date.now(), ...newMsg }]);
       setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -119,12 +81,46 @@ function MessagingPanel({ conversationId, selectedConversation }) {
 
   useEffect(() => {
     setIsLoading(true)
-    fetchMessages();
+
+    if (!conversationId) {
+      setIsLoading(false)
+      return
+    }
+
+    const q = query(
+      collection(db, "messages"),
+      where("inbox_item_id", "==", conversationId),
+      orderBy("timestamp", "asc")
+    );
+
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        setMessages([]);
+        setIsLoading(false)
+        return;
+      }
+
+      const fetchedMessages = [];
+
+      querySnapshot.forEach((doc) => {
+        fetchedMessages.push({ id: doc.id, ...doc.data() });
+      });
+
+      setMessages(fetchedMessages);
+      setIsLoading(false)
+    }, (error) => {
+      console.error(error)
+      setIsLoading(false)
+    })
+
+    return () => {
+      unsubscribe()
+    }
   }, [conversationId]);
 
   useEffect(() => {
     scrollToBottom();
-
     if (messages.length === 0) {
       setIsFirstMsg(true)
     }

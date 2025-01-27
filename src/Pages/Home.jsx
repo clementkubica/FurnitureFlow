@@ -31,6 +31,7 @@ const Home = () => {
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [category, setCategory] = useState("");
   const user = useAuth();
 
   return (
@@ -46,6 +47,8 @@ const Home = () => {
           setQuery={setQuery}
           // priceRange={priceRange}
           setPriceRange={setPriceRange}
+          category={category}
+          setCategory={setCategory}
         />
       </div>
 
@@ -59,12 +62,13 @@ const Home = () => {
               setMapBounds={setBounds}
               priceRange={priceRange}
               query={query}
+              category={category}
             />
           </Item>
         </Grid>
         <Grid item xs={4.7}>
           <Item>
-            <ItemPanel items={visibleItems} />
+            <ItemPanel items={visibleItems} category={category} />
           </Item>
         </Grid>
       </Grid>

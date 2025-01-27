@@ -13,7 +13,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 import { useAuth } from "../services/auth";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -26,7 +25,20 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function MediaCard({ item, size }) {
+export default function MediaCard({
+  item_id,
+  name,
+  description,
+  user,
+  price,
+  location,
+  status,
+  date_posted,
+  sellby_date,
+  date_sold,
+  category,
+  image,
+}) {
   const [expanded, setExpanded] = React.useState(false);
   const loggedInUser = useAuth();
   const [isFavorite, setIsFavorite] = React.useState(false);
@@ -56,12 +68,6 @@ export default function MediaCard({ item, size }) {
 
     return `${month}/${day}/${year}`;
   }
-  function formatPrice(price) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(Number(price));
-  }
 
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
@@ -74,7 +80,7 @@ export default function MediaCard({ item, size }) {
       try {
         const res = await axios.post(
           "https://checkfavoritestatus-jbhycjd2za-uc.a.run.app",
-          { user_id: loggedInUser.user.uid, item_id: item.item_id },
+          { user_id: loggedInUser.user.uid, item_id: item_id },
           { headers: { "Content-Type": "application/json" } }
         );
         setIsFavorite(res.data);
@@ -86,7 +92,7 @@ export default function MediaCard({ item, size }) {
     };
 
     fetchFavoriteStatus();
-  }, [loggedInUser, item.item_id]);
+  }, [loggedInUser, item_id]);
 
   const handleFavoriteToggle = async () => {
     if (!loggedInUser) {
@@ -101,7 +107,7 @@ export default function MediaCard({ item, size }) {
           {
             data: {
               user_id: loggedInUser.user.uid,
-              item_id: item.item_id,
+              item_id: item_id,
             },
             headers: { "Content-Type": "application/json" },
           }
@@ -111,7 +117,7 @@ export default function MediaCard({ item, size }) {
           "https://adduserfavorite-jbhycjd2za-uc.a.run.app",
           {
             user_id: loggedInUser.user.uid,
-            item_id: item.item_id,
+            item_id: item_id,
           },
           { headers: { "Content-Type": "application/json" } }
         );
@@ -126,8 +132,8 @@ export default function MediaCard({ item, size }) {
     return (
       <Card
         sx={{
-          maxWidth: `${size}%`,
-          minWidth: `${size}%`,
+          maxWidth: "25%",
+          minWidth: "25%",
           maxHeight: "20%",
           display: "flex",
           justifyContent: "center",
@@ -143,8 +149,8 @@ export default function MediaCard({ item, size }) {
   return (
     <Card
       sx={{
-        maxWidth: `${size}%`,
-        minWidth: `${size}%`,
+        maxWidth: "24.55%",
+        minWidth: "24.55%",
         maxHeight: "20%",
         display: "flex",
         flexDirection: "column",
@@ -156,17 +162,13 @@ export default function MediaCard({ item, size }) {
         },
       }}
     >
-      <CardMedia
-        sx={{ height: 200 }}
-        image={item.image_url}
-        title="item card"
-      />
+      <CardMedia sx={{ height: 200 }} image={image} title="item card" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {item.name} - {formatPrice(item.price)}
+          {name} - {price}
         </Typography>
-        <Typography variant="subtitle1">Posted by: {item.username}</Typography>
-        <Typography variant="body2">{item.description}</Typography>
+        <Typography variant="subtitle1">Posted by: {user}</Typography>
+        <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton
@@ -177,11 +179,9 @@ export default function MediaCard({ item, size }) {
         >
           <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
         </IconButton>
-        <Link to="/inbox" state={{ item: item }}>
-          <Button size="small" className="hover:font-bold">
-            Message
-          </Button>
-        </Link>
+        <Button size="small" className="hover:font-bold">
+          Message
+        </Button>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -194,18 +194,18 @@ export default function MediaCard({ item, size }) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            <strong>Date Posted:</strong> {formatDate(item.date_posted)}
+            <strong>Date Posted:</strong> {formatDate(date_posted)}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>Category:</strong> {item.category || "N/A"}
+            <strong>Category: </strong> {category || "N/A"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>Sell by:</strong>
-            {formatDateManually(item.date_sellby) || "N/A"}
+            <strong>Sell by: </strong>
+            {formatDateManually(sellby_date) || "N/A"}
           </Typography>
-          {item.date_sold && (
+          {date_sold && (
             <Typography variant="body2" color="text.secondary">
-              <strong>Date Sold:</strong> {item.date_sold}
+              <strong>Date Sold:</strong> {date_sold}
             </Typography>
           )}
         </CardContent>
