@@ -3,24 +3,21 @@ import {
   useJsApiLoader,
   MarkerF,
   InfoWindowF,
-  LoadScript,
-  InfoBoxF,
 } from "@react-google-maps/api";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Carousel } from "primereact/carousel";
-import { Button } from "primereact/button";
-import { Tag } from "primereact/tag";
 import { Modal } from "@mui/material";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
-async function fetchItems(bounds) {
+async function fetchItems(bounds, priceRange) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
   const maxLon = bounds.east;
+  const [minPrice, maxPrice] = priceRange;
 
   try {
     const res = await axios.post(
@@ -30,6 +27,8 @@ async function fetchItems(bounds) {
         maxLat: maxLat,
         minLon: minLon,
         maxLon: maxLon,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
       },
       {
         headers: {
@@ -111,7 +110,7 @@ const purp = [
         lightness: 21,
       },
       {
-        visibility: "on", // Enable icons for points of interest
+        visibility: "on",
       },
     ],
   },
@@ -191,7 +190,14 @@ const purp = [
   },
 ];
 
-const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
+const Map = ({
+  visibleItems,
+  setVisibleItems,
+  mapBounds,
+  setMapBounds,
+  priceRange,
+  category,
+}) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -199,13 +205,13 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
   const [open, setOpen] = useState(false);
 
   const boxstyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
+    bgcolor: "background.paper",
+    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
@@ -218,12 +224,12 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
       west: newBounds.getSouthWest().lng(),
     });
   }
+
   const handleActiveMarker = (marker) => {
     console.log("activemarker changed");
     if (marker === activeMarker) {
       return undefined;
     }
-
     setActiveMarker(marker);
   };
 
@@ -262,15 +268,15 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
 
   useEffect(() => {
     if (mapBounds) {
-        const fetchData = async () => {
-            const items = await fetchItems(mapBounds);
-            if (items) {
-                setVisibleItems(items)
-            }
+      const fetchData = async () => {
+        const items = await fetchItems(mapBounds, priceRange, category);
+        if (items) {
+          setVisibleItems(items);
         }
-        fetchData()
+      };
+      fetchData();
     }
-  }, [mapBounds]);
+  }, [mapBounds, category]);
 
   useEffect(() => {
     const newMarkers = visibleItems.map((item) => {
@@ -279,13 +285,13 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
         price: item.price,
         name: item.name,
         position: {
-          lat: parseFloat(item.latitude), 
-          lng: parseFloat(item.longitude), 
+          lat: parseFloat(item.latitude),
+          lng: parseFloat(item.longitude),
         },
         description: item.description,
-        item:item
-      }
-    })
+        item: item,
+      };
+    });
     setMarkers(newMarkers);
   }, [visibleItems]);
 
@@ -301,6 +307,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
       numScroll: 1,
     },
   ];
+
   return isLoaded ? (
     <GoogleMap
       onLoad={handleOnLoad}
@@ -322,7 +329,10 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
           position={position}
           onClick={() => handleActiveMarker(id)}
           icon={{
-            url: activeMarker == id ? createPriceMarker(price, "#9E4B9E") : createPriceMarker(price, "#DAB1DA"),
+            url:
+              activeMarker == id
+                ? createPriceMarker(price, "#9E4B9E")
+                : createPriceMarker(price, "#DAB1DA"),
             scaledSize: new google.maps.Size(80, 40),
             anchor: new google.maps.Point(40, 40),
           }}
@@ -330,7 +340,6 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
           {activeMarker === id ? (
             <InfoWindowF
               options={{
-                disableAutoPan: true,
                 maxWidth: 200,
                 pixelOffset: new google.maps.Size(0, -30),
                 closeButton: false,
@@ -367,32 +376,36 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
                   )}
                   verticalViewPortHeight="150px"
                 />
-                <Modal open={open} onClose={() => setOpen(false)}
-                       aria-labelledby="modal-modal-title"
-                       aria-describedby="modal-modal-description">
+                <Modal
+                  open={open}
+                  onClose={() => setOpen(false)}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
                   <Box sx={boxstyle}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h6"
+                      component="h2"
+                    >
                       {name}
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{mt: 2}}>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                       Price: ${price}.00
                     </Typography>
                     <img
-                        src={item.image_url}
-                        alt={name}
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                          objectFit: "cover",
-                          marginBottom: "16px",
-                        }}
+                      src={item.image_url}
+                      alt={name}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        objectFit: "cover",
+                        marginBottom: "16px",
+                      }}
                     />
-                    <Typography id="modal-modal-description" sx={{mt: 2}}>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                       {description}
-                      {/*<Typography variant="subtitle1">Posted by: {name}</Typography>
-                      <Typography variant="body2">{description}</Typography>*/}
                     </Typography>
-                    {/*<Button onClick={() => setOpen(false)}></Button>*/}
                   </Box>
                 </Modal>
               </div>
@@ -403,4 +416,5 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds}) => {
     </GoogleMap>
   ) : null;
 };
+
 export default Map;

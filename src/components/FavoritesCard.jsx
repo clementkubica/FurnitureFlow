@@ -36,6 +36,7 @@ export default function MediaCard({
   date_posted,
   sellby_date,
   date_sold,
+  category,
   image,
 }) {
   const [expanded, setExpanded] = React.useState(false);
@@ -56,7 +57,6 @@ export default function MediaCard({
   }
 
   useEffect(() => {
-
     const fetchFavoriteStatus = async () => {
       if (!loggedInUser) {
         console.error("User not logged in");
@@ -74,7 +74,7 @@ export default function MediaCard({
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -182,6 +182,12 @@ export default function MediaCard({
         <CardContent>
           <Typography variant="body2" color="text.secondary">
             <strong>Date Posted:</strong> {formatDate(date_posted)}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Category: </strong> {category || "N/A"}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Sell by: </strong> {formatDate(sellby_date) || "N/A"}
           </Typography>
           {date_sold && (
             <Typography variant="body2" color="text.secondary">

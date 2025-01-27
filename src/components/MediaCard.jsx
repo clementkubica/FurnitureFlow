@@ -26,9 +26,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function MediaCard({
-  item
-}) {
+export default function MediaCard({ item, size }) {
   const [expanded, setExpanded] = React.useState(false);
   const loggedInUser = useAuth();
   const [isFavorite, setIsFavorite] = React.useState(false);
@@ -45,12 +43,12 @@ export default function MediaCard({
     const year = String(date.getFullYear()).slice(-2);
     return `${month}/${day}/${year}`;
   }
-  
+
   function formatPrice(price) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(Number(price))
+    }).format(Number(price));
   }
 
   useEffect(() => {
@@ -71,13 +69,14 @@ export default function MediaCard({
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchFavoriteStatus();
   }, [loggedInUser, item.item_id]);
 
+  console.log(item);
   const handleFavoriteToggle = async () => {
     if (!loggedInUser) {
       console.error("User not logged in");
@@ -116,8 +115,8 @@ export default function MediaCard({
     return (
       <Card
         sx={{
-          maxWidth: "50%",
-          minWidth: "50%",
+          maxWidth: `${size}%`,
+          minWidth: `${size}%`,
           maxHeight: "20%",
           display: "flex",
           justifyContent: "center",
@@ -133,8 +132,8 @@ export default function MediaCard({
   return (
     <Card
       sx={{
-        maxWidth: "50%",
-        minWidth: "50%",
+        maxWidth: `${size}%`,
+        minWidth: `${size}%`,
         maxHeight: "20%",
         display: "flex",
         flexDirection: "column",
@@ -146,7 +145,11 @@ export default function MediaCard({
         },
       }}
     >
-      <CardMedia sx={{ height: 200 }} image={item.image_url} title="item card" />
+      <CardMedia
+        sx={{ height: 200 }}
+        image={item.image_url}
+        title="item card"
+      />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {item.name} - {formatPrice(item.price)}
@@ -181,6 +184,12 @@ export default function MediaCard({
         <CardContent>
           <Typography variant="body2" color="text.secondary">
             <strong>Date Posted:</strong> {formatDate(item.date_posted)}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Category:</strong> {item.category || "N/A"}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Sell by:</strong> {formatDate(item.date_sellby) || "N/A"}
           </Typography>
           {item.date_sold && (
             <Typography variant="body2" color="text.secondary">
