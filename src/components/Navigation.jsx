@@ -23,12 +23,18 @@ function Navigation({
   setIsFavoritePage,
   showSearchBar = true,
   showFavorite = true,
+  query,
+  setQuery,
+  category,
+  setCategory,
   priceRange,
   setPriceRange,
   dateRange,
   setDateRange,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [dateNeeded, setDateNeeded] = useState("");
   const [category, setCategory] = useState("");
 
   const { user } = useAuth();
@@ -97,6 +103,8 @@ function Navigation({
                 setMapBounds={setMapBounds}
                 visibleItems={visibleItems}
                 setVisibleItems={setVisibleItems}
+                query={query}
+                setQuery={setQuery}
               />
             </div>
             {/* Dropdowns Buttons */}
@@ -116,8 +124,9 @@ function Navigation({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="couch">Couch</MenuItem>
-                  <MenuItem value="dresser">Dresser</MenuItem>
+                  <MenuItem value="couch">couch</MenuItem>
+                  <MenuItem value="dresser">dresser</MenuItem>
+                  <MenuItem value="dresser">table</MenuItem>
                 </Select>
               </FormControl>
               {/* Price Slider */}

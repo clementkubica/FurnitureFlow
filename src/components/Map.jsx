@@ -3,21 +3,17 @@ import {
   useJsApiLoader,
   MarkerF,
   InfoWindowF,
-  LoadScript,
-  InfoBoxF,
 } from "@react-google-maps/api";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Carousel } from "primereact/carousel";
-import { Button } from "primereact/button";
-import { Tag } from "primereact/tag";
 import { Modal } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { Box as MuiBox } from "@mui/material";
 
-async function fetchItems(bounds, priceRange, dateRange) {
+async function fetchItems(bounds, priceRange, query, category, dateRange) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
@@ -36,6 +32,7 @@ async function fetchItems(bounds, priceRange, dateRange) {
         maxLon: maxLon,
         minPrice: minPrice,
         maxPrice: maxPrice,
+        query: query,
         startDate: startDate ? startDate.toISOString() : null,
         endDate: endDate ? endDate.toISOString(): null,
       },
@@ -200,12 +197,20 @@ const purp = [
   },
 ];
 
+const Map = ({
+  visibleItems,
+  setVisibleItems,
+  mapBounds,
+  setMapBounds,
+  priceRange,
+  query,
+  category,
+  dateRange
+}) => {
 
-const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRange, dateRange}) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  
 
   const [open, setOpen] = useState(false);
 
@@ -275,7 +280,7 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRang
     if (mapBounds && priceRange) {
       const fetchData = async () => {
         console.log("Map component useEffect triggered with dateNeeded:", dateRange);
-        const items = await fetchItems(mapBounds, priceRange, dateRange);
+        const items = await fetchItems(mapBounds, priceRange, query, category, dateRange);
         if (items) {
           console.log("Fetched Items:", items);
           setVisibleItems(items);
@@ -284,7 +289,8 @@ const Map = ({ visibleItems, setVisibleItems, mapBounds, setMapBounds, priceRang
       
       fetchData();
     }
-  }, [mapBounds, priceRange, dateRange]);
+
+  }, [mapBounds, priceRange, category, dateRange]);
 
   useEffect(() => {
     const newMarkers = visibleItems.map((item) => {

@@ -26,9 +26,11 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Home = () => {
   const [visibleItems, setVisibleItems] = useState([]);
+  const [query, setQuery] = useState("");
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [category, setCategory] = useState("");
   const [dateRange, setDateRange] = useState([null, null]);
   const user = useAuth();
 
@@ -41,15 +43,17 @@ const Home = () => {
           visibleItems={visibleItems}
           setVisibleItems={setVisibleItems}
           setIsFavoritePage={setIsFavoritePage}
+          query={query}
+          setQuery={setQuery}
+          category={category}
+          setCategory={setCategory}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
           dateRange={dateRange}
           setDateRange={setDateRange}
         />
       </div>
-      {/* <div>
-        <SearchBar />
-      </div> */}
+
       <Grid container spacing={2}>
         <Grid item xs={7.3}>
           <Item>
@@ -59,13 +63,15 @@ const Home = () => {
               mapBounds={bounds}
               setMapBounds={setBounds}
               priceRange={priceRange}
+              query={query}
+              category={category}
               dateRange={dateRange}
             />
           </Item>
         </Grid>
         <Grid item xs={4.7}>
           <Item>
-            <ItemPanel items={visibleItems} />
+            <ItemPanel items={visibleItems} category={category} />
           </Item>
         </Grid>
       </Grid>

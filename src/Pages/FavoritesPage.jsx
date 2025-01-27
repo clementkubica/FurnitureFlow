@@ -7,7 +7,7 @@ import FavoritesPanel from "../components/FavoritesPanel";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
-import CircularProgress from "@mui/material/CircularProgress";
+import LoadingScreen from "../components/Loading";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -77,10 +77,7 @@ export default function FavoritesPage() {
             marginTop: "50px",
           }}
         >
-          <CircularProgress style={{ color: "#6c63ff" }} size={60} />
-          <p style={{ marginTop: "20px", fontSize: "1.5rem", color: "grey" }}>
-            Loading your favorites...
-          </p>
+          <LoadingScreen text="Loading your favorites..." />
         </div>
       </div>
     );
