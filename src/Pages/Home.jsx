@@ -25,7 +25,7 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-const Home = () => {
+const Home = (isLoaded) => {
   const [visibleItems, setVisibleItems] = useState([]);
   const [bounds, setBounds] = useState(null);
   const [isFavoritePage, setIsFavoritePage] = useState(false);
@@ -61,6 +61,7 @@ const Home = () => {
               setMapBounds={setBounds}
               priceRange={priceRange}
               category={category}
+              isLoaded={isLoaded}
             />
           </Item>
         </Grid>

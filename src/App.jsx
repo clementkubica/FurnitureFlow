@@ -1,22 +1,22 @@
 import React from "react";
 import "./App.css";
-// import Map from "./components/Map";
-// import ItemPanel from "./components/ItemPanel";
-// import Navigation from "./components/Navigation";
-import Login from "./components/Login";
-import Inbox from "./Pages/Inbox";
-import Profile from "./Pages/Profile";
-
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider, useAuth } from "./services/auth"; // Auth Context
-import Home from "./Pages/Home";
+import { useJsApiLoader } from "@react-google-maps/api";
+import { AuthProvider, useAuth } from "./services/auth";
+import Login from "./components/Login";
+import Inbox from "./Pages/Inbox";
+import Profile from "./Pages/Profile";
+import Home from "./Pages/Home"; 
 import FavoritesPage from "./Pages/FavoritesPage";
 import Post from "./Pages/Post";
+
+const GOOGLE_MAPS_API_KEY = "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE";
+const GOOGLE_MAPS_LIBRARIES = ["places", "geometry"];
 
 const PrivateRoute = ({ children }) => {
   const { user, authLoading } = useAuth();
@@ -39,6 +39,21 @@ const PublicRoute = ({ children }) => {
 };
 
 const App = () => {
+  // Load Google Maps API once here
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES,
+  });
+
+  if (loadError) {
+    return <div>Error loading Google Maps API: {loadError.message}</div>;
+  }
+
+  if (!isLoaded) {
+    return <div>Loading Google Maps...</div>;
+  }
+
   return (
     <AuthProvider>
       <Router>
@@ -55,7 +70,7 @@ const App = () => {
             path="/"
             element={
               <PrivateRoute>
-                <Home />
+                <Home isLoaded={isLoaded} />
               </PrivateRoute>
             }
           />
@@ -87,7 +102,7 @@ const App = () => {
             path="/post"
             element={
               <PrivateRoute>
-                <Post />
+                <Post isLoaded={isLoaded} /> 
               </PrivateRoute>
             }
           />

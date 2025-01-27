@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Navigation from "../components/Navigation";
 import { useAuth } from "../services/auth";
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Autocomplete } from "@react-google-maps/api";
 import axios from "axios";
 
-function Post() {
+function Post({ isLoaded }) {
   const { user } = useAuth();
   const [postDetails, setPostDetails] = useState({
     name: "",
@@ -17,6 +18,8 @@ function Post() {
     sellBy: "",
   });
   const [isAdding, setIsAdding] = useState(false);
+  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+  const autocompleteRef = useRef(null);
 
   const categoryOptions = ["Couch", "Dresser", "Table"];
 
@@ -28,6 +31,21 @@ function Post() {
     }));
   };
 
+  const handlePlaceSelect = () => {
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
+      if (place && place.geometry) {
+        const { lat, lng } = place.geometry.location;
+        setPostDetails((prevDetails) => ({
+          ...prevDetails,
+          address: place.formatted_address,
+          latitude: lat(),
+          longitude: lng(),
+        }));
+      }
+    }
+  };
+
   const getLatLonFromAddress = async (address) => {
     try {
       const response = await axios.get(
@@ -35,7 +53,7 @@ function Post() {
         {
           params: {
             address: address,
-            key: "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE", 
+            key: "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE",
           },
         }
       );
@@ -56,6 +74,45 @@ function Post() {
     }
   };
 
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      setIsFetchingLocation(true);
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const response = await axios.get(
+              `https://maps.googleapis.com/maps/api/geocode/json`,
+              {
+                params: {
+                  latlng: `${latitude},${longitude}`,
+                  key: "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE",
+                },
+              }
+            );
+            const address = response.data.results[0].formatted_address;
+            setPostDetails((prevDetails) => ({
+              ...prevDetails,
+              address,
+              latitude,
+              longitude,
+            }));
+          } catch (error) {
+            console.error("Error fetching address from location:", error);
+          } finally {
+            setIsFetchingLocation(false);
+          }
+        },
+        (error) => {
+          alert("Unable to retrieve your location.");
+          setIsFetchingLocation(false);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     setIsAdding(true);
@@ -63,8 +120,13 @@ function Post() {
     try {
       if (!user) throw new Error("User is not authenticated.");
 
-      // Fetch latitude and longitude from the address
-      const { latitude, longitude } = await getLatLonFromAddress(postDetails.address);
+      let { latitude, longitude } = postDetails;
+
+      if (!latitude || !longitude) {
+        const coordinates = await getLatLonFromAddress(postDetails.address);
+        latitude = coordinates.latitude;
+        longitude = coordinates.longitude;
+      }
 
       const newPost = {
         ...postDetails,
@@ -100,7 +162,7 @@ function Post() {
     }
   };
 
-  return (
+  return isLoaded ? (
     <div className="h-screen flex flex-col">
       <Navigation showSearchBar={false} />
       <div className="flex flex-1 overflow-hidden p-4">
@@ -134,14 +196,28 @@ function Post() {
               fullWidth
               required
             />
-            <TextField
-              label="Address"
-              name="address"
-              value={postDetails.address}
-              onChange={handleInputChange}
+            <Autocomplete
+              onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+              onPlaceChanged={handlePlaceSelect}
+            >
+              <TextField
+                label="Address"
+                name="address"
+                value={postDetails.address}
+                onChange={handleInputChange}
+                fullWidth
+                required
+              />
+            </Autocomplete>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={getCurrentLocation}
               fullWidth
-              required
-            />
+              disabled={isFetchingLocation}
+            >
+              {isFetchingLocation ? "Fetching location..." : "Use My Location"}
+            </Button>
             <TextField
               label="Sell By (Optional)"
               name="sellBy"
@@ -183,6 +259,8 @@ function Post() {
         </div>
       </div>
     </div>
+  ) : (
+    <div>Loading Google Maps...</div>
   );
 }
 

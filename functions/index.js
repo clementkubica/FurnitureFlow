@@ -187,10 +187,8 @@ exports.addUser = onRequest({ cors: true }, async (request, response) => {
     
 });
 
-// Google Maps API Key
 const GOOGLE_MAPS_API_KEY = "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE";
 
-// Helper function to convert address to latitude and longitude
 async function getLatLonFromAddress(address) {
   try {
     const response = await axios.get(
@@ -219,7 +217,6 @@ async function getLatLonFromAddress(address) {
   }
 }
 
-// Add Item Function
 exports.addItem = onRequest({ cors: true }, async (req, res) => {
   const {
     name,
@@ -235,7 +232,6 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
     date_sold,
   } = req.body;
 
-  // Validate required fields
   const missingFields = [];
   if (!name) missingFields.push("name");
   if (!description) missingFields.push("description");
@@ -250,7 +246,6 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
   }
 
   try {
-    // If latitude and longitude are not provided, fetch them using the address
     let lat = latitude;
     let lng = longitude;
 

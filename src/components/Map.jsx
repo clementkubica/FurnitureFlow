@@ -1,6 +1,5 @@
 import {
   GoogleMap,
-  useJsApiLoader,
   MarkerF,
   InfoWindowF,
 } from "@react-google-maps/api";
@@ -197,6 +196,7 @@ const Map = ({
   setMapBounds,
   priceRange,
   category,
+  isLoaded
 }) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
@@ -294,11 +294,6 @@ const Map = ({
     });
     setMarkers(newMarkers);
   }, [visibleItems]);
-
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyDs962Jh1sH_fkkOtdf2FNlYyomF-4n_F8",
-  });
 
   const responsiveOptions = [
     {
@@ -418,3 +413,5 @@ const Map = ({
 };
 
 export default Map;
+
+
