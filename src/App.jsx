@@ -6,6 +6,7 @@ import "./App.css";
 import Login from "./components/Login";
 import Inbox from "./Pages/Inbox";
 import Profile from "./Pages/Profile";
+import LoadingScreen from "./components/Loading";
 
 import {
   BrowserRouter as Router,
@@ -20,8 +21,16 @@ import FavoritesPage from "./Pages/FavoritesPage";
 const PrivateRoute = ({ children }) => {
   const { user, authLoading } = useAuth();
 
-  if (authLoading) {
-    return <div>Loading...</div>;
+  if (location.pathname == "/inbox" && authLoading) {
+    return <LoadingScreen text={"Loading Messages..."}/>;
+  }
+
+  else if (location.pathname == "/favorites" && authLoading) {
+    return <LoadingScreen text={"Loading your Favorites..."}/>;
+  }
+
+  else if (authLoading) {
+    return <LoadingScreen text={"Loading..."}/>;
   }
 
   return user ? children : <Navigate to="/login" replace />;
@@ -31,7 +40,7 @@ const PublicRoute = ({ children }) => {
   const { user, authLoading } = useAuth();
 
   if (authLoading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen text={"Loading..."}/>;
   }
 
   return !user ? children : <Navigate to="/" replace />;
