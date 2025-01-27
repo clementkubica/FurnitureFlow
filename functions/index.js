@@ -187,45 +187,99 @@ exports.addUser = onRequest({ cors: true }, async (request, response) => {
     
 });
 
+// Google Maps API Key
+const GOOGLE_MAPS_API_KEY = "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE";
+
+// Helper function to convert address to latitude and longitude
+async function getLatLonFromAddress(address) {
+  try {
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json`,
+      {
+        params: {
+          address: address,
+          key: GOOGLE_MAPS_API_KEY,
+        },
+      }
+    );
+
+    if (
+      response.data.status === "OK" &&
+      response.data.results &&
+      response.data.results.length > 0
+    ) {
+      const { lat, lng } = response.data.results[0].geometry.location;
+      return { lat, lng };
+    } else {
+      throw new Error(`Failed to get coordinates for address: ${address}`);
+    }
+  } catch (error) {
+    console.error("Error converting address to lat/lon:", error.message);
+    throw error;
+  }
+}
+
+// Add Item Function
 exports.addItem = onRequest({ cors: true }, async (req, res) => {
-    const {
+  const {
+    name,
+    description,
+    price,
+    address,
+    longitude,
+    latitude,
+    category,
+    user_id,
+    status = "FOR_SALE",
+    date_sellby,
+    date_sold,
+  } = req.body;
+
+  // Validate required fields
+  const missingFields = [];
+  if (!name) missingFields.push("name");
+  if (!description) missingFields.push("description");
+  if (!price) missingFields.push("price");
+  if (!address) missingFields.push("address");
+  if (!category) missingFields.push("category");
+  if (!user_id) missingFields.push("user_id");
+
+  if (missingFields.length > 0) {
+    res.status(400).send({ error: `Missing required fields: ${missingFields.join(", ")}` });
+    return;
+  }
+
+  try {
+    // If latitude and longitude are not provided, fetch them using the address
+    let lat = latitude;
+    let lng = longitude;
+
+    if (!lat || !lng) {
+      const coordinates = await getLatLonFromAddress(address);
+      lat = coordinates.lat;
+      lng = coordinates.lng;
+    }
+
+    const itemData = {
       name,
       description,
       price,
       address,
-      longitude,
-      latitude,
+      longitude: lng,
+      latitude: lat,
       category,
       user_id,
-      status = "FOR_SALE",
-      date_sellby,
-    } = req.body;
-  
-    if (!name || !description || !price || !address || !category || !user_id) {
-      res.status(400).send({ error: "Missing required fields" });
-      return;
-    }
-  
-    try {
-      const [item_id] = await db("items")
-        .insert({
-          name,
-          description,
-          price,
-          address,
-          longitude,
-          latitude,
-          category,
-          user_id,
-          status,
-          date_posted: new Date(),
-          date_sellby,
-        })
-        .returning("item_id");
-  
-      res.status(201).send({ success: true, item_id });
-    } catch (error) {
-      console.error("Error adding item:", error);
-      res.status(500).send({ error: "Failed to add item" });
-    }
-  });
+      status,
+      date_posted: new Date(),
+      date_sellby: date_sellby || null,
+      date_sold: date_sold || null,
+    };
+
+    const [item_id] = await knex("items").insert(itemData).returning("item_id");
+
+    res.status(201).send({ success: true, item_id });
+  } catch (error) {
+    console.error("Error adding item:", error);
+    res.status(500).send({ error: "Failed to add item" });
+  }
+});
