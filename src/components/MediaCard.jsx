@@ -76,7 +76,6 @@ export default function MediaCard({ item, size }) {
     fetchFavoriteStatus();
   }, [loggedInUser, item.item_id]);
 
-  console.log(item);
   const handleFavoriteToggle = async () => {
     if (!loggedInUser) {
       console.error("User not logged in");

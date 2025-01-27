@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 function ItemPanel({ items = [], category }) {
   // Default to an empty array
   const cardsPerRow = 2;
-  console.log((1 / cardsPerRow) * 100);
 
   const navigate = useNavigate();
   const handleNav = (path) => {
