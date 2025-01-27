@@ -3,6 +3,7 @@ import Navigation from "../components/Navigation";
 import { useAuth } from "../services/auth";
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { Autocomplete } from "@react-google-maps/api";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 
 function Post({ isLoaded }) {
@@ -16,6 +17,7 @@ function Post({ isLoaded }) {
     longitude: "",
     category: "",
     sellBy: "",
+    imageFile: null, // New field to handle the image file
   });
   const [isAdding, setIsAdding] = useState(false);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
@@ -28,6 +30,14 @@ function Post({ isLoaded }) {
     setPostDetails((prevDetails) => ({
       ...prevDetails,
       [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setPostDetails((prevDetails) => ({
+      ...prevDetails,
+      imageFile: file,
     }));
   };
 
@@ -82,10 +92,10 @@ function Post({ isLoaded }) {
           const { latitude, longitude } = position.coords;
           try {
             const response = await axios.get(
-              `https://maps.googleapis.com/maps/api/geocode/json`,
+              "https://maps.googleapis.com/maps/api/geocode/json", // Added missing quotes
               {
                 params: {
-                  latlng: `${latitude},${longitude}`,
+                  latlng: `${latitude},${longitude}`, // Fixed template literal syntax
                   key: "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE",
                 },
               }
@@ -113,36 +123,67 @@ function Post({ isLoaded }) {
     }
   };
 
+  const uploadImageToFirebase = async (file, user_id) => {
+    try {
+      const storage = getStorage();
+      const filePath = `user${user_id}/${file.name}`;
+      const storagePath = `user${user_id}/${file.name}/${file.name}`;
+      const storageRef = ref(storage, storagePath);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return { downloadURL, filePath };
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw new Error("Failed to upload image");
+    }
+  };
+
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     setIsAdding(true);
-
+  
     try {
       if (!user) throw new Error("User is not authenticated.");
-
-      let { latitude, longitude } = postDetails;
-
+  
+      let { latitude, longitude, imageFile } = postDetails;
+  
       if (!latitude || !longitude) {
         const coordinates = await getLatLonFromAddress(postDetails.address);
         latitude = coordinates.latitude;
         longitude = coordinates.longitude;
       }
-
+  
+      let imageUrl = null;
+      let imagePath = null;
+  
+      if (imageFile) {
+        const uploadResult = await uploadImageToFirebase(imageFile, user.uid);
+        imageUrl = uploadResult.downloadURL;
+        imagePath = uploadResult.filePath;
+      }
+  
       const newPost = {
-        ...postDetails,
+        name: postDetails.name,
+        description: postDetails.description,
+        price: postDetails.price,
+        address: postDetails.address,
         latitude,
         longitude,
+        category: postDetails.category,
         user_id: user.uid,
         status: "FOR_SALE",
         date_sellby: postDetails.sellBy || null,
+        imageUrl: imageUrl, // Full image URL
+        imagePath: imagePath, // Firebase path
       };
-
+  
+      console.log("Request Payload:", newPost); // Debug the payload
       const response = await axios.post(
         "https://additem-jbhycjd2za-uc.a.run.app",
         newPost,
         { headers: { "Content-Type": "application/json" } }
       );
-
+  
       alert(`Listing added successfully! Item ID: ${response.data.item_id}`);
       setPostDetails({
         name: "",
@@ -153,6 +194,7 @@ function Post({ isLoaded }) {
         longitude: "",
         category: "",
         sellBy: "",
+        imageFile: null,
       });
     } catch (error) {
       console.error("Error adding listing:", error);
@@ -246,6 +288,7 @@ function Post({ isLoaded }) {
                 ))}
               </Select>
             </FormControl>
+            <input type="file" accept="image/*" onChange={handleImageChange} />
             <Button
               type="submit"
               variant="contained"

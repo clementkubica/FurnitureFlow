@@ -228,9 +228,10 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
     latitude,
     category,
     user_id,
+    imageUrl,
+    imagePath,
     status = "FOR_SALE",
     date_sellby,
-    date_sold,
   } = req.body;
 
   const missingFields = [];
@@ -268,10 +269,22 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
       status,
       date_posted: new Date(),
       date_sellby: date_sellby || null,
-      date_sold: date_sold || null,
     };
 
-    const [item_id] = await knex("items").insert(itemData).returning("item_id");
+    const insertedItem = await knex("items").insert(itemData).returning("item_id");
+    const item_id = insertedItem[0].item_id;
+
+    console.log("Inserted Item ID:", item_id);
+
+    if (imageUrl && imagePath) {
+      console.log("Inserting image data:", { item_id, url: imageUrl, path: imagePath });
+      await knex("image_urls").insert({
+        item_id,
+        url: imageUrl,
+        path: imagePath,
+      });
+      console.log("Image added successfully!");
+    }
 
     res.status(201).send({ success: true, item_id });
   } catch (error) {
