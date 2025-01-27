@@ -17,11 +17,18 @@ const Search = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
     width: "auto",
+    width: "auto",
   },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   height: "100%",
   position: "absolute",
   pointerEvents: "none",
@@ -58,6 +65,9 @@ async function fetchItems(bounds, query) {
         minLon: minLon,
         maxLon: maxLon,
         query: query,
+        minPrice: 0,
+        maxPrice: 200,
+        query: query,
       },
       {
         headers: {
@@ -74,15 +84,15 @@ async function fetchItems(bounds, query) {
 
 export default function SearchBar({
   mapBounds,
-  setMapBounds,
-  visibleItems,
   setVisibleItems,
+  query,
+  setQuery,
 }) {
-  const [query, setQuery] = React.useState("");
   const handleSearch = async (e) => {
     e.preventDefault();
     const items = await fetchItems(mapBounds, query);
     if (items) {
+      setVisibleItems(items);
       setVisibleItems(items);
     }
   };
@@ -97,6 +107,7 @@ export default function SearchBar({
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
           value={query}
+          inputProps={{ "aria-label": "search" }}
           onChange={(e) => setQuery(e.target.value)}
         />
       </Search>

@@ -28,12 +28,7 @@ exports.filterByName = onRequest({cors: true}, async (request, response) => {
 })
 
 exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
-    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, query } = request.body;
-
-    // Validate price inputs
-    // if (minPrice == null || maxPrice == null) {
-    //     return response.status(400).send({ msg: "Please include minPrice and maxPrice" });
-    // }
+    const { minLat, minLon, maxLat, maxLon, minPrice, maxPrice, endDate, query, category } = request.body;
 
     try {
         let queryBuilder = knex('items')
@@ -42,9 +37,19 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             .whereBetween('items.longitude', [minLon, maxLon]) // Longitude filter
             .andWhereBetween('items.latitude', [minLat, maxLat]) // Latitude filter
             .andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
-
+ 
+        // Handle custom date range
+        if (endDate) {
+            console.log(`Applying end date filter: date_sellby <= ${endDate}`);
+            queryBuilder = queryBuilder
+                .andWhere("items.date_sellby", "<=", endDate);
+        }
         if (query) {
             queryBuilder = queryBuilder.whereILike('items.name', `%${query}%`);
+        }
+
+        if (category) {
+            queryBuilder = queryBuilder.andWhere('items.category', category); 
         }
 
         const res = await queryBuilder.select(
@@ -58,6 +63,7 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             'items.status',
             'items.date_posted',
             'items.date_sellby',
+            'items.category',
             'items.date_sold',
             'users.username',
             'users.email',
@@ -71,7 +77,6 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
         response.status(500).send({ msg: "Internal Server Error" });
     }
 });
-
 
 exports.getUserFavorites = onRequest({ cors: true }, async (request, response) => {
     const userId = request.body.user_id;
@@ -92,6 +97,7 @@ exports.getUserFavorites = onRequest({ cors: true }, async (request, response) =
             'items.status',
             'items.date_posted',
             'items.date_sellby',
+            'items.category',
             'items.date_sold', // All columns except `address`
             'users.username',
             'users.email',

@@ -3,28 +3,21 @@ import {
   useJsApiLoader,
   MarkerF,
   InfoWindowF,
-  LoadScript,
-  InfoBoxF,
 } from "@react-google-maps/api";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Carousel } from "primereact/carousel";
-import { Button } from "primereact/button";
-import { Tag } from "primereact/tag";
 import { Modal } from "@mui/material";
 import * as React from "react";
-import { useMediaQuery } from "@mui/material";
-import { IconButton, Paper, Box, Typography, Slide } from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ItemPanel from "./ItemPanel";
+import { Box as MuiBox } from "@mui/material";
 
-async function fetchItems(bounds, priceRange) {
+async function fetchItems(bounds, priceRange, query, category, dateRange) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
   const minLon = bounds.west;
   const maxLon = bounds.east;
   const [minPrice, maxPrice] = priceRange;
+  const [startDate, endDate] = dateRange;
 
   try {
     const res = await axios.post(
@@ -36,6 +29,10 @@ async function fetchItems(bounds, priceRange) {
         maxLon: maxLon,
         minPrice: minPrice,
         maxPrice: maxPrice,
+        query: query,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
+        category: category,
       },
       {
         headers: {
@@ -46,7 +43,8 @@ async function fetchItems(bounds, priceRange) {
 
     return res.data;
   } catch (error) {
-    console.error(error);
+    console.error("Error in fetchItems:", error);
+    return [];
   }
 }
 
@@ -214,6 +212,9 @@ const Map = ({
   mapBounds,
   setMapBounds,
   priceRange,
+  query,
+  category,
+  dateRange,
 }) => {
   const [activeMarker, setActiveMarker] = useState(0 | null);
   const [gMap, setGMap] = useState(null);
@@ -284,16 +285,28 @@ const Map = ({
   };
 
   useEffect(() => {
-    if (mapBounds) {
+    if (mapBounds && priceRange) {
       const fetchData = async () => {
-        const items = await fetchItems(mapBounds, priceRange);
+        console.log(
+          "Map component useEffect triggered with dateNeeded:",
+          dateRange
+        );
+        const items = await fetchItems(
+          mapBounds,
+          priceRange,
+          query,
+          category,
+          dateRange
+        );
         if (items) {
+          console.log("Fetched Items:", items);
           setVisibleItems(items);
         }
       };
+
       fetchData();
     }
-  }, [mapBounds]);
+  }, [mapBounds, priceRange, category, dateRange]);
 
   useEffect(() => {
     const newMarkers = visibleItems.map((item) => {
