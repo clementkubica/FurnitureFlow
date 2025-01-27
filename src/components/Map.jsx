@@ -35,6 +35,7 @@ async function fetchItems(bounds, priceRange, query, category, dateRange) {
         query: query,
         startDate: startDate ? startDate.toISOString() : null,
         endDate: endDate ? endDate.toISOString(): null,
+        category: category,
       },
       {
         headers: {
