@@ -4,7 +4,7 @@ import InboxItemList from "../components/InboxItemList";
 import MessagingPanel from "../components/MessagingPanel";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../services/auth";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, orderBy, query, where, onSnapshot} from "firebase/firestore";
 import { db } from "../firebase/FirebaseConfig";
 import { getConversationByUserAndItem } from "../services/firestore";
 
@@ -56,19 +56,21 @@ function Inbox() {
       // soon, we need to change it so that we're fetching all of the inbox_items where the current user's id is in the users array
       const inboxCollection = collection(db, "inbox_items")
       const q = query(inboxCollection, where("users", "array-contains", user.uid), orderBy("timestamp", "desc"))
-      const querySnapshot = await getDocs(q)
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        items.push({ id: doc.id, ...doc.data() });
+      
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const items = [];
+        querySnapshot.forEach((doc) => {
+          items.push({ id: doc.id, ...doc.data() });
+        });
+  
+        if (newInboxItem) {
+          setInboxItems([newInboxItem, ...items]);
+        } else {
+          setInboxItems(items);
+        }
       });
-      
-      if (newInboxItem) {
-        setInboxItems([newInboxItem, ...items]);
-      }
-      else {
-        setInboxItems(items)
-      }
-      
+
+      return unsubscribe
     } catch (error) {
       console.error("Error fetching inbox items:", error);
     }
