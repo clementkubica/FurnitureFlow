@@ -25,7 +25,7 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-const Home = () => {
+const Home = (isLoaded) => {
   const [visibleItems, setVisibleItems] = useState([]);
   const [query, setQuery] = useState("");
   const [bounds, setBounds] = useState(null);
@@ -70,6 +70,7 @@ const Home = () => {
               query={query}
               category={category}
               dateRange={dateRange}
+              isLoaded={isLoaded}
             />
           </Item>
         </Grid>

@@ -6,6 +6,8 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 import { auth } from "../firebase/FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../services/auth";
@@ -33,9 +35,6 @@ function Navigation({
   setDateRange,
 }) {
   const [isFavorite, setIsFavorited] = useState(false);
-  // const [priceRange, setPriceRange] = useState([0, 1000]);
-  // const [dateNeeded, setDateNeeded] = useState("");
-  // const [category, setCategory] = useState("");
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -79,6 +78,10 @@ function Navigation({
       console.error("Error signing out:", error);
       alert("Failed to sign out. Please try again.");
     }
+  };
+
+  const handleAddListing = () => {
+    navigate("/post");
   };
 
   return (
@@ -183,6 +186,13 @@ function Navigation({
 
         {/* Icons */}
         <div className="flex items-center space-x-4">
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleAddListing}
+          >
+            Add Listing
+          </Button>
           <a href="/inbox">
             <FaBell
               className="text-black text-xl hover:text-yellow-400 cursor-pointer"
