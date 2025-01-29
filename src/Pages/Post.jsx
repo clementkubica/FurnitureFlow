@@ -17,7 +17,7 @@ function Post({ isLoaded }) {
     longitude: "",
     category: "",
     sellBy: "",
-    imageFile: null, // New field to handle the image file
+    imageFile: null,
   });
   const [isAdding, setIsAdding] = useState(false);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
@@ -92,10 +92,10 @@ function Post({ isLoaded }) {
           const { latitude, longitude } = position.coords;
           try {
             const response = await axios.get(
-              "https://maps.googleapis.com/maps/api/geocode/json", // Added missing quotes
+              "https://maps.googleapis.com/maps/api/geocode/json",
               {
                 params: {
-                  latlng: `${latitude},${longitude}`, // Fixed template literal syntax
+                  latlng: `${latitude},${longitude}`,
                   key: "AIzaSyDXujfrQ-cDYi1EbQpayGEYRit-fB0KMcE",
                 },
               }
@@ -173,11 +173,11 @@ function Post({ isLoaded }) {
         user_id: user.uid,
         status: "FOR_SALE",
         date_sellby: postDetails.sellBy || null,
-        imageUrl: imageUrl, // Full image URL
-        imagePath: imagePath, // Firebase path
+        imageUrl: imageUrl,
+        imagePath: imagePath,
       };
   
-      console.log("Request Payload:", newPost); // Debug the payload
+      console.log("Request Payload:", newPost);
       const response = await axios.post(
         "https://additem-jbhycjd2za-uc.a.run.app",
         newPost,
