@@ -107,7 +107,6 @@ export default function SearchBar({
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
           value={query}
-          inputProps={{ "aria-label": "search" }}
           onChange={(e) => setQuery(e.target.value)}
         />
       </Search>

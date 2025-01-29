@@ -4,8 +4,11 @@ import { useState, useEffect } from "react";
 import { Carousel } from "primereact/carousel";
 import { Modal } from "@mui/material";
 import * as React from "react";
-import { Box as MuiBox } from "@mui/material";
-
+import { useMediaQuery } from "@mui/material";
+import { Box, IconButton, Slide } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ItemPanel from "./ItemPanel";
 async function fetchItems(bounds, priceRange, query, category, dateRange) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
@@ -13,7 +16,7 @@ async function fetchItems(bounds, priceRange, query, category, dateRange) {
   const maxLon = bounds.east;
   const [minPrice, maxPrice] = priceRange;
   const [startDate, endDate] = dateRange;
-
+  const isMobile = useMediaQuery("(max-width: 768px)");
   try {
     const res = await axios.post(
       "https://fetchitems-jbhycjd2za-uc.a.run.app",
