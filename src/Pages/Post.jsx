@@ -207,7 +207,7 @@ function Post({ isLoaded }) {
   return isLoaded ? (
     <div className="h-screen flex flex-col">
       <Navigation showSearchBar={false} />
-      <div className="flex flex-1 overflow-hidden p-4">
+      <div className="flex flex-1 overflow-hidden overflow-y-auto p-4">
         <div className="w-full max-w-md mx-auto">
           <h1 className="text-2xl font-bold mb-4">New Listing</h1>
           <form onSubmit={handlePostSubmit} className="space-y-4">
