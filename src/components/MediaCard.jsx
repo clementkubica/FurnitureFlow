@@ -14,6 +14,8 @@ import { styled } from "@mui/material/styles";
 import { useAuth } from "../services/auth";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import MailIcon from '@mui/icons-material/Mail';
+import MapsUgcIcon from '@mui/icons-material/MapsUgc';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -178,9 +180,12 @@ export default function MediaCard({ item, size }) {
           <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
         </IconButton>
         <Link to="/inbox" state={{ item: item }}>
-          <Button size="small" className="hover:font-bold">
-            Message
-          </Button>
+          <IconButton
+            className="hover:font-bold"
+            aria-label="go to inbox"
+          >
+            <MapsUgcIcon />
+          </IconButton>
         </Link>
         <ExpandMore
           expand={expanded}

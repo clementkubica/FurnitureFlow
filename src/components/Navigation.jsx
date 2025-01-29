@@ -16,6 +16,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
+import MailIcon from '@mui/icons-material/Mail';
 
 function Navigation({
   mapBounds,
@@ -56,7 +57,7 @@ function Navigation({
   const handleProfile = () => {
     navigate("/profile");
   };
-  // Handlers for Date Pickers
+
   const handleStartDateChange = (newValue) => {
     setDateRange([newValue, dateRange[1]]);
     console.log("Start Date Changed:", newValue);
@@ -187,14 +188,16 @@ function Navigation({
         {/* Icons */}
         <div className="flex items-center space-x-4">
           <Button
+            className="!bg-purple-400 !text-white hover:!bg-purple-500"
             variant="contained"
             startIcon={<AddIcon />}
             onClick={handleAddListing}
+            size="small"
           >
-            Add Listing
+            post
           </Button>
           <a href="/inbox">
-            <FaBell
+            <MailIcon
               className="text-black text-xl hover:text-yellow-400 cursor-pointer"
               aria-label="Notifications"
               title="Notifications"

@@ -113,20 +113,20 @@ function InboxItem({
         />
 
         {/* Text Content */}
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full overflow-hidden">
           {/* Receiver Name */}
-          <p className="font-bold text-lg">{userDetails.username}</p>
+          <p className="font-bold text-lg truncate">{userDetails.username}</p>
 
           {/* Item Name */}
-          <p className="text-sm">
+          <p className="text-sm truncate">
             <strong>Item:</strong> {itemDetails.item.name}
           </p>
 
           {/* Timestamp */}
-          <p className="text-xs font-semibold text-gray-600">{timestamp ? timestamp : ""}</p>
+          <p className="text-xs font-semibold text-gray-600 truncate">{timestamp ? timestamp : ""}</p>
 
           {/* Preview */}
-          <p className="text-sm text-gray-500 mt-2">{preview ? preview : ""}</p>
+          <p className="text-sm text-gray-500 mt-2 truncate">{preview ? preview : ""}</p>
         </div>
       </div>
     );
