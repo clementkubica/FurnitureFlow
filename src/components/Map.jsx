@@ -5,10 +5,11 @@ import { Carousel } from "primereact/carousel";
 import { Modal } from "@mui/material";
 import * as React from "react";
 import { useMediaQuery } from "@mui/material";
-import { Box, IconButton, Slide } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ItemPanel from "./ItemPanel";
+
 async function fetchItems(bounds, priceRange, query, category, dateRange) {
   const minLat = bounds.south;
   const maxLat = bounds.north;
@@ -16,7 +17,7 @@ async function fetchItems(bounds, priceRange, query, category, dateRange) {
   const maxLon = bounds.east;
   const [minPrice, maxPrice] = priceRange;
   const [startDate, endDate] = dateRange;
-  const isMobile = useMediaQuery("(max-width: 768px)");
+
   try {
     const res = await axios.post(
       "https://fetchitems-jbhycjd2za-uc.a.run.app",
@@ -49,19 +50,13 @@ async function fetchItems(bounds, priceRange, query, category, dateRange) {
 const containerStyleDesktop = {
   width: "100%",
   height: "90vh",
-  pointerEvents: "auto",
 };
 
-const containerStyleMobilePopUpClosed = {
+const containerStyleMobile = {
   width: "100%",
   height: "85vh",
-  pointerEvents: "auto",
 };
-const containerStyleMobilePopUpOpen = {
-  width: "50%",
-  height: "85vh",
-  pointerEvents: "auto",
-};
+
 const center = {
   lat: 42.0521,
   lng: -87.6848,
@@ -69,32 +64,30 @@ const center = {
 
 const createPriceMarker = (price, color) => {
   const svgMarker = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40">
-          <rect
-            x="15"
-            y="12.5"
-            width="50"
-            height="20"
-            rx="6"
-            ry="6"
-            fill="${color}"
-           
-          />
-          <text
-            x="40"
-            y="24"
-            font-family="Arial"
-            font-size="14"
-            font-weight="bold"
-            text-anchor="middle"
-            fill="black"
-            dominant-baseline="middle"
-          >
-            $${price}
-          </text>
-         
-        </svg>
-      `;
+    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40">
+      <rect
+        x="15"
+        y="12.5"
+        width="50"
+        height="20"
+        rx="6"
+        ry="6"
+        fill="${color}"
+      />
+      <text
+        x="40"
+        y="24"
+        font-family="Arial"
+        font-size="14"
+        font-weight="bold"
+        text-anchor="middle"
+        fill="black"
+        dominant-baseline="middle"
+      >
+        $${price}
+      </text>
+    </svg>
+  `;
 
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgMarker)}`;
 };
@@ -102,105 +95,48 @@ const createPriceMarker = (price, color) => {
 const purp = [
   {
     featureType: "road",
-    stylers: [
-      {
-        hue: "#5e00ff",
-      },
-      {
-        saturation: -79,
-      },
-    ],
+    stylers: [{ hue: "#5e00ff" }, { saturation: -79 }],
   },
   {
     featureType: "poi",
     stylers: [
-      {
-        saturation: -78,
-      },
-      {
-        hue: "#6600ff",
-      },
-      {
-        lightness: 21,
-      },
-      {
-        visibility: "on",
-      },
+      { saturation: -78 },
+      { hue: "#6600ff" },
+      { lightness: 21 },
+      { visibility: "on" },
     ],
   },
   {
     featureType: "poi.park",
-    stylers: [
-      {
-        hue: "#e0aaff",
-      },
-    ],
+    stylers: [{ hue: "#e0aaff" }],
   },
   {
     featureType: "road.local",
-    stylers: [
-      {
-        lightness: 22,
-      },
-    ],
+    stylers: [{ lightness: 22 }],
   },
   {
     featureType: "landscape",
-    stylers: [
-      {
-        hue: "#6600ff",
-      },
-      {
-        saturation: -5,
-      },
-    ],
+    stylers: [{ hue: "#6600ff" }, { saturation: -5 }],
   },
   {
     featureType: "water",
-    stylers: [
-      {
-        saturation: -65,
-      },
-      {
-        hue: "#1900ff",
-      },
-      {
-        lightness: 8,
-      },
-    ],
+    stylers: [{ saturation: -65 }, { hue: "#1900ff" }, { lightness: 8 }],
   },
   {
     featureType: "road.local",
-    stylers: [
-      {
-        weight: 1.3,
-      },
-      {
-        lightness: 30,
-      },
-    ],
+    stylers: [{ weight: 1.3 }, { lightness: 30 }],
   },
   {
     featureType: "transit",
     stylers: [
-      {
-        visibility: "simplified",
-      },
-      {
-        hue: "#5e00ff",
-      },
-      {
-        saturation: -16,
-      },
+      { visibility: "simplified" },
+      { hue: "#5e00ff" },
+      { saturation: -16 },
     ],
   },
   {
     featureType: "transit.line",
-    stylers: [
-      {
-        saturation: -72,
-      },
-    ],
+    stylers: [{ saturation: -72 }],
   },
 ];
 
@@ -215,11 +151,12 @@ const Map = ({
   dateRange,
   isLoaded,
 }) => {
-  const [activeMarker, setActiveMarker] = useState(0 | null);
+  const [activeMarker, setActiveMarker] = useState(null);
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-
   const [open, setOpen] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const boxstyle = {
     position: "absolute",
@@ -243,15 +180,13 @@ const Map = ({
   }
 
   const handleActiveMarker = (marker) => {
-    console.log("activemarker changed");
     if (marker === activeMarker) {
-      return undefined;
+      return;
     }
     setActiveMarker(marker);
   };
 
   const handleOnLoad = (map) => {
-    console.log("init bounds", map);
     const topLeft = {
       lat: 42.059275268799205,
       lng: -87.68953333051405,
@@ -286,10 +221,6 @@ const Map = ({
   useEffect(() => {
     if (mapBounds && priceRange) {
       const fetchData = async () => {
-        console.log(
-          "Map component useEffect triggered with dateNeeded:",
-          dateRange
-        );
         const items = await fetchItems(
           mapBounds,
           priceRange,
@@ -298,7 +229,6 @@ const Map = ({
           dateRange
         );
         if (items) {
-          console.log("Fetched Items:", items);
           setVisibleItems(items);
         }
       };
@@ -308,19 +238,17 @@ const Map = ({
   }, [mapBounds, priceRange, category, dateRange]);
 
   useEffect(() => {
-    const newMarkers = visibleItems.map((item) => {
-      return {
-        id: item.item_id,
-        price: item.price,
-        name: item.name,
-        position: {
-          lat: parseFloat(item.latitude),
-          lng: parseFloat(item.longitude),
-        },
-        description: item.description,
-        item: item,
-      };
-    });
+    const newMarkers = visibleItems.map((item) => ({
+      id: item.item_id,
+      price: item.price,
+      name: item.name,
+      position: {
+        lat: parseFloat(item.latitude),
+        lng: parseFloat(item.longitude),
+      },
+      description: item.description,
+      item: item,
+    }));
     setMarkers(newMarkers);
   }, [visibleItems]);
 
@@ -331,75 +259,32 @@ const Map = ({
       numScroll: 1,
     },
   ];
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const [openPanel, setOpenPanel] = useState(false);
+
   const togglePanel = () => {
-    setOpen((prev) => !prev);
+    setIsPanelOpen((prev) => !prev);
   };
 
-  const MobilePopOut = (
+  return (
     <Box
       sx={{
+        display: "flex",
+        width: "100%",
+        height: "85vh",
         position: "relative",
-        width: "auto",
-        height: "100vh",
-        overflow: "hidden",
       }}
     >
-      {/* Icon Button */}
-      <IconButton
-        onClick={togglePanel}
+      <Box
         sx={{
-          position: "absolute",
-          top: "42.5%",
-          right: open ? "50%" : "0%",
-          transform: "translateY(-50%)",
-          zIndex: 1300,
-          backgroundColor: "#e0e0e0",
-          color: "#424242",
-          width: 26,
-          height: 56,
-          borderRadius: 2,
-          "&:hover": {
-            backgroundColor: "#bdbdbd",
-          },
+          width: isMobile && isPanelOpen ? "50%" : "100%",
+          transition: "width 0.3s ease",
+          height: "100%",
         }}
       >
-        {open ? <ArrowForwardIosIcon /> : <ArrowBackIosNewIcon />}
-      </IconButton>
-
-      {/* Popout Panel */}
-      <Slide direction="left" in={open} mountOnEnter unmountOnExit>
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            width: "50%",
-            height: "100%",
-            backgroundColor: "white",
-            boxShadow: 3,
-
-            overflowY: "auto",
-          }}
-        >
-          {<ItemPanel items={visibleItems} cardsPerRowParameter={1} />}
-        </Box>
-      </Slide>
-    </Box>
-  );
-  return (
-    <>
-      {isLoaded ? (
-        <>
+        {isLoaded && (
           <GoogleMap
             onLoad={handleOnLoad}
             mapContainerStyle={
-              isMobile
-                ? openPanel
-                  ? containerStyleMobilePopUpOpen
-                  : containerStyleMobilePopUpClosed
-                : containerStyleDesktop
+              isMobile ? containerStyleMobile : containerStyleDesktop
             }
             center={center}
             zoom={16}
@@ -413,7 +298,6 @@ const Map = ({
               styles: purp,
             }}
           >
-            {isMobile && MobilePopOut}
             {markers.map(({ id, price, position, name, description, item }) => (
               <MarkerF
                 key={id}
@@ -421,21 +305,21 @@ const Map = ({
                 onClick={() => handleActiveMarker(id)}
                 icon={{
                   url:
-                    activeMarker == id
+                    activeMarker === id
                       ? createPriceMarker(price, "#9E4B9E")
                       : createPriceMarker(price, "#DAB1DA"),
                   scaledSize: new google.maps.Size(80, 40),
                   anchor: new google.maps.Point(40, 40),
                 }}
               >
-                {activeMarker === id ? (
+                {activeMarker === id && (
                   <InfoWindowF
                     options={{
                       maxWidth: 200,
                       pixelOffset: new google.maps.Size(0, -30),
                       closeButton: false,
                     }}
-                    onCloseClick={() => setActiveMarker(undefined)}
+                    onCloseClick={() => setActiveMarker(null)}
                   >
                     <div style={{ padding: 0, margin: 0 }}>
                       <Carousel
@@ -456,7 +340,7 @@ const Map = ({
                           >
                             <img
                               src={image_url}
-                              alt={"image"}
+                              alt="item"
                               style={{
                                 width: "100%",
                                 height: "100%",
@@ -467,53 +351,82 @@ const Map = ({
                         )}
                         verticalViewPortHeight="150px"
                       />
-                      <Modal
-                        open={open}
-                        onClose={() => setOpen(false)}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                      >
-                        <Box sx={boxstyle}>
-                          <Typography
-                            id="modal-modal-title"
-                            variant="h6"
-                            component="h2"
-                          >
-                            {name}
-                          </Typography>
-                          <Typography
-                            id="modal-modal-description"
-                            sx={{ mt: 2 }}
-                          >
-                            Price: ${price}.00
-                          </Typography>
-                          <img
-                            src={item.image_url}
-                            alt={name}
-                            style={{
-                              width: "100%",
-                              height: "auto",
-                              objectFit: "cover",
-                              marginBottom: "16px",
-                            }}
-                          />
-                          <Typography
-                            id="modal-modal-description"
-                            sx={{ mt: 2 }}
-                          >
-                            {description}
-                          </Typography>
-                        </Box>
-                      </Modal>
                     </div>
                   </InfoWindowF>
-                ) : null}
+                )}
               </MarkerF>
             ))}
           </GoogleMap>
+        )}
+      </Box>
+
+      {isMobile && (
+        <>
+          <IconButton
+            onClick={togglePanel}
+            sx={{
+              position: "absolute",
+              top: "42.5%",
+              right: isPanelOpen ? "50%" : 0,
+              transform: "translateY(-50%)",
+              backgroundColor: "#e0e0e0",
+              color: "#424242",
+              width: 26,
+              height: 56,
+              borderRadius: 2,
+              transition: "right 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#bdbdbd",
+              },
+            }}
+          >
+            {isPanelOpen ? <ArrowForwardIosIcon /> : <ArrowBackIosNewIcon />}
+          </IconButton>
+
+          {isPanelOpen && (
+            <Box
+              sx={{
+                width: "50%",
+                height: "100%",
+                backgroundColor: "white",
+                overflowY: "auto",
+              }}
+            >
+              <ItemPanel items={visibleItems} cardsPerRowParameter={1} />
+            </Box>
+          )}
         </>
-      ) : null}
-    </>
+      )}
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={boxstyle}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {markers.find((m) => m.id === activeMarker)?.name}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Price: ${markers.find((m) => m.id === activeMarker)?.price}.00
+          </Typography>
+          <img
+            src={markers.find((m) => m.id === activeMarker)?.item.image_url}
+            alt={markers.find((m) => m.id === activeMarker)?.name}
+            style={{
+              width: "100%",
+              height: "auto",
+              objectFit: "cover",
+              marginBottom: "16px",
+            }}
+          />
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {markers.find((m) => m.id === activeMarker)?.description}
+          </Typography>
+        </Box>
+      </Modal>
+    </Box>
   );
 };
 

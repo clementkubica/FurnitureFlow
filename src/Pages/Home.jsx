@@ -35,9 +35,7 @@ const Home = (isLoaded) => {
   const [dateRange, setDateRange] = useState([null, null]);
   const user = useAuth();
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const handleIsMobile = () => {
-    console.log("MOBILE!!!");
-  };
+
   return (
     <>
       <div>
@@ -57,29 +55,45 @@ const Home = (isLoaded) => {
           setDateRange={setDateRange}
         />
       </div>
-
-      <Grid container spacing={2}>
-        <Grid item xs={7.3}>
-          <Item>
-            <Map
-              visibleItems={visibleItems}
-              setVisibleItems={setVisibleItems}
-              mapBounds={bounds}
-              setMapBounds={setBounds}
-              priceRange={priceRange}
-              query={query}
-              category={category}
-              dateRange={dateRange}
-              isLoaded={isLoaded}
-            />
-          </Item>
+      {isMobile && (
+        <div className="m-3">
+          <Map
+            visibleItems={visibleItems}
+            setVisibleItems={setVisibleItems}
+            mapBounds={bounds}
+            setMapBounds={setBounds}
+            priceRange={priceRange}
+            query={query}
+            category={category}
+            dateRange={dateRange}
+            isLoaded={isLoaded}
+          />
+        </div>
+      )}
+      {!isMobile && (
+        <Grid container spacing={2}>
+          <Grid item xs={7.3}>
+            <Item>
+              <Map
+                visibleItems={visibleItems}
+                setVisibleItems={setVisibleItems}
+                mapBounds={bounds}
+                setMapBounds={setBounds}
+                priceRange={priceRange}
+                query={query}
+                category={category}
+                dateRange={dateRange}
+                isLoaded={isLoaded}
+              />
+            </Item>
+          </Grid>
+          <Grid item xs={4.7}>
+            <Item>
+              <ItemPanel items={visibleItems} category={category} />
+            </Item>
+          </Grid>
         </Grid>
-        <Grid item xs={4.7}>
-          <Item>
-            <ItemPanel items={visibleItems} category={category} />
-          </Item>
-        </Grid>
-      </Grid>
+      )}
     </>
   );
 };
