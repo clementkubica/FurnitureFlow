@@ -102,8 +102,8 @@ function Navigation({
         {/* Search Bar Center and Dropdowns*/}
 
         {showSearchBar && (
-          <div className="flex-1 flex items-center justify-center space-x-4 mx-4">
-            <div className="flex-1 mx-4">
+          <div className="flex-1 flex items-center justify-center space-x-4">
+            <div className="flex-1 mr-2">
               <SearchBar
                 mapBounds={mapBounds}
                 setMapBounds={setMapBounds}
@@ -189,21 +189,23 @@ function Navigation({
                           )}
                         />
                         <Box sx={{ mx: 1 }}> to </Box>
-                        <DatePicker
-                          label="End"
-                          value={dateRange[1]}
-                          onChange={handleEndDateChange}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              size="small"
-                              variant="outlined"
-                              sx={{
-                                width: 120, // Keep consistent width
-                              }}
-                            />
-                          )}
-                        />
+                        <div className="mr-3">
+                          <DatePicker
+                            label="End"
+                            value={dateRange[1]}
+                            onChange={handleEndDateChange}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                size="small"
+                                variant="outlined"
+                                sx={{
+                                  width: 120, // Keep consistent width
+                                }}
+                              />
+                            )}
+                          />
+                        </div>
                       </Box>
                     </LocalizationProvider>
                   </div>
@@ -274,7 +276,7 @@ function Navigation({
       </div>
       {showSearchBar && isMobile && (
         <>
-          <div className="mr-4">
+          <div className="mr-4 ml-2">
             {/* Dropdowns Buttons */}
             <div className="flex md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
               <div className="mx-2 mr-[-30px]">
