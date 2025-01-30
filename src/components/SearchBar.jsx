@@ -17,18 +17,11 @@ const Search = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
     width: "auto",
-    width: "auto",
   },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
   height: "100%",
   position: "absolute",
   pointerEvents: "none",
@@ -67,7 +60,6 @@ async function fetchItems(bounds, query) {
         query: query,
         minPrice: 0,
         maxPrice: 200,
-        query: query,
       },
       {
         headers: {
