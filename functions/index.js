@@ -292,3 +292,29 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
     res.status(500).send({ error: "Failed to add item" });
   }
 });
+
+exports.getUserPosts = onRequest({ cors: true }, async (request, response) => {
+  const userId = request.body.user_id;
+
+  try {
+      const res = await knex('items')
+          .leftJoin('image_urls', 'items.item_id', '=', 'image_urls.item_id')
+          .where('items.user_id', userId)
+          .select(
+              'items.item_id',
+              'items.name',
+              'items.description',
+              'items.price',
+              'items.date_posted',
+              'items.date_sellby',
+              'items.category',
+              'items.date_sold',
+              'image_urls.url as image_url'
+          );
+
+      response.status(200).send(res);
+  } catch (error) {
+      console.error("Error fetching user posts:", error);
+      response.status(500).send({ msg: "Internal Server Error" });
+  }
+});
