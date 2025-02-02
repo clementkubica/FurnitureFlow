@@ -318,3 +318,24 @@ exports.getUserPosts = onRequest({ cors: true }, async (request, response) => {
       response.status(500).send({ msg: "Internal Server Error" });
   }
 });
+
+exports.deleteUserPost = onRequest({ cors: true }, async (request, response) => {
+  const { user_id, item_id } = request.body;
+
+  if (!user_id || !item_id) {
+      return response.status(400).json({ error: "Missing user_id or item_id" });
+  }
+
+  try {
+      await knex('favorites').where({ item_id }).del();
+
+      await knex('image_urls').where({ item_id }).del();
+
+      await knex('items').where({ item_id }).del();
+
+      response.status(200).json({ success: true, message: "Post deleted successfully." });
+  } catch (error) {
+      console.error("Error deleting post:", error);
+      response.status(500).json({ error: "Failed to delete post." });
+  }
+});

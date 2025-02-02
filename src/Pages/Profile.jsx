@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useAuth } from "../services/auth";
-import { Button } from "@mui/material";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/FirebaseConfig";
@@ -12,11 +11,16 @@ import MediaCard from "../components/MediaCard";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { collection, query, where, getDocs, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase/FirebaseConfig";
+import { Snackbar, Alert } from "@mui/material";
 
 export default function Profile() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [userPosts, setUserPosts] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -43,8 +47,31 @@ export default function Profile() {
     }
   };
 
-  const handleHome = async () => {
-    navigate("/");
+  const handleDeletePost = async (item_id) => {
+    try {
+      const inboxCollection = collection(db, "inbox_items");
+      const inboxQuery = query(inboxCollection, where("item_id", "==", item_id));
+      const inboxDocs = await getDocs(inboxQuery);
+
+      const batchDelete = inboxDocs.docs.map(async (doc) => await deleteDoc(doc.ref));
+      await Promise.all(batchDelete);
+
+      await axios.post("https://deleteuserpost-jbhycjd2za-uc.a.run.app", {
+        user_id: user.uid,
+        item_id: postId,
+      });
+
+      setUserPosts((prevPosts) => prevPosts.filter((post) => post.item_id !== postId));
+      setSnackbarMessage("Post and messages deleted successfully!");
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("Failed to delete post. Please try again.");
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   const responsiveOptions = [
@@ -63,7 +90,6 @@ export default function Profile() {
       <ArrowBackIosNewIcon fontSize="large" />
     </IconButton>
   );
-
 
   return (
     <>
@@ -104,7 +130,6 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* ✅ User Posts Carousel (Below Profile Box) */}
         <Box className="w-full max-w-3xl mt-5">
           <Typography variant="h6" className="text-center mb-3">
             Your Posts
@@ -120,7 +145,7 @@ export default function Profile() {
               autoplayInterval={3000}
               itemTemplate={(post) => (
                 <Box className="flex justify-center">
-                  <MediaCard item={post} size={100} />
+                  <MediaCard item={post} size={100} onDelete={handleDeletePost}/>
                 </Box>
               )}
               nextIcon={customNext}
@@ -134,6 +159,12 @@ export default function Profile() {
           )}
         </Box>
       </div>
+
+      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
