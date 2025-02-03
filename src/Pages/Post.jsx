@@ -24,11 +24,12 @@ function Post({ isLoaded }) {
     longitude: "",
     category: "",
     sellBy: "",
-    imageFile: null,
+    imageFiles: [],
   });
   const [isAdding, setIsAdding] = useState(false);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const autocompleteRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const categoryOptions = ["Couch", "Dresser", "Table", "Other"];
 
@@ -41,10 +42,16 @@ function Post({ isLoaded }) {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const files = Array.from(e.target.files);
+    
+    if (files.length + postDetails.imageFiles.length > 3) {
+      alert("You can upload up to 3 images only.");
+      return;
+    }
+  
     setPostDetails((prevDetails) => ({
       ...prevDetails,
-      imageFile: file,
+      imageFiles: [...prevDetails.imageFiles, ...files],
     }));
   };
 
@@ -130,18 +137,24 @@ function Post({ isLoaded }) {
     }
   };
 
-  const uploadImageToFirebase = async (file, user_id) => {
+  const uploadImagesToFirebase = async (files, user_id) => {
     try {
       const storage = getStorage();
-      const filePath = `user${user_id}/${file.name}`;
-      const storagePath = `user${user_id}/${file.name}/${file.name}`;
-      const storageRef = ref(storage, storagePath);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      return { downloadURL, filePath };
+      const uploadedImages = [];
+  
+      for (const file of files) {
+        const filePath = `user${user_id}/${file.name}`;
+        const storageRef = ref(storage, filePath);
+        const snapshot = await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+  
+        uploadedImages.push({ downloadURL, filePath });
+      }
+  
+      return uploadedImages;
     } catch (error) {
-      console.error("Error uploading image:", error);
-      throw new Error("Failed to upload image");
+      console.error("Error uploading images:", error);
+      throw new Error("Failed to upload images");
     }
   };
 
@@ -152,21 +165,21 @@ function Post({ isLoaded }) {
     try {
       if (!user) throw new Error("User is not authenticated.");
 
-      let { latitude, longitude, imageFile } = postDetails;
-
+  
+      let { latitude, longitude, imageFiles } = postDetails;
+  
       if (!latitude || !longitude) {
         const coordinates = await getLatLonFromAddress(postDetails.address);
         latitude = coordinates.latitude;
         longitude = coordinates.longitude;
       }
-
-      let imageUrl = null;
-      let imagePath = null;
-
-      if (imageFile) {
-        const uploadResult = await uploadImageToFirebase(imageFile, user.uid);
-        imageUrl = uploadResult.downloadURL;
-        imagePath = uploadResult.filePath;
+      let imageUrls = [];
+      let imagePaths = [];
+  
+      if (imageFiles.length > 0) {
+        const uploadResults = await uploadImagesToFirebase(imageFiles, user.uid);
+        imageUrls = uploadResults.map((img) => img.downloadURL);
+        imagePaths = uploadResults.map((img) => img.filePath);
       }
 
       const newPost = {
@@ -180,8 +193,8 @@ function Post({ isLoaded }) {
         user_id: user.uid,
         status: "FOR_SALE",
         date_sellby: postDetails.sellBy || null,
-        imageUrl: imageUrl,
-        imagePath: imagePath,
+        imageUrls,
+        imagePaths,
       };
 
       console.log("Request Payload:", newPost);
@@ -201,7 +214,7 @@ function Post({ isLoaded }) {
         longitude: "",
         category: "",
         sellBy: "",
-        imageFile: null,
+        imageFiles: [],
       });
     } catch (error) {
       console.error("Error adding listing:", error);
@@ -209,6 +222,18 @@ function Post({ isLoaded }) {
     } finally {
       setIsAdding(false);
     }
+  };
+
+  const removeImage = (index) => {
+    setPostDetails((prevDetails) => {
+      const updatedImages = prevDetails.imageFiles.filter((_, i) => i !== index);
+  
+      if (updatedImages.length === 0 && fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+  
+      return { ...prevDetails, imageFiles: updatedImages };
+    });
   };
 
   return isLoaded ? (
@@ -297,7 +322,32 @@ function Post({ isLoaded }) {
                 ))}
               </Select>
             </FormControl>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              ref={fileInputRef}
+              onChange={handleImageChange}
+            />
+            <div className="flex space-x-2 mt-2">
+              {postDetails.imageFiles.map((file, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="Preview"
+                    className="h-16 w-16 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1"
+                    onClick={() => removeImage(index)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+
             <Button
               type="submit"
               variant="contained"

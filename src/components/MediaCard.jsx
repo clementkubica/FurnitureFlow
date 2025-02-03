@@ -160,7 +160,7 @@ export default function MediaCard({ item, size }) {
     >
       <CardMedia
         sx={{ height: 200 }}
-        image={item.image_url}
+        image={item.image_urls ? item.image_urls[0] : item.image_url} // temp fix
         title="item card"
       />
       <CardContent>
