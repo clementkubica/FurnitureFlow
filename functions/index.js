@@ -235,8 +235,8 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
     latitude,
     category,
     user_id,
-    imageUrl,
-    imagePath,
+    imageUrls,
+    imagePaths,
     status = "FOR_SALE",
     date_sellby,
   } = req.body;
@@ -283,14 +283,16 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
 
     console.log("Inserted Item ID:", item_id);
 
-    if (imageUrl && imagePath) {
-      console.log("Inserting image data:", { item_id, url: imageUrl, path: imagePath });
-      await knex("image_urls").insert({
+    if (imageUrls && imagePaths && imageUrls.length > 0) {
+      const imageEntries = imageUrls.map((url, index) => ({
         item_id,
-        url: imageUrl,
-        path: imagePath,
-      });
-      console.log("Image added successfully!");
+        url,
+        path: imagePaths[index],
+      }));
+
+      console.log("Inserting multiple images:", imageEntries);
+      await knex("image_urls").insert(imageEntries);
+      console.log("Images added successfully!");
     }
 
     res.status(201).send({ success: true, item_id });
