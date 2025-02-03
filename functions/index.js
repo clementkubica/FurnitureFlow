@@ -308,6 +308,7 @@ exports.getUserPosts = onRequest({ cors: true }, async (request, response) => {
   try {
       const res = await knex('items')
           .leftJoin('image_urls', 'items.item_id', '=', 'image_urls.item_id')
+          .groupBy('items.item_id')
           .where('items.user_id', userId)
           .select(
               'items.item_id',
@@ -318,7 +319,7 @@ exports.getUserPosts = onRequest({ cors: true }, async (request, response) => {
               'items.date_sellby',
               'items.category',
               'items.date_sold',
-              'image_urls.url as image_url'
+              knex.raw('ARRAY_AGG(image_urls.url) AS image_urls')
           );
 
       response.status(200).send(res);
