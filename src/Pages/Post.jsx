@@ -1,7 +1,14 @@
 import React, { useState, useRef } from "react";
 import Navigation from "../components/Navigation";
 import { useAuth } from "../services/auth";
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { Autocomplete } from "@react-google-maps/api";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
@@ -24,7 +31,7 @@ function Post({ isLoaded }) {
   const autocompleteRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const categoryOptions = ["Couch", "Dresser", "Table"];
+  const categoryOptions = ["Couch", "Dresser", "Table", "Other"];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -154,9 +161,10 @@ function Post({ isLoaded }) {
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     setIsAdding(true);
-  
+
     try {
       if (!user) throw new Error("User is not authenticated.");
+
   
       let { latitude, longitude, imageFiles } = postDetails;
   
@@ -165,7 +173,6 @@ function Post({ isLoaded }) {
         latitude = coordinates.latitude;
         longitude = coordinates.longitude;
       }
-  
       let imageUrls = [];
       let imagePaths = [];
   
@@ -174,7 +181,7 @@ function Post({ isLoaded }) {
         imageUrls = uploadResults.map((img) => img.downloadURL);
         imagePaths = uploadResults.map((img) => img.filePath);
       }
-  
+
       const newPost = {
         name: postDetails.name,
         description: postDetails.description,
@@ -189,14 +196,14 @@ function Post({ isLoaded }) {
         imageUrls,
         imagePaths,
       };
-  
+
       console.log("Request Payload:", newPost);
       const response = await axios.post(
         "https://additem-jbhycjd2za-uc.a.run.app",
         newPost,
         { headers: { "Content-Type": "application/json" } }
       );
-  
+
       alert(`Listing added successfully! Item ID: ${response.data.item_id}`);
       setPostDetails({
         name: "",
@@ -264,7 +271,9 @@ function Post({ isLoaded }) {
               required
             />
             <Autocomplete
-              onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+              onLoad={(autocomplete) =>
+                (autocompleteRef.current = autocomplete)
+              }
               onPlaceChanged={handlePlaceSelect}
             >
               <TextField

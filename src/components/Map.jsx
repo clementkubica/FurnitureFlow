@@ -328,6 +328,10 @@ const Map = ({
                       <Carousel
                         value={item.image_urls}
                         responsiveOptions={responsiveOptions}
+                        showNavigators={
+                          Array.isArray(item.image_url) &&
+                          item.image_url.length > 1
+                        }
                         itemTemplate={(image_url) => (
                           <div
                             style={{
