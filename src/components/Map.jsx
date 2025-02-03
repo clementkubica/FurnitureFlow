@@ -328,6 +328,10 @@ const Map = ({
                         numVisible={1}
                         numScroll={1}
                         responsiveOptions={responsiveOptions}
+                        showNavigators={
+                          Array.isArray(item.image_url) &&
+                          item.image_url.length > 1
+                        }
                         itemTemplate={(image_url) => (
                           <div
                             style={{

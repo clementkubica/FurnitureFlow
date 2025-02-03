@@ -1,7 +1,14 @@
 import React, { useState, useRef } from "react";
 import Navigation from "../components/Navigation";
 import { useAuth } from "../services/auth";
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { Autocomplete } from "@react-google-maps/api";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
@@ -23,7 +30,7 @@ function Post({ isLoaded }) {
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const autocompleteRef = useRef(null);
 
-  const categoryOptions = ["Couch", "Dresser", "Table"];
+  const categoryOptions = ["Couch", "Dresser", "Table", "Other"];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -141,27 +148,27 @@ function Post({ isLoaded }) {
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     setIsAdding(true);
-  
+
     try {
       if (!user) throw new Error("User is not authenticated.");
-  
+
       let { latitude, longitude, imageFile } = postDetails;
-  
+
       if (!latitude || !longitude) {
         const coordinates = await getLatLonFromAddress(postDetails.address);
         latitude = coordinates.latitude;
         longitude = coordinates.longitude;
       }
-  
+
       let imageUrl = null;
       let imagePath = null;
-  
+
       if (imageFile) {
         const uploadResult = await uploadImageToFirebase(imageFile, user.uid);
         imageUrl = uploadResult.downloadURL;
         imagePath = uploadResult.filePath;
       }
-  
+
       const newPost = {
         name: postDetails.name,
         description: postDetails.description,
@@ -176,14 +183,14 @@ function Post({ isLoaded }) {
         imageUrl: imageUrl,
         imagePath: imagePath,
       };
-  
+
       console.log("Request Payload:", newPost);
       const response = await axios.post(
         "https://additem-jbhycjd2za-uc.a.run.app",
         newPost,
         { headers: { "Content-Type": "application/json" } }
       );
-  
+
       alert(`Listing added successfully! Item ID: ${response.data.item_id}`);
       setPostDetails({
         name: "",
@@ -239,7 +246,9 @@ function Post({ isLoaded }) {
               required
             />
             <Autocomplete
-              onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+              onLoad={(autocomplete) =>
+                (autocompleteRef.current = autocomplete)
+              }
               onPlaceChanged={handlePlaceSelect}
             >
               <TextField
