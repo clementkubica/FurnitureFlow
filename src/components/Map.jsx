@@ -188,14 +188,16 @@ const Map = ({
   };
 
   const handleOnLoad = (map) => {
+    const expandFactor = 0.02;
+
     const topLeft = {
-      lat: 42.059275268799205,
-      lng: -87.68953333051405,
+      lat: 42.059275268799205 + expandFactor,
+      lng: -87.68953333051405 - expandFactor,
     };
 
     const botRight = {
-      lat: 42.0502366521107,
-      lng: -87.67701760844375,
+      lat: 42.0502366521107 - expandFactor,
+      lng: -87.67701760844375 + expandFactor,
     };
     const bounds = new google.maps.LatLngBounds();
     bounds.extend(topLeft);
