@@ -344,8 +344,8 @@ const Map = ({
                           >
                             <img
                               onClick={() => {
-                                setOpen(true)
-                                setSelectedItem(item)
+                                setOpen(true);
+                                setSelectedItem(item);
                               }}
                               src={image_url}
                               alt="item"
@@ -406,12 +406,12 @@ const Map = ({
         </>
       )}
 
-      {selectedItem && 
+      {selectedItem && (
         <Modal
           open={open}
           onClose={() => {
-            setOpen(false)
-            setSelectedItem(null)
+            setOpen(false);
+            setSelectedItem(null);
           }}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -426,37 +426,41 @@ const Map = ({
 
             {/* carousel for multiple images in Modal object */}
             <Carousel
-                value={selectedItem.image_urls}
-                responsiveOptions={responsiveOptions}
-                itemTemplate={(image_url) => (
-                  <div
+              value={selectedItem.image_urls}
+              responsiveOptions={responsiveOptions}
+              showNavigators={
+                Array.isArray(selectedItem.image_urls) &&
+                selectedItem.image_urls.length > 1
+              }
+              itemTemplate={(image_url) => (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "150px",
+                    width: "100%",
+                  }}
+                >
+                  <img
+                    src={image_url}
+                    alt="item"
                     style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "150px",
                       width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
                     }}
-                  >
-                    <img
-                      src={image_url}
-                      alt="item"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </div>
-                )}
-                verticalViewPortHeight="150px"
-              />
+                  />
+                </div>
+              )}
+              verticalViewPortHeight="150px"
+            />
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               {selectedItem.description}
             </Typography>
           </Box>
         </Modal>
-      }
+      )}
     </Box>
   );
 };
