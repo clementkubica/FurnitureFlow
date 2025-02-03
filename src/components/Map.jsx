@@ -155,6 +155,7 @@ const Map = ({
   const [gMap, setGMap] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null); // keeps track of the selected item if user selects it from map
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -323,10 +324,7 @@ const Map = ({
                   >
                     <div style={{ padding: 0, margin: 0 }}>
                       <Carousel
-                        onClick={() => setOpen(true)}
-                        value={[item.image_url]}
-                        numVisible={1}
-                        numScroll={1}
+                        value={item.image_urls}
                         responsiveOptions={responsiveOptions}
                         itemTemplate={(image_url) => (
                           <div
@@ -339,6 +337,10 @@ const Map = ({
                             }}
                           >
                             <img
+                              onClick={() => {
+                                setOpen(true)
+                                setSelectedItem(item)
+                              }}
                               src={image_url}
                               alt="item"
                               style={{
@@ -398,34 +400,57 @@ const Map = ({
         </>
       )}
 
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={boxstyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {markers.find((m) => m.id === activeMarker)?.name}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Price: ${markers.find((m) => m.id === activeMarker)?.price}.00
-          </Typography>
-          <img
-            src={markers.find((m) => m.id === activeMarker)?.item.image_url}
-            alt={markers.find((m) => m.id === activeMarker)?.name}
-            style={{
-              width: "100%",
-              height: "auto",
-              objectFit: "cover",
-              marginBottom: "16px",
-            }}
-          />
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {markers.find((m) => m.id === activeMarker)?.description}
-          </Typography>
-        </Box>
-      </Modal>
+      {selectedItem && 
+        <Modal
+          open={open}
+          onClose={() => {
+            setOpen(false)
+            setSelectedItem(null)
+          }}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={boxstyle}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {selectedItem.name}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Price: ${selectedItem.price}.00
+            </Typography>
+
+            {/* carousel for multiple images in Modal object */}
+            <Carousel
+                value={selectedItem.image_urls}
+                responsiveOptions={responsiveOptions}
+                itemTemplate={(image_url) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "150px",
+                      width: "100%",
+                    }}
+                  >
+                    <img
+                      src={image_url}
+                      alt="item"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                )}
+                verticalViewPortHeight="150px"
+              />
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              {selectedItem.description}
+            </Typography>
+          </Box>
+        </Modal>
+      }
     </Box>
   );
 };
