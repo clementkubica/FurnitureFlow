@@ -136,6 +136,7 @@ export default function Profile() {
           </Typography>
 
           {userPosts.length > 0 ? (
+            userPosts.length > 1 ? (
             <Carousel
               value={userPosts}
               numVisible={1}
@@ -152,6 +153,11 @@ export default function Profile() {
               prevIcon={customPrev}
               showIndicators
             />
+            ) : (
+              <Box className="flex justify-center">
+                <MediaCard item={userPosts[0]} size={100} onDelete={handleDeletePost}/>
+              </Box>
+            )
           ) : (
             <Typography className="text-center text-gray-600">
               No posts yet.
