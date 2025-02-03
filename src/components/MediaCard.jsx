@@ -158,7 +158,11 @@ export default function MediaCard({ item, size, onDelete }) {
         },
       }}
     >
-      <CardMedia sx={{ height: 200 }} image={item.image_url} title="item card" />
+      <CardMedia
+        sx={{ height: 200 }}
+        image={item.image_urls ? item.image_urls[0] : item.image_url} // temp fix
+        title="item card"
+      />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {item.name} - {formatPrice(item.price)}

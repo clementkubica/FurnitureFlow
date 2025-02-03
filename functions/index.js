@@ -36,7 +36,12 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             .leftJoin('image_urls', 'image_urls.item_id', '=', 'items.item_id') // Join with image_urls
             .whereBetween('items.longitude', [minLon, maxLon]) // Longitude filter
             .andWhereBetween('items.latitude', [minLat, maxLat]) // Latitude filter
-            .andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
+            
+
+        // Add price filter if minPrice and maxPrice are not null
+        if (minPrice && maxPrice) {
+          queryBuilder = queryBuilder.andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
+        }
  
         // Handle custom date range
         if (startDate && endDate) {
@@ -51,6 +56,9 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
         if (category) {
             queryBuilder = queryBuilder.andWhere('items.category', category); 
         }
+
+        // group by is required to aggregate image urls into an array
+        queryBuilder = queryBuilder.groupBy('items.item_id', 'users.username', 'users.email') 
 
         const res = await queryBuilder.select(
             'items.item_id',
@@ -67,8 +75,7 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             'items.date_sold',
             'users.username',
             'users.email',
-            'image_urls.url as image_url',
-            'image_urls.path as image_path'
+            knex.raw('ARRAY_AGG(image_urls.url) AS image_urls')
         );
 
         response.status(200).send(res);
@@ -228,8 +235,8 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
     latitude,
     category,
     user_id,
-    imageUrl,
-    imagePath,
+    imageUrls,
+    imagePaths,
     status = "FOR_SALE",
     date_sellby,
   } = req.body;
@@ -276,14 +283,16 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
 
     console.log("Inserted Item ID:", item_id);
 
-    if (imageUrl && imagePath) {
-      console.log("Inserting image data:", { item_id, url: imageUrl, path: imagePath });
-      await knex("image_urls").insert({
+    if (imageUrls && imagePaths && imageUrls.length > 0) {
+      const imageEntries = imageUrls.map((url, index) => ({
         item_id,
-        url: imageUrl,
-        path: imagePath,
-      });
-      console.log("Image added successfully!");
+        url,
+        path: imagePaths[index],
+      }));
+
+      console.log("Inserting multiple images:", imageEntries);
+      await knex("image_urls").insert(imageEntries);
+      console.log("Images added successfully!");
     }
 
     res.status(201).send({ success: true, item_id });
