@@ -67,16 +67,16 @@ export default function Profile() {
 
           const messageBatch = writeBatch(db);
           messagesDocs.forEach((doc) => messageBatch.delete(doc.ref));
-          await messageBatch.commit(); // Commit batch deletion of messages
+          await messageBatch.commit();
         }
 
         // Delete the inbox_items after deleting their messages
         const inboxBatch = writeBatch(db);
         inboxDocs.forEach((doc) => inboxBatch.delete(doc.ref));
-        await inboxBatch.commit(); // Commit batch deletion of inbox items
+        await inboxBatch.commit();
       }
 
-      // Call your backend to delete PostgreSQL records (favorites, images, items)
+      // Call backend to delete records
       await axios.post("https://deleteuserpost-jbhycjd2za-uc.a.run.app", {
         user_id: user.uid,
         item_id: postToDelete,
@@ -84,7 +84,7 @@ export default function Profile() {
 
       // Update UI to remove deleted post
       setUserPosts((prevPosts) => prevPosts.filter((post) => post.item_id !== postToDelete));
-      setSnackbarMessage("Post, messages, and inbox items deleted successfully!");
+      setSnackbarMessage("Post deleted successfully!");
       setSnackbarOpen(true);
     } catch (error) {
       console.error("Error deleting post:", error);
