@@ -86,6 +86,13 @@ function Navigation({
     navigate("/post");
   };
 
+  const handleResetFilters = () => {
+    setQuery("");
+    setCategory("");
+    setPriceRange([0, 2000]);
+    setDateRange([null, null]);
+  };
+
   return (
     <nav className="bg-white shadow w-full">
       <div className="flex items-center justify-between px-4 py-4">
@@ -145,6 +152,7 @@ function Navigation({
                         <MenuItem value="Couch">Couch</MenuItem>
                         <MenuItem value="Dresser">Dresser</MenuItem>
                         <MenuItem value="Table">Table</MenuItem>
+                        <MenuItem value="Other">Other</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
@@ -209,12 +217,26 @@ function Navigation({
                       </Box>
                     </LocalizationProvider>
                   </div>
+                  <div>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={handleResetFilters}
+                      sx={{
+                        textTransform: "none",
+                        height: "36px",
+                        marginRight: "16px",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Reset Filters
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}
           </div>
         )}
-
         {/* Icons */}
         <div className="flex items-center space-x-4">
           <Button

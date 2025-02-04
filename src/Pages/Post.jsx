@@ -27,7 +27,7 @@ function Post({ isLoaded }) {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  const categoryOptions = ["Couch", "Dresser", "Table"];
+  const categoryOptions = ["Couch", "Dresser", "Table", "Other"];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -163,9 +163,10 @@ function Post({ isLoaded }) {
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     setIsAdding(true);
-  
+
     try {
       if (!user) throw new Error("User is not authenticated.");
+
   
       let { latitude, longitude, imageFiles } = postDetails;
   
@@ -174,7 +175,6 @@ function Post({ isLoaded }) {
         latitude = coordinates.latitude;
         longitude = coordinates.longitude;
       }
-  
       let imageUrls = [];
       let imagePaths = [];
   
@@ -183,7 +183,7 @@ function Post({ isLoaded }) {
         imageUrls = uploadResults.map((img) => img.downloadURL);
         imagePaths = uploadResults.map((img) => img.filePath);
       }
-  
+
       const newPost = {
         name: postDetails.name,
         description: postDetails.description,
@@ -198,7 +198,7 @@ function Post({ isLoaded }) {
         imageUrls,
         imagePaths,
       };
-  
+
       console.log("Request Payload:", newPost);
       const response = await axios.post(
         "https://additem-jbhycjd2za-uc.a.run.app",
@@ -281,7 +281,9 @@ function Post({ isLoaded }) {
               required
             />
             <Autocomplete
-              onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+              onLoad={(autocomplete) =>
+                (autocompleteRef.current = autocomplete)
+              }
               onPlaceChanged={handlePlaceSelect}
             >
               <TextField
