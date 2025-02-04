@@ -8,7 +8,7 @@ import Navigation from "../components/Navigation";
 import axios from "axios";
 import { Carousel } from "primereact/carousel";
 import MediaCard from "../components/MediaCard";
-import { Box, IconButton, Typography, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
+import { Box, IconButton, Typography, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Backdrop, CircularProgress } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { writeBatch, collection, query, where, getDocs } from "firebase/firestore";
@@ -18,17 +18,21 @@ export default function Profile() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [userPosts, setUserPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (user) {
+      setLoadingPosts(true);
       axios
         .post("https://getuserposts-jbhycjd2za-uc.a.run.app", { user_id: user.uid })
         .then((response) => setUserPosts(response.data))
-        .catch((error) => console.error("Error fetching user posts:", error));
+        .catch((error) => console.error("Error fetching user posts:", error))
+        .finally(() => setLoadingPosts(false));
     }
   }, [user]);
 
@@ -49,6 +53,7 @@ export default function Profile() {
 
   const handleConfirmedDelete = async () => {
     if (!postToDelete) return;
+    setIsDeleting(true);
 
     try {
       // Fetch all inbox_items related to this post from Firestore
@@ -91,6 +96,7 @@ export default function Profile() {
       setSnackbarMessage("Failed to delete post. Please try again.");
       setSnackbarOpen(true);
     } finally {
+      setIsDeleting(false);
       setDialogOpen(false);
       setPostToDelete(null);
     }
@@ -145,38 +151,48 @@ export default function Profile() {
           </div>
         </div>
 
-        <Box className="w-full max-w-3xl mt-5">
-          <Typography variant="h6" className="text-center mb-3">
-            Your Posts
-          </Typography>
+        <Backdrop open={isDeleting} style={{ zIndex: 1300, color: "#fff" }}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
 
-          {userPosts.length > 0 ? (
-            userPosts.length > 1 ? (
-              <Carousel
-                value={userPosts}
-                numVisible={1}
-                numScroll={1}
-                responsiveOptions={responsiveOptions}
-                circular
-                autoplayInterval={3000}
-                itemTemplate={(post) => (
-                  <Box className="flex justify-center">
-                    <MediaCard item={post} size={100} onDelete={() => confirmDeletePost(post.item_id)} />
-                  </Box>
-                )}
-                nextIcon={customNext}
-                prevIcon={customPrev}
-                showIndicators
-              />
+        {loadingPosts ? (
+          <Box className="flex justify-center items-center mt-5">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box className="w-full max-w-3xl mt-5">
+            <Typography variant="h6" className="text-center mb-3">
+              Your Posts
+            </Typography>
+
+            {userPosts.length > 0 ? (
+              userPosts.length > 1 ? (
+                <Carousel
+                  value={userPosts}
+                  numVisible={1}
+                  numScroll={1}
+                  responsiveOptions={responsiveOptions}
+                  circular
+                  autoplayInterval={3000}
+                  itemTemplate={(post) => (
+                    <Box className="flex justify-center">
+                      <MediaCard item={post} size={100} onDelete={() => confirmDeletePost(post.item_id)} />
+                    </Box>
+                  )}
+                  nextIcon={customNext}
+                  prevIcon={customPrev}
+                  showIndicators
+                />
+              ) : (
+                <Box className="flex justify-center">
+                  <MediaCard item={userPosts[0]} size={100} onDelete={() => confirmDeletePost(userPosts[0].item_id)} />
+                </Box>
+              )
             ) : (
-              <Box className="flex justify-center">
-                <MediaCard item={userPosts[0]} size={100} onDelete={() => confirmDeletePost(userPosts[0].item_id)} />
-              </Box>
-            )
-          ) : (
-            <Typography className="text-center text-gray-600">No posts yet.</Typography>
-          )}
-        </Box>
+              <Typography className="text-center text-gray-600">No posts yet.</Typography>
+            )}
+          </Box>
+        )}
       </div>
 
       <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
