@@ -301,3 +301,51 @@ exports.addItem = onRequest({ cors: true }, async (req, res) => {
     res.status(500).send({ error: "Failed to add item" });
   }
 });
+
+exports.getUserPosts = onRequest({ cors: true }, async (request, response) => {
+  const userId = request.body.user_id;
+
+  try {
+      const res = await knex('items')
+          .leftJoin('image_urls', 'items.item_id', '=', 'image_urls.item_id')
+          .groupBy('items.item_id')
+          .where('items.user_id', userId)
+          .select(
+              'items.item_id',
+              'items.name',
+              'items.description',
+              'items.price',
+              'items.date_posted',
+              'items.date_sellby',
+              'items.category',
+              'items.date_sold',
+              knex.raw('ARRAY_AGG(image_urls.url) AS image_urls')
+          );
+
+      response.status(200).send(res);
+  } catch (error) {
+      console.error("Error fetching user posts:", error);
+      response.status(500).send({ msg: "Internal Server Error" });
+  }
+});
+
+exports.deleteUserPost = onRequest({ cors: true }, async (request, response) => {
+  const { user_id, item_id } = request.body;
+
+  if (!user_id || !item_id) {
+      return response.status(400).json({ error: "Missing user_id or item_id" });
+  }
+
+  try {
+      await knex('favorites').where({ item_id }).del();
+
+      await knex('image_urls').where({ item_id }).del();
+
+      await knex('items').where({ item_id }).del();
+
+      response.status(200).json({ success: true, message: "Post deleted successfully." });
+  } catch (error) {
+      console.error("Error deleting post:", error);
+      response.status(500).json({ error: "Failed to delete post." });
+  }
+});

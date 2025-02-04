@@ -1,14 +1,7 @@
 import React, { useState, useRef } from "react";
 import Navigation from "../components/Navigation";
 import { useAuth } from "../services/auth";
-import {
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Snackbar, Alert } from "@mui/material";
 import { Autocomplete } from "@react-google-maps/api";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
@@ -30,6 +23,9 @@ function Post({ isLoaded }) {
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const autocompleteRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const categoryOptions = ["Couch", "Dresser", "Table", "Other"];
 
@@ -45,7 +41,9 @@ function Post({ isLoaded }) {
     const files = Array.from(e.target.files);
     
     if (files.length + postDetails.imageFiles.length > 3) {
-      alert("You can upload up to 3 images only.");
+      setSnackbarMessage("You can upload up to 3 images only.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
       return;
     }
   
@@ -128,12 +126,16 @@ function Post({ isLoaded }) {
           }
         },
         (error) => {
-          alert("Unable to retrieve your location.");
+          setSnackbarMessage("Failed to retrieve your location. Please try again.");
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
           setIsFetchingLocation(false);
         }
       );
     } else {
-      alert("Geolocation is not supported by this browser.");
+      setSnackbarMessage("Geolocation not supported by browser.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -203,8 +205,10 @@ function Post({ isLoaded }) {
         newPost,
         { headers: { "Content-Type": "application/json" } }
       );
-
-      alert(`Listing added successfully! Item ID: ${response.data.item_id}`);
+  
+      setSnackbarMessage("Listing added successfully!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
       setPostDetails({
         name: "",
         description: "",
@@ -218,7 +222,9 @@ function Post({ isLoaded }) {
       });
     } catch (error) {
       console.error("Error adding listing:", error);
-      alert("Failed to add listing. Please try again.");
+      setSnackbarMessage("Failed to add listing. Please try again.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);  
     } finally {
       setIsAdding(false);
     }
@@ -234,6 +240,10 @@ function Post({ isLoaded }) {
   
       return { ...prevDetails, imageFiles: updatedImages };
     });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return isLoaded ? (
@@ -360,6 +370,11 @@ function Post({ isLoaded }) {
           </form>
         </div>
       </div>
+      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   ) : (
     <div>Loading Google Maps...</div>
