@@ -296,6 +296,11 @@ function Post({ isLoaded }) {
               onChange={handleInputChange}
               fullWidth
               required
+              onKeyDown={(e) => {
+                if (e.key === "+" || e.key === "-") {
+                  e.preventDefault();
+                }
+              }}
             />
             <Autocomplete
               onLoad={(autocomplete) =>
