@@ -1,7 +1,16 @@
 import React, { useState, useRef } from "react";
 import Navigation from "../components/Navigation";
 import { useAuth } from "../services/auth";
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Snackbar, Alert } from "@mui/material";
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { Autocomplete } from "@react-google-maps/api";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
@@ -39,14 +48,14 @@ function Post({ isLoaded }) {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    
+
     if (files.length + postDetails.imageFiles.length > 3) {
       setSnackbarMessage("You can upload up to 3 images only.");
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
       return;
     }
-  
+
     setPostDetails((prevDetails) => ({
       ...prevDetails,
       imageFiles: [...prevDetails.imageFiles, ...files],
@@ -126,7 +135,9 @@ function Post({ isLoaded }) {
           }
         },
         (error) => {
-          setSnackbarMessage("Failed to retrieve your location. Please try again.");
+          setSnackbarMessage(
+            "Failed to retrieve your location. Please try again."
+          );
           setSnackbarSeverity("error");
           setSnackbarOpen(true);
           setIsFetchingLocation(false);
@@ -143,16 +154,16 @@ function Post({ isLoaded }) {
     try {
       const storage = getStorage();
       const uploadedImages = [];
-  
+
       for (const file of files) {
         const filePath = `user${user_id}/${file.name}`;
         const storageRef = ref(storage, filePath);
         const snapshot = await uploadBytes(storageRef, file);
         const downloadURL = await getDownloadURL(snapshot.ref);
-  
+
         uploadedImages.push({ downloadURL, filePath });
       }
-  
+
       return uploadedImages;
     } catch (error) {
       console.error("Error uploading images:", error);
@@ -167,9 +178,8 @@ function Post({ isLoaded }) {
     try {
       if (!user) throw new Error("User is not authenticated.");
 
-  
       let { latitude, longitude, imageFiles } = postDetails;
-  
+
       if (!latitude || !longitude) {
         const coordinates = await getLatLonFromAddress(postDetails.address);
         latitude = coordinates.latitude;
@@ -177,9 +187,12 @@ function Post({ isLoaded }) {
       }
       let imageUrls = [];
       let imagePaths = [];
-  
+
       if (imageFiles.length > 0) {
-        const uploadResults = await uploadImagesToFirebase(imageFiles, user.uid);
+        const uploadResults = await uploadImagesToFirebase(
+          imageFiles,
+          user.uid
+        );
         imageUrls = uploadResults.map((img) => img.downloadURL);
         imagePaths = uploadResults.map((img) => img.filePath);
       }
@@ -205,7 +218,7 @@ function Post({ isLoaded }) {
         newPost,
         { headers: { "Content-Type": "application/json" } }
       );
-  
+
       setSnackbarMessage("Listing added successfully!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
@@ -224,7 +237,7 @@ function Post({ isLoaded }) {
       console.error("Error adding listing:", error);
       setSnackbarMessage("Failed to add listing. Please try again.");
       setSnackbarSeverity("error");
-      setSnackbarOpen(true);  
+      setSnackbarOpen(true);
     } finally {
       setIsAdding(false);
     }
@@ -232,12 +245,14 @@ function Post({ isLoaded }) {
 
   const removeImage = (index) => {
     setPostDetails((prevDetails) => {
-      const updatedImages = prevDetails.imageFiles.filter((_, i) => i !== index);
-  
+      const updatedImages = prevDetails.imageFiles.filter(
+        (_, i) => i !== index
+      );
+
       if (updatedImages.length === 0 && fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-  
+
       return { ...prevDetails, imageFiles: updatedImages };
     });
   };
@@ -245,7 +260,9 @@ function Post({ isLoaded }) {
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
-
+  const handleUploadButtonClick = () => {
+    fileInputRef.current.click();
+  };
   return isLoaded ? (
     <div className="h-screen flex flex-col">
       <Navigation showSearchBar={false} />
@@ -314,6 +331,9 @@ function Post({ isLoaded }) {
               InputLabelProps={{
                 shrink: true,
               }}
+              inputProps={{
+                min: new Date().toISOString().split("T")[0], // Sets min to today's date
+              }}
             />
             <FormControl fullWidth required variant="outlined">
               <InputLabel id="category-label">Category</InputLabel>
@@ -370,7 +390,11 @@ function Post({ isLoaded }) {
           </form>
         </div>
       </div>
-      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
         <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
           {snackbarMessage}
         </Alert>
