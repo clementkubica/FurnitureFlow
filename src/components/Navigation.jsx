@@ -190,8 +190,8 @@ function Navigation({
                               size="small"
                               variant="outlined"
                               sx={{
-                                width: 120, // Smaller width
-                                height: 30, // Reduce height
+                                width: 120,
+                                height: 30,
                               }}
                             />
                           )}
@@ -282,18 +282,6 @@ function Navigation({
             title="User Profile"
             onClick={handleProfile}
           />
-          {/* Logout Button */}
-          {/* {user && (
-            <button
-              onClick={handleLogout}
-              className="flex items-cetner text-black hover:text-red-500 cursor-pointer"
-              aria-label="Logout"
-              title="Logout"
-            >
-              <FaSignOutAlt className="text-[25px] mr-1 ml-0" />
-              <h5 className="mt-[-2px] text-[20px]">log out</h5>
-            </button>
-          )} */}
         </div>
       </div>
       {showSearchBar && isMobile && (
