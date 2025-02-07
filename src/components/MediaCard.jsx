@@ -90,7 +90,7 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick }) {
         setLoading(false);
       }
     };
-
+    console.log(item)
     fetchFavoriteStatus();
   }, [user, item.item_id]);
 
@@ -160,7 +160,7 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick }) {
         maxHeight: "20%",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         backgroundColor: "#E6DFF1",
         transition: "background-color 0.3s ease-in-out",
         "&:hover": {
@@ -175,13 +175,12 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick }) {
         title="item card"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {item.name} - {formatPrice(item.price)}
-        </Typography>
-        <Typography variant="subtitle1">Posted by: {item.username}</Typography>
-        <Typography variant="body2">{item.description}</Typography>
+        <p className="font-bold text-xl">{item.name}</p>
+        <p className="font-medium text-lg">{formatPrice(item.price)}</p>
+        <p className="font-normal text-sm text-gray-600">Posted by: {item.username}</p>
+        <p className="mt-2 font-medium text-sm">{item.description}</p>
       </CardContent>
-      <CardActions disableSpacing>
+      <CardActions className="mt-auto" disableSpacing>
         <IconButton
           onClick={handleFavoriteToggle}
           variant="contained"
