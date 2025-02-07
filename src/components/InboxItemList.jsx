@@ -5,7 +5,7 @@ import { db } from "../firebase/FirebaseConfig";
 import { collection, query, where, getDocs, writeBatch } from "firebase/firestore";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Snackbar, Alert, Backdrop, CircularProgress } from "@mui/material";
 
-function InboxItemList({ setSelectedConversation, selectedConversation, inboxItems, setInboxItems }) {
+function InboxItemList({ setSelectedConversation, selectedConversation, inboxItems, setInboxItems}) {
   const { user } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -40,28 +40,25 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
       if (!inboxDocs.empty) {
         const inboxItemId = inboxDocs.docs[0].id;
 
-        // 🔴 Fetch and delete ALL messages linked to the inbox item in BATCHES
         const messagesQuery = query(collection(db, "messages"), where("inbox_item_id", "==", inboxItemId));
         const messagesDocs = await getDocs(messagesQuery);
 
         if (!messagesDocs.empty) {
           const messageBatch = writeBatch(db);
           messagesDocs.forEach((doc) => messageBatch.delete(doc.ref));
-          await messageBatch.commit(); // ✅ Ensure messages are deleted first
+          await messageBatch.commit();
         }
 
-        // 🔴 Now delete the inbox item itself
         const inboxBatch = writeBatch(db);
         inboxDocs.forEach((doc) => inboxBatch.delete(doc.ref));
         await inboxBatch.commit();
       }
 
-      // ✅ Update UI after successful deletion
       setInboxItems((prevItems) => prevItems.filter((item) => item.item_id !== itemToDelete));
       setSnackbarMessage("Conversation deleted successfully!");
       setSnackbarOpen(true);
     } catch (error) {
-      console.error("❌ Error deleting conversation:", error);
+      console.error("Error deleting conversation:", error);
       setSnackbarMessage("Failed to delete conversation. Please try again.");
       setSnackbarOpen(true);
     } finally {
@@ -90,19 +87,16 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
         <p className="text-gray-500">No conversations available</p>
       )}
 
-      {/* Backdrop for Deleting */}
       <Backdrop open={isDeleting} style={{ zIndex: 1300, color: "#fff" }}>
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {/* Snackbar for success/error messages */}
       <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={() => setSnackbarOpen(false)}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="success">
           {snackbarMessage}
         </Alert>
       </Snackbar>
 
-      {/* Confirmation Dialog */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
