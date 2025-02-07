@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Skeleton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { IconButton } from "@mui/material";
 
 function InboxItem({
   receiverUid,
@@ -9,6 +11,7 @@ function InboxItem({
   preview,
   onClick,
   isSelected,
+  onDelete,
 }) {
   const [userDetails, setUserDetails] = useState(null);
   const [itemDetails, setItemDetails] = useState(null);
@@ -128,6 +131,10 @@ function InboxItem({
           {/* Preview */}
           <p className="text-sm text-gray-500 mt-2 truncate">{preview ? preview : ""}</p>
         </div>
+        {/* Delete button */}
+        <IconButton onClick={(e) => { e.stopPropagation(); onDelete(itemId); }}>
+          <DeleteIcon color="error" />
+        </IconButton>
       </div>
     );
   }
