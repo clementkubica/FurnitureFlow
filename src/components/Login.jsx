@@ -66,9 +66,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-stone-100 to-purple-300">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-stone-100 to-purple-200">
         <div className="flex flex-col items-center justify-center">
-                <div className="flex-col items-center justify-center">
+                <div className="flex-col mb-0.5 items-center justify-center">
                     <Box
                         id="hero"
                         sx={(theme) => ({
@@ -82,8 +82,8 @@ const Login = () => {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
-                                pt: { xs: 14, sm: 20 },
-                                pb: { xs: 8, sm: 12 },
+                                pt: { xs: 7, sm: 10 },
+                                pb: { xs: 1, sm: 1.5 },
                             }}
                         >
                             <Stack
@@ -138,26 +138,16 @@ const Login = () => {
                     </Box>
 
               </div>
-                <div className="flex-row">
+                <div className="flex-row m-1.5">
                     <img
-                        src="/images/like-image.png"
+                        src="/images/preview.png"
                         alt="App Logo with Title"
-                        className="max-w-[160px]"
-                    />
-                    <img
-                        src="/images/deal-image.png"
-                        alt="App Logo with Title"
-                        className="max-w-[160px]"
-                    />
-                    <img
-                        src="/images/photo.png"
-                        alt="App Logo with Title"
-                        className="max-w-[160px]"
+                        className="max-w-[800px] shadow-lg rounded-lg mb-3"
                     />
                 </div>
             <div className="max-w-sm w-full text-center">
                 <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1>
+                    {/* <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1> */}
                     <p className="text-gray-600 mb-6">
                         Log in with your Northwestern email to continue.
                     </p>
