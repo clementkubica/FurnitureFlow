@@ -17,8 +17,8 @@ function ItemPanel({ items = [], category, onMarkerClick }) {
   }
 
   return (
-    <div className="bg-white overflow-x-auto overflow-y-auto max-h-[90vh]">
-      <div className="flex flex-col gap-4 p-4">
+    <div className="overflow-x-auto overflow-y-auto p-4 max-h-[90vh]">
+      <div className="flex flex-col gap-4 pr-4">
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="flex flex-row gap-4">
             {row.map((item, itemIndex) => (

@@ -1,13 +1,9 @@
 import { useState } from "react";
-import logo from "../logo.svg";
 import "../App.css";
 import Map from "../components/Map";
-import MediaCard from "../components/MediaCard";
 import ItemPanel from "../components/ItemPanel";
-
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Navigation from "../components/Navigation";
@@ -40,7 +36,7 @@ const Home = (isLoaded) => {
     setActiveMarkerOnMap(marker);
   };
   return (
-    <>
+    <div>
       <div>
         <Navigation
           mapBounds={bounds}
@@ -76,9 +72,8 @@ const Home = (isLoaded) => {
         </div>
       )}
       {!isMobile && (
-        <Grid container spacing={2}>
+        <Grid container spacing={0}>
           <Grid item xs={7.3}>
-            <Item>
               <Map
                 visibleItems={visibleItems}
                 setVisibleItems={setVisibleItems}
@@ -92,20 +87,17 @@ const Home = (isLoaded) => {
                 activeMarkerOnMap={activeMarkerOnMap}
                 setActiveMarkerOnMap={setActiveMarkerOnMap}
               />
-            </Item>
           </Grid>
           <Grid item xs={4.7}>
-            <Item>
               <ItemPanel
                 items={visibleItems}
                 category={category}
                 onMarkerClick={handleActiveMarkerOnMap}
               />
-            </Item>
           </Grid>
         </Grid>
       )}
-    </>
+    </div>
   );
 };
 
