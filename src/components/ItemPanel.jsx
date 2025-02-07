@@ -2,7 +2,7 @@ import React from "react";
 import MediaCard from "./MediaCard";
 import { useNavigate } from "react-router";
 import { useMediaQuery } from "@mui/material";
-function ItemPanel({ items = [], category }) {
+function ItemPanel({ items = [], category, onMarkerClick }) {
   // Default to an empty array
   const cardsPerRow = 2;
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -27,6 +27,7 @@ function ItemPanel({ items = [], category }) {
                 item={item}
                 size={isMobile ? 100 : (1 / cardsPerRow) * 100}
                 className="flex-1"
+                onMarkerClick={onMarkerClick}
               />
             ))}
             {row.length < cardsPerRow &&

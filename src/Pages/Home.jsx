@@ -35,7 +35,10 @@ const Home = (isLoaded) => {
   const [dateRange, setDateRange] = useState([null, null]);
   const user = useAuth();
   const isMobile = useMediaQuery("(max-width: 768px)");
-
+  const [activeMarkerOnMap, setActiveMarkerOnMap] = useState(null);
+  const handleActiveMarkerOnMap = (marker) => {
+    setActiveMarkerOnMap(marker);
+  };
   return (
     <>
       <div>
@@ -67,6 +70,8 @@ const Home = (isLoaded) => {
             category={category}
             dateRange={dateRange}
             isLoaded={isLoaded}
+            activeMarkerOnMap={activeMarkerOnMap}
+            setActiveMarkerOnMap={setActiveMarkerOnMap}
           />
         </div>
       )}
@@ -84,12 +89,18 @@ const Home = (isLoaded) => {
                 category={category}
                 dateRange={dateRange}
                 isLoaded={isLoaded}
+                activeMarkerOnMap={activeMarkerOnMap}
+                setActiveMarkerOnMap={setActiveMarkerOnMap}
               />
             </Item>
           </Grid>
           <Grid item xs={4.7}>
             <Item>
-              <ItemPanel items={visibleItems} category={category} />
+              <ItemPanel
+                items={visibleItems}
+                category={category}
+                onMarkerClick={handleActiveMarkerOnMap}
+              />
             </Item>
           </Grid>
         </Grid>

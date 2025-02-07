@@ -13,7 +13,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 import { useAuth } from "../services/auth";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,10 +29,11 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function MediaCard({ item, size, onDelete }) {
+export default function MediaCard({ item, size, onDelete, onMarkerClick }) {
   const [expanded, setExpanded] = useState(false);
   const { user } = useAuth();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isMap, setIsMap] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const handleExpandClick = () => {
@@ -142,6 +143,15 @@ export default function MediaCard({ item, size, onDelete }) {
     );
   }
 
+  const location = useLocation();
+  const isMapPage = location.pathname === "/";
+  const handleMapMediaCardMarkerFLink = () => {
+    if (isMapPage && onMarkerClick) {
+      onMarkerClick(item.item_id);
+      console.log("TEST");
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -157,6 +167,7 @@ export default function MediaCard({ item, size, onDelete }) {
           backgroundColor: "#c0afdc",
         },
       }}
+      onClick={handleMapMediaCardMarkerFLink}
     >
       <CardMedia
         sx={{ height: 200 }}
@@ -184,15 +195,15 @@ export default function MediaCard({ item, size, onDelete }) {
             <MapsUgcIcon />
           </IconButton>
         </Link>
-        {onDelete && 
-          (<IconButton
-              onClick={handleDeletePost}
-              aria-label="delete post"
-              className="ml-auto text-red-500 hover:text-red-700"
-            >
-              <DeleteIcon />
-          </IconButton>)
-        }
+        {onDelete && (
+          <IconButton
+            onClick={handleDeletePost}
+            aria-label="delete post"
+            className="ml-auto text-red-500 hover:text-red-700"
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -201,7 +212,6 @@ export default function MediaCard({ item, size, onDelete }) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
-
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
