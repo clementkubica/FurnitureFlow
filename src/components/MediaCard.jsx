@@ -96,8 +96,12 @@ export default function MediaCard({ item, size, onDelete }) {
   const handleFavoriteToggle = async () => {
     if (!user) return;
 
+    //save previous state to go back to in case of failure 
+    const prevFav = isFavorite;
+    //update UI right away
+    setIsFavorite(!prevFav);
     try {
-      if (isFavorite) {
+      if (prevFav) {
         await axios.delete(
           "https://removeuserfavorite-jbhycjd2za-uc.a.run.app",
           {
@@ -118,9 +122,9 @@ export default function MediaCard({ item, size, onDelete }) {
           { headers: { "Content-Type": "application/json" } }
         );
       }
-      setIsFavorite(!isFavorite);
     } catch (error) {
       console.error("Error toggling favorite status:", error);
+      setIsFavorite(!isFavorite);
     }
   };
 
@@ -152,15 +156,18 @@ export default function MediaCard({ item, size, onDelete }) {
         flexDirection: "column",
         justifyContent: "space-between",
         backgroundColor: "#E6DFF1",
-        transition: "background-color 0.3s ease-in-out",
+        borderRadius: 2,
+        boxShadow: 3,
+        transition: "background-color 0.3s ease, transform 0.2s ease",
         "&:hover": {
           backgroundColor: "#c0afdc",
+          transform: "translateY(-3px)",
         },
       }}
     >
       <CardMedia
         sx={{ height: 200 }}
-        image={item.image_urls ? item.image_urls[0] : item.image_url} // temp fix
+        image={item.image_urls ? item.image_urls[0] : item.image_url} // temporary fix for image URL key
         title="item card"
       />
       <CardContent>
@@ -173,26 +180,33 @@ export default function MediaCard({ item, size, onDelete }) {
       <CardActions disableSpacing>
         <IconButton
           onClick={handleFavoriteToggle}
-          variant="contained"
-          color={isFavorite ? "error" : "default"}
           aria-label="add to favorites"
+          sx={{
+            transition: "color 0.2s ease",
+            color: isFavorite ? "error.main" : "text.secondary",
+          }}
         >
-          <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
+          <FavoriteIcon />
         </IconButton>
         <Link to="/inbox" state={{ item: item }}>
-          <IconButton className="hover:font-bold" aria-label="go to inbox">
+          <IconButton aria-label="go to inbox">
             <MapsUgcIcon />
           </IconButton>
         </Link>
-        {onDelete && 
-          (<IconButton
-              onClick={handleDeletePost}
-              aria-label="delete post"
-              className="ml-auto text-red-500 hover:text-red-700"
-            >
-              <DeleteIcon />
-          </IconButton>)
-        }
+        {onDelete && (
+          <IconButton
+            onClick={handleDeletePost}
+            aria-label="delete post"
+            sx={{
+              ml: "auto",
+              color: "error.main",
+              transition: "color 0.2s ease",
+              "&:hover": { color: "error.dark" },
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -201,7 +215,6 @@ export default function MediaCard({ item, size, onDelete }) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
-
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
