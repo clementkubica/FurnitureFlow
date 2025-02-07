@@ -61,7 +61,7 @@ const Login = () => {
           {/* Logo at the top of the card */}
           <CardMedia
             component="img"
-            image="/images/logo_with_name.PNG" // Adjust the path as needed
+            image="/images/logo_with_name.PNG" 
             alt="Furniture Flow Logo"
             sx={{ height: 140, objectFit: "contain", p: 2 }}
           />
