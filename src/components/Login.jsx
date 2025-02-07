@@ -104,7 +104,8 @@ const Login = () => {
                 variant="h1"
                 sx={(theme) => ({
                   fontSize: 'inherit',
-                  color: 'primary.main',
+                  fontWeight: 'bold',
+                  color: 'purple',
                   ...theme.applyStyles('dark', {
                     color: 'primary.light',
                   }),
@@ -120,9 +121,8 @@ const Login = () => {
                 width: { sm: '100%', md: '80%' },
               }}
           >
-            Explore our cutting-edge dashboard, delivering high-quality solutions
-            tailored to your needs. Elevate your experience with top-tier features
-            and services.
+            Explore the new and fresh platform for Northwestern students to easily get furniture for the new home. Delivering a high-quality solution
+            tailored to wildcats' needs.
           </Typography>
           <Stack
               direction={{ xs: 'column', sm: 'row' }}
@@ -171,7 +171,7 @@ const Login = () => {
         </Stack>
       </Container>
     </Box>
-    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-purple-400 to-blue-500">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-stone-100 to-purple-300">
 
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1>
