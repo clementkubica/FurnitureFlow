@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { styled } from '@mui/material/styles';
 
+
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',
   width: '100%',
@@ -67,7 +68,6 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-b from-stone-100 to-purple-300">
         <div className="flex flex-col items-center justify-center">
-                {/* First div content */}
                 <div className="flex-col items-center justify-center">
                     <Box
                         id="hero"
@@ -138,7 +138,23 @@ const Login = () => {
                     </Box>
 
               </div>
-
+                <div className="flex-row">
+                    <img
+                        src="/images/like-image.png"
+                        alt="App Logo with Title"
+                        className="max-w-[160px]"
+                    />
+                    <img
+                        src="/images/deal-image.png"
+                        alt="App Logo with Title"
+                        className="max-w-[160px]"
+                    />
+                    <img
+                        src="/images/photo.png"
+                        alt="App Logo with Title"
+                        className="max-w-[160px]"
+                    />
+                </div>
             <div className="max-w-sm w-full text-center">
                 <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1>
