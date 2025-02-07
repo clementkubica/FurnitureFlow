@@ -65,128 +65,96 @@ const Login = () => {
   };
 
   return (
-  <>
-    this is a test
-    <Box
-        id="hero"
-        sx={(theme) => ({
-          width: '100%',
-          backgroundRepeat: 'no-repeat',
-          ...theme.applyStyles('dark', {}),
-        })}
-    >
-      <Container
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            pt: { xs: 14, sm: 20 },
-            pb: { xs: 8, sm: 12 },
-          }}
-      >
-        <Stack
-            spacing={2}
-            useFlexGap
-            sx={{ alignItems: 'center', width: { xs: '100%', sm: '70%' } }}
-        >
-          <Typography
-              variant="h1"
-              sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column', sm: 'row' },
-                alignItems: 'center',
-                fontSize: 'clamp(3rem, 10vw, 3.5rem)',
-              }}
-          >
-            Welcome&nbsp;to&nbsp;
-            <Typography
-                component="span"
-                variant="h1"
-                sx={(theme) => ({
-                  fontSize: 'inherit',
-                  fontWeight: 'bold',
-                  color: 'purple',
-                  ...theme.applyStyles('dark', {
-                    color: 'primary.light',
-                  }),
-                })}
-            >
-              Furniture Flow
-            </Typography>
-          </Typography>
-          <Typography
-              sx={{
-                textAlign: 'center',
-                color: 'text.secondary',
-                width: { sm: '100%', md: '80%' },
-              }}
-          >
-            Explore the new and fresh platform for Northwestern students to easily get furniture for the new home. Delivering a high-quality solution
-            tailored to wildcats' needs.
-          </Typography>
-          <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={1}
-              useFlexGap
-              sx={{ pt: 2, width: { xs: '100%', sm: '350px' } }}
-          >
-            <InputLabel htmlFor="email-hero" sx={visuallyHidden}>
-              Email
-            </InputLabel>
-            <TextField
-                id="email-hero"
-                hiddenLabel
-                size="small"
-                variant="outlined"
-                aria-label="Enter your email address"
-                placeholder="Your email address"
-                fullWidth
-                slotProps={{
-                  htmlInput: {
-                    autoComplete: 'off',
-                    'aria-label': 'Enter your email address',
-                  },
-                }}
-            />
-            <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                sx={{ minWidth: 'fit-content' }}
-            >
-              Start now
-            </Button>
-          </Stack>
-          <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ textAlign: 'center' }}
-          >
-            By clicking &quot;Start now&quot; you agree to our&nbsp;
-            <Link href="#" color="primary">
-              Terms & Conditions
-            </Link>
-            .
-          </Typography>
-        </Stack>
-      </Container>
-    </Box>
     <div className="flex items-center justify-center h-screen bg-gradient-to-b from-stone-100 to-purple-300">
+        <div className="flex flex-col items-center justify-center">
+                {/* First div content */}
+                <div className="flex-col items-center justify-center">
+                    <Box
+                        id="hero"
+                        sx={(theme) => ({
+                            width: '100%',
+                            backgroundRepeat: 'no-repeat',
+                            ...theme.applyStyles('dark', {}),
+                        })}
+                    >
+                        <Container
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                pt: { xs: 14, sm: 20 },
+                                pb: { xs: 8, sm: 12 },
+                            }}
+                        >
+                            <Stack
+                                spacing={2}
+                                useFlexGap
+                                sx={{ alignItems: 'center', width: { xs: '100%', sm: '70%' } }}
+                            >
+                                <Typography
+                                    variant="h1"
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        alignItems: 'center',
+                                        fontSize: 'clamp(3rem, 10vw, 3.5rem)',
+                                    }}
+                                >
+                                    Welcome&nbsp;to&nbsp;
+                                    <Typography
+                                        component="span"
+                                        variant="h1"
+                                        sx={(theme) => ({
+                                            fontSize: 'inherit',
+                                            fontWeight: 'bold',
+                                            color: 'purple',
+                                            ...theme.applyStyles('dark', {
+                                                color: 'primary.light',
+                                            }),
+                                        })}
+                                    >
+                                        Furniture Flow
+                                    </Typography>
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        textAlign: 'center',
+                                        color: 'text.secondary',
+                                        width: { sm: '100%', md: '80%' },
+                                    }}
+                                >
+                                    Explore the new and fresh platform for Northwestern students to easily get furniture for the new home. Delivering a high-quality solution
+                                    tailored to wildcats' needs.
+                                </Typography>
+                                <Stack
+                                    direction={{ xs: 'column', sm: 'row' }}
+                                    spacing={1}
+                                    useFlexGap
+                                    sx={{ pt: 2, width: { xs: '100%', sm: '350px' } }}
+                                >
+                                </Stack>
+                            </Stack>
+                        </Container>
+                    </Box>
 
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1>
-        <p className="text-gray-600 mb-6">
-          Log in with your Northwestern email to continue.
-        </p>
-        <button
-          onClick={handleGoogleSignIn}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 w-full"
-        >
-          <GoogleIcon /> Sign in with Google
-        </button>
-      </div>
+              </div>
+
+            <div className="max-w-sm w-full text-center">
+                <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
+                    <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1>
+                    <p className="text-gray-600 mb-6">
+                        Log in with your Northwestern email to continue.
+                    </p>
+                    <button
+                        onClick={handleGoogleSignIn}
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 w-full"
+                    >
+                        <GoogleIcon /> Sign in with Google
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </>
   );
 };
 
