@@ -17,6 +17,9 @@ import Typography from '@mui/material/Typography';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { styled } from '@mui/material/styles';
 
+import Flicking from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
 
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -68,7 +71,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-b from-stone-100 to-purple-200">
         <div className="flex flex-col items-center justify-center">
-                <div className="flex-col mb-0.5 items-center justify-center">
+                <div className="flex-col mb-0.0 items-center justify-center">
                     <Box
                         id="hero"
                         sx={(theme) => ({
@@ -83,7 +86,7 @@ const Login = () => {
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 pt: { xs: 7, sm: 10 },
-                                pb: { xs: 1, sm: 1.5 },
+                                pb: { xs: 0, sm: 0 },
                             }}
                         >
                             <Stack
@@ -138,13 +141,44 @@ const Login = () => {
                     </Box>
 
               </div>
-                <div className="flex-row m-1.5">
+            {/*<div className="flex-row m-1.5 pb-5">
                     <img
                         src="/images/preview.png"
                         alt="App Logo with Title"
-                        className="max-w-[800px] shadow-lg rounded-lg mb-3"
+                        className="max-w-[600px] shadow-lg rounded-lg mb-3"
+                    />
+                </div>*/}
+            <div className="">
+            <Flicking
+                align="prev"
+                circular={true}
+                moveType="freeScroll"
+                onMoveEnd={e => {
+                    console.log(e);
+                }}>
+                <div className="panel flex-row m-1.5 pb-5">
+                    <img
+                        src="/images/deal-image.png"
+                        alt="App Logo with Title"
+                        className="max-w-[420px] shadow-lg rounded-lg mb-3"
                     />
                 </div>
+                <div className="panel flex-row m-1.5 pb-5">
+                    <img
+                        src="/images/preview.png"
+                        alt="App Logo with Title"
+                        className="max-w-[600px] shadow-lg rounded-lg mb-3"
+                    />
+                </div>
+                <div className="panel flex-row m-1.5 pb-5">
+                    <img
+                        src="/images/like-image.png"
+                        alt="App Logo with Title"
+                        className="max-w-[200px] shadow-lg rounded-lg mb-3"
+                    />
+                </div>
+            </Flicking>
+            </div>
             <div className="max-w-sm w-full text-center">
                 <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
                     {/* <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1> */}
