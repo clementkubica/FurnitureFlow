@@ -15,11 +15,11 @@ function InboxItem({
 }) {
   const [userDetails, setUserDetails] = useState(null);
   const [itemDetails, setItemDetails] = useState(null);
-    const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchInboxItemDetails = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
 
       const itemReq = axios.post(
         "https://fetchitembyid-jbhycjd2za-uc.a.run.app",
@@ -47,10 +47,10 @@ function InboxItem({
         setUserDetails(userRes.data.user);
       }
 
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching inbox item details:", error);
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -60,52 +60,42 @@ function InboxItem({
 
   if (isLoading) {
     return (
-      <div
-        className="flex gap-4 items-center px-4 py-3 shadow-sm cursor-pointer hover:bg-gray-100"
-      >
+      <div className="flex gap-4 items-center px-4 py-3 shadow-sm cursor-pointer hover:bg-gray-100">
         {/* Image */}
         <Skeleton variant="rounded" width={64} height={64} />
-  
+
         {/* Text Content */}
         <div className="flex flex-col">
           {/* Receiver Name */}
           <Skeleton variant="text">
             <p className="font-bold text-lg">{"fdfdd"}</p>
           </Skeleton>
-          
-          
+
           <Skeleton variant="text">
             <p className="text-sm">
               <strong>Item:</strong> {"brown leather couch"}
             </p>
           </Skeleton>
-          
-          
+
           {/* Timestamp */}
           <Skeleton variant="text">
             <p className="text-xs font-semibold text-gray-600">{"timestamp"}</p>
           </Skeleton>
-          
-  
+
           {/* Preview */}
           <Skeleton variant="text">
             <p className="text-sm text-gray-500 mt-2">{"preview"}</p>
           </Skeleton>
-          
         </div>
       </div>
-    )
+    );
   }
 
   if (itemDetails && userDetails) {
     return (
       <div
         className={`flex gap-4 items-center px-4 py-3 shadow-sm cursor-pointer 
-        ${
-          isSelected
-            ? "bg-purple-300"
-            : "hover:bg-purple-200"
-        }`}
+        ${isSelected ? "bg-purple-300" : "hover:bg-purple-200"}`}
         onClick={onClick}
       >
         {/* Image */}
@@ -126,22 +116,29 @@ function InboxItem({
           </p>
 
           {/* Timestamp */}
-          <p className="text-xs font-semibold text-gray-600 truncate">{timestamp ? timestamp : ""}</p>
+          <p className="text-xs font-semibold text-gray-600 truncate">
+            {timestamp ? timestamp : ""}
+          </p>
 
           {/* Preview */}
-          <p className="text-sm text-gray-500 mt-2 truncate">{preview ? preview : ""}</p>
+          <p className="text-sm text-gray-500 mt-2 truncate">
+            {preview ? preview : ""}
+          </p>
         </div>
         {/* Delete button */}
-        <IconButton onClick={(e) => { e.stopPropagation(); onDelete(itemId); }}>
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(itemId);
+          }}
+        >
           <DeleteIcon color="error" />
         </IconButton>
       </div>
     );
   }
 
-    return(
-      <></>
-    )
+  return <></>;
 }
 
 export default InboxItem;

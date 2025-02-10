@@ -2,10 +2,32 @@ import React, { useState } from "react";
 import InboxItem from "./InboxItem";
 import { useAuth } from "../services/auth";
 import { db } from "../firebase/FirebaseConfig";
-import { collection, query, where, getDocs, writeBatch } from "firebase/firestore";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Snackbar, Alert, Backdrop, CircularProgress } from "@mui/material";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  writeBatch,
+} from "firebase/firestore";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Snackbar,
+  Alert,
+  Backdrop,
+  CircularProgress,
+} from "@mui/material";
 
-function InboxItemList({ setSelectedConversation, selectedConversation, inboxItems, setInboxItems}) {
+function InboxItemList({
+  setSelectedConversation,
+  selectedConversation,
+  inboxItems,
+  setInboxItems,
+}) {
   const { user } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -34,13 +56,19 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
 
     try {
       const inboxCollection = collection(db, "inbox_items");
-      const inboxQuery = query(inboxCollection, where("item_id", "==", itemToDelete));
+      const inboxQuery = query(
+        inboxCollection,
+        where("item_id", "==", itemToDelete)
+      );
       const inboxDocs = await getDocs(inboxQuery);
 
       if (!inboxDocs.empty) {
         const inboxItemId = inboxDocs.docs[0].id;
 
-        const messagesQuery = query(collection(db, "messages"), where("inbox_item_id", "==", inboxItemId));
+        const messagesQuery = query(
+          collection(db, "messages"),
+          where("inbox_item_id", "==", inboxItemId)
+        );
         const messagesDocs = await getDocs(messagesQuery);
 
         if (!messagesDocs.empty) {
@@ -54,7 +82,9 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
         await inboxBatch.commit();
       }
 
-      setInboxItems((prevItems) => prevItems.filter((item) => item.item_id !== itemToDelete));
+      setInboxItems((prevItems) =>
+        prevItems.filter((item) => item.item_id !== itemToDelete)
+      );
       setSnackbarMessage("Conversation deleted successfully!");
       setSnackbarOpen(true);
     } catch (error) {
@@ -69,7 +99,10 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
   };
 
   return (
-    <div className="p-4 overflow-y-auto border-r bg-white" style={{ maxHeight: "100vh", height: "100%" }}>
+    <div
+      className="p-4 overflow-y-auto border-r bg-white"
+      style={{ maxHeight: "100vh", height: "100%" }}
+    >
       {inboxItems.length > 0 ? (
         inboxItems.map((item) => (
           <InboxItem
@@ -78,7 +111,9 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
             itemId={item.item_id}
             timestamp={formatTimestamp(item.timestamp)}
             preview={item.preview || "No preview available"}
-            isSelected={selectedConversation && selectedConversation.id === item.id}
+            isSelected={
+              selectedConversation && selectedConversation.id === item.id
+            }
             onClick={() => setSelectedConversation(item)}
             onDelete={() => confirmDeleteInboxItem(item.item_id)}
           />
@@ -91,7 +126,11 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={() => setSnackbarOpen(false)}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+      >
         <Alert onClose={() => setSnackbarOpen(false)} severity="success">
           {snackbarMessage}
         </Alert>
@@ -101,12 +140,17 @@ function InboxItemList({ setSelectedConversation, selectedConversation, inboxIte
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this conversation? This action cannot be undone.
+            Are you sure you want to delete this conversation? This action
+            cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)} color="primary">Cancel</Button>
-          <Button onClick={handleConfirmedDelete} color="error">Delete</Button>
+          <Button onClick={() => setDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmedDelete} color="error">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
