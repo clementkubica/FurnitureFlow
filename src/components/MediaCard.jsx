@@ -17,6 +17,7 @@ import { Link, useLocation } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -169,11 +170,51 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick }) {
       }}
       onClick={handleMapMediaCardMarkerFLink}
     >
-      <CardMedia
-        sx={{ height: 200 }}
-        image={item.image_urls ? item.image_urls[0] : item.image_url} // temp fix
-        title="item card"
-      />
+      <Box sx={{ position: "relative" }}>
+        <CardMedia
+          sx={{ height: 200 }}
+          image={item.image_urls ? item.image_urls[0] : item.image_url} // temp fix
+          title="item card"
+        />
+        {item.status === "SOLD" && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: 0,
+              right: 0,
+              transform: "translateY(-50%)",
+              backgroundColor: "rgba(110, 110, 110, 0.60)",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "65px",
+              fontWeight: "bold",
+              fontSize: "1.7rem",
+            }}
+          >
+            SOLD
+          </Box>
+        )}
+
+        {item.status === "PENDING" && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 8,
+              left: 8,
+              backgroundColor: "rgb(255, 70, 70)",
+              color: "#fff",
+              padding: "4px 8px",
+              borderRadius: "4px",
+              fontWeight: "bold",
+            }}
+          >
+            Pending
+          </Box>
+        )}
+      </Box>
       <CardContent>
         <p className="font-bold text-xl">{item.name}</p>
         <p className="font-medium text-lg">{formatPrice(item.price)}</p>
