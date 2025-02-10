@@ -123,9 +123,21 @@ export default function Profile() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center bg-[radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))]">
         <Navigation showSearchBar={false} />
-        <div className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[auto] w-3/4 max-w-[500px] mt-[100px] mb-10 pb-7 rounded-[45px] bg-[#d6c3dc]">
+        <div className="bg-amber-200 h-70 w-full">
+          <img
+              className="h-72 w-full object-fill"
+              src="/images/deering.png"
+          />
+        </div>
+        <div
+            className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[auto] w-3/4 max-w-[500px] mt-[100px] mb-10 pb-7 rounded-[45px] bg-[#d6c3dc]"
+            style={{
+              boxShadow:
+                  'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+            }}
+        >
           <div className="mt-[30px] flex items-center pb-[10px]">
             {user.photoURL ? (
               <img src={user.photoURL} className="rounded-full size-[63px]" alt="Profile" />

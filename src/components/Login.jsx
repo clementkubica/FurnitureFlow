@@ -148,7 +148,7 @@ const Login = () => {
                         className="max-w-[600px] shadow-lg rounded-lg mb-3"
                     />
                 </div>*/}
-            <div className="">
+            {/*<div className="">
             <Flicking
                 align="prev"
                 circular={true}
@@ -178,6 +178,29 @@ const Login = () => {
                     />
                 </div>
             </Flicking>
+            </div>*/}
+            <div className="flex flex-row mr-30">
+                <div className="m-1.5 pb-5">
+                    <img
+                        src="/images/deal-image.png"
+                        alt="App Logo with Title"
+                        className="max-w-[184px] shadow-lg rounded-lg mb-3"
+                    />
+                </div>
+                <div className="m-1.5 pb-5">
+                    <img
+                        src="/images/preview.png"
+                        alt="App Logo with Title"
+                        className="max-w-[600px] shadow-lg rounded-lg mb-3"
+                    />
+                </div>
+                <div className="m-1.5 pb-5">
+                    <img
+                        src="/images/like-image.png"
+                        alt="App Logo with Title"
+                        className="max-w-[200px] shadow-lg rounded-lg mb-3"
+                    />
+                </div>
             </div>
             <div className="max-w-sm w-full text-center">
                 <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
