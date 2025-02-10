@@ -8,11 +8,12 @@ import Navigation from "../components/Navigation";
 import axios from "axios";
 import { Carousel } from "primereact/carousel";
 import MediaCard from "../components/MediaCard";
-import { Box, IconButton, Typography, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Backdrop, CircularProgress } from "@mui/material";
+import {Box, IconButton, Typography, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Backdrop} from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { writeBatch, collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase/FirebaseConfig";
+import LoadingScreen from "../components/Loading";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -24,6 +25,7 @@ export default function Profile() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [autoPlayInterval, setAutoPlayInterval] = useState(3000);
 
   useEffect(() => {
     if (user) {
@@ -62,12 +64,15 @@ export default function Profile() {
       const inboxDocs = await getDocs(inboxQuery);
 
       // Collect inbox_item_ids
-      const inboxItemIds = inboxDocs.docs.map(doc => doc.id);
+      const inboxItemIds = inboxDocs.docs.map((doc) => doc.id);
 
       if (inboxItemIds.length > 0) {
         // Delete all messages linked to each inbox_item_id
         for (const inboxItemId of inboxItemIds) {
-          const messagesQuery = query(collection(db, "messages"), where("inbox_item_id", "==", inboxItemId));
+          const messagesQuery = query(
+            collection(db, "messages"),
+            where("inbox_item_id", "==", inboxItemId)
+          );
           const messagesDocs = await getDocs(messagesQuery);
 
           const messageBatch = writeBatch(db);
@@ -88,7 +93,9 @@ export default function Profile() {
       });
 
       // Update UI to remove deleted post
-      setUserPosts((prevPosts) => prevPosts.filter((post) => post.item_id !== postToDelete));
+      setUserPosts((prevPosts) =>
+        prevPosts.filter((post) => post.item_id !== postToDelete)
+      );
       setSnackbarMessage("Post deleted successfully!");
       setSnackbarOpen(true);
     } catch (error) {
@@ -110,13 +117,23 @@ export default function Profile() {
   ];
 
   const customNext = ({ onClick }) => (
-    <IconButton onClick={onClick}>
+    <IconButton
+      onClick={() => {
+        setAutoPlayInterval(500);
+        onClick();
+      }}
+    >
       <ArrowForwardIosIcon fontSize="large" />
     </IconButton>
   );
 
   const customPrev = ({ onClick }) => (
-    <IconButton onClick={onClick}>
+    <IconButton
+      onClick={() => {
+        setAutoPlayInterval(500);
+        onClick();
+      }}
+    >
       <ArrowBackIosNewIcon fontSize="large" />
     </IconButton>
   );
@@ -152,19 +169,22 @@ export default function Profile() {
         </div>
 
         <Backdrop open={isDeleting} style={{ zIndex: 1300, color: "#fff" }}>
-          <CircularProgress color="inherit" />
+          <LoadingScreen />
         </Backdrop>
-
+            
         {loadingPosts ? (
           <Box className="flex justify-center items-center mt-5">
-            <CircularProgress />
+            <LoadingScreen text={"Loading Posts..."} />
           </Box>
         ) : (
-          <Box className="w-full max-w-3xl mt-5">
+          <Box
+            className="w-full max-w-3xl mt-5"
+            onMouseEnter={() => setAutoPlayInterval(0)}
+            onMouseLeave={() => setAutoPlayInterval(3000)}
+          >
             <Typography variant="h6" className="text-center mb-3">
               Your Posts
             </Typography>
-
             {userPosts.length > 0 ? (
               userPosts.length > 1 ? (
                 <Carousel
@@ -173,10 +193,15 @@ export default function Profile() {
                   numScroll={1}
                   responsiveOptions={responsiveOptions}
                   circular
-                  autoplayInterval={3000}
+                  autoplayInterval={autoPlayInterval}
                   itemTemplate={(post) => (
                     <Box className="flex justify-center">
-                      <MediaCard item={post} size={100} onDelete={() => confirmDeletePost(post.item_id)} />
+                      <MediaCard
+                        item={post}
+                        size={100}
+                        onDelete={() => confirmDeletePost(post.item_id)}
+                        allowStatusChange={true}
+                      />
                     </Box>
                   )}
                   nextIcon={customNext}
@@ -185,7 +210,12 @@ export default function Profile() {
                 />
               ) : (
                 <Box className="flex justify-center">
-                  <MediaCard item={userPosts[0]} size={100} onDelete={() => confirmDeletePost(userPosts[0].item_id)} />
+                  <MediaCard
+                    item={userPosts[0]}
+                    size={100}
+                    onDelete={() => confirmDeletePost(userPosts[0].item_id)}
+                    allowStatusChange={true}
+                  />
                 </Box>
               )
             ) : (

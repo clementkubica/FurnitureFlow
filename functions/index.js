@@ -42,6 +42,8 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
         if (minPrice && maxPrice) {
           queryBuilder = queryBuilder.andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
         }
+
+        queryBuilder = queryBuilder.andWhereNot('items.status', 'SOLD');
  
         // Handle custom date range
         if (startDate && endDate) {
@@ -319,6 +321,7 @@ exports.getUserPosts = onRequest({ cors: true }, async (request, response) => {
               'items.date_sellby',
               'items.category',
               'items.date_sold',
+              'items.status',
               knex.raw('ARRAY_AGG(image_urls.url) AS image_urls')
           );
 
@@ -347,5 +350,22 @@ exports.deleteUserPost = onRequest({ cors: true }, async (request, response) => 
   } catch (error) {
       console.error("Error deleting post:", error);
       response.status(500).json({ error: "Failed to delete post." });
+  }
+});
+
+exports.changeItemStatus = onRequest({ cors: true }, async (request, response) => {
+  const { item_id, status } = request.body;
+
+  if (!item_id || !status) {
+      return response.status(400).json({ error: "Missing item_id or status" });
+  }
+
+  try {
+      await knex('items').where({ item_id }).update({ status });
+
+      response.status(200).json({ success: true, message: "Status updated successfully." });
+  } catch (error) {
+      console.error("Error updating status:", error);
+      response.status(500).json({ error: "Failed to update status." });
   }
 });

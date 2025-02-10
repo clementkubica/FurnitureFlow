@@ -179,7 +179,7 @@ function Navigation({
                   {/* Date Pickers */}
                   <div className="ml-2">
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Box sx={{ display: "flex", alignItems: "center"}}>
                         <DatePicker
                           label="Start"
                           value={dateRange[0]}
