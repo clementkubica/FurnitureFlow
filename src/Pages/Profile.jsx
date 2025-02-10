@@ -140,9 +140,22 @@ export default function Profile() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center pb-8 bg-[radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))]">
         <Navigation showSearchBar={false} />
-        <div className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[auto] w-3/4 max-w-[500px] mt-[100px] mb-10 pb-7 rounded-[45px] bg-[#d6c3dc]">
+        <div className="bg-amber-200 h-70 w-full">
+          <img
+              className="h-72 w-full object-fill"
+              src="/images/deering.png"
+          />
+        </div>
+
+        <div
+            className="flex flex-col items-center border border-[#b4a3c4] border-[5px] h-[auto] w-3/4 max-w-[500px] mt-[-125px] mb-10 pb-7 rounded-[20px] bg-gradient-to-b from-stone-100 to-purple-100"
+            style={{
+              boxShadow:
+                  'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+            }}
+        >
           <div className="mt-[30px] flex items-center pb-[10px]">
             {user.photoURL ? (
               <img src={user.photoURL} className="rounded-full size-[63px]" alt="Profile" />
@@ -157,12 +170,12 @@ export default function Profile() {
             {user && (
               <button
                 onClick={handleLogout}
-                className="flex items-center text-black hover:text-red-500 cursor-pointer"
+                className="flex items-center text-black hover:text-red-500 cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 w-full"
                 aria-label="Logout"
                 title="Logout"
               >
                 <FaSignOutAlt className="text-[25px] text-xl mr-1" />
-                <h5 className="mt-[-7px] text-[25px] ml-1">Log Out</h5>
+                <h5 className="mt-[-7px] text-[25px] ml-1">LOG OUT</h5>
               </button>
             )}
           </div>
@@ -223,6 +236,9 @@ export default function Profile() {
             )}
           </Box>
         )}
+      </div>
+      <div className="bg-purple-600 h-5 w-full">
+
       </div>
 
       <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
