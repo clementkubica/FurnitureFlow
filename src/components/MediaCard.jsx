@@ -33,7 +33,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function MediaCard({ item, size, onDelete, onMarkerClick, allowStatusChange}) {
+export default function MediaCard({ item, size, onDelete, onMarkerClick, allowStatusChange, onProfile = false}) {
   const [expanded, setExpanded] = useState(false);
   const { user } = useAuth();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -241,19 +241,23 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick, allowSt
         </Typography>
       </CardContent>
       <CardActions disableSpacing className="mt-auto">
-        <IconButton
-          onClick={handleFavoriteToggle}
-          variant="contained"
-          color={isFavorite ? "error" : "default"}
-          aria-label="add to favorites"
-        >
-          <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
-        </IconButton>
-        <Link to="/inbox" state={{ item: item }}>
-          <IconButton aria-label="go to inbox">
-            <MapsUgcIcon />
+        {!onProfile && (
+          <IconButton
+            onClick={handleFavoriteToggle}
+            variant="contained"
+            color={isFavorite ? "error" : "default"}
+            aria-label="add to favorites"
+          >
+            <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
           </IconButton>
-        </Link>
+        )}
+        {!onProfile && (
+          <Link to="/inbox" state={{ item: item }}>
+            <IconButton aria-label="go to inbox">
+              <MapsUgcIcon />
+            </IconButton>
+          </Link>
+        )}
         {onDelete && (
           <IconButton
             onClick={handleDeletePost}

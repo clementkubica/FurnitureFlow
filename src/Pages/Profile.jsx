@@ -228,6 +228,7 @@ export default function Profile() {
                     size={100}
                     onDelete={() => confirmDeletePost(userPosts[0].item_id)}
                     allowStatusChange={true}
+                    onProfile = {true}
                   />
                 </Box>
               )
