@@ -40,6 +40,10 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick, allowSt
   const [loading, setLoading] = useState(true);
   const [itemStatus, setItemStatus] = useState(item.status);
 
+  useEffect(() => {
+    setItemStatus(item.status);
+  }, [item]);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
