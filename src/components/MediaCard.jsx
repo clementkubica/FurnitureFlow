@@ -4,7 +4,6 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -13,10 +12,15 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 import { useAuth } from "../services/auth";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -29,11 +33,16 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function MediaCard({ item, size, onDelete }) {
+export default function MediaCard({ item, size, onDelete, onMarkerClick, allowStatusChange, onProfile = false}) {
   const [expanded, setExpanded] = useState(false);
   const { user } = useAuth();
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [itemStatus, setItemStatus] = useState(item.status);
+
+  useEffect(() => {
+    setItemStatus(item.status);
+  }, [item]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -75,7 +84,6 @@ export default function MediaCard({ item, size, onDelete }) {
         setLoading(false);
         return;
       }
-
       try {
         const res = await axios.post(
           "https://checkfavoritestatus-jbhycjd2za-uc.a.run.app",
@@ -89,13 +97,11 @@ export default function MediaCard({ item, size, onDelete }) {
         setLoading(false);
       }
     };
-
     fetchFavoriteStatus();
   }, [user, item.item_id]);
 
   const handleFavoriteToggle = async () => {
     if (!user) return;
-
     //save previous state to go back to in case of failure 
     const prevFav = isFavorite;
     //update UI right away
@@ -105,26 +111,47 @@ export default function MediaCard({ item, size, onDelete }) {
         await axios.delete(
           "https://removeuserfavorite-jbhycjd2za-uc.a.run.app",
           {
-            data: {
-              user_id: user.uid,
-              item_id: item.item_id,
-            },
+            data: { user_id: user.uid, item_id: item.item_id },
             headers: { "Content-Type": "application/json" },
           }
         );
       } else {
         await axios.post(
           "https://adduserfavorite-jbhycjd2za-uc.a.run.app",
-          {
-            user_id: user.uid,
-            item_id: item.item_id,
-          },
+          { user_id: user.uid, item_id: item.item_id },
           { headers: { "Content-Type": "application/json" } }
         );
       }
     } catch (error) {
       console.error("Error toggling favorite status:", error);
       setIsFavorite(!isFavorite);
+    }
+  };
+
+  const handleStatusChange = async (event) => {
+    const newStatus = event.target.value;
+    setItemStatus(newStatus);
+    try {
+      await axios.post(
+        "https://changeitemstatus-jbhycjd2za-uc.a.run.app",
+        {
+          item_id: item.item_id,
+          status: newStatus,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status.");
+      setItemStatus(item.status);
+    }
+  };
+
+  const location = useLocation();
+  const isMapPage = location.pathname === "/";
+  const handleMapMediaCardMarkerFLink = () => {
+    if (isMapPage && onMarkerClick) {
+      onMarkerClick(item.item_id);
     }
   };
 
@@ -154,7 +181,7 @@ export default function MediaCard({ item, size, onDelete }) {
         maxHeight: "20%",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         backgroundColor: "#E6DFF1",
         borderRadius: 2,
         boxShadow: 3,
@@ -164,49 +191,109 @@ export default function MediaCard({ item, size, onDelete }) {
           transform: "translateY(-3px)",
         },
       }}
+      onClick={handleMapMediaCardMarkerFLink}
     >
-      <CardMedia
-        sx={{ height: 200 }}
-        image={item.image_urls ? item.image_urls[0] : item.image_url} // temporary fix for image URL key
-        title="item card"
-      />
+      <Box sx={{ position: "relative" }}>
+        <CardMedia
+          sx={{ height: 200 }}
+          image={item.image_urls ? item.image_urls[0] : item.image_url}
+          title="item card"
+        />
+        {itemStatus === "SOLD" && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: 0,
+              right: 0,
+              transform: "translateY(-50%)",
+              backgroundColor: "rgba(110, 110, 110, 0.60)",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "65px",
+              fontWeight: "bold",
+              fontSize: "1.7rem",
+            }}
+          >
+            SOLD
+          </Box>
+        )}
+        {itemStatus === "PENDING" && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 8,
+              left: 8,
+              backgroundColor: "rgb(255, 70, 70)",
+              color: "#fff",
+              padding: "4px 8px",
+              borderRadius: "4px",
+              fontWeight: "bold",
+            }}
+          >
+            Pending
+          </Box>
+        )}
+      </Box>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {item.name} - {formatPrice(item.price)}
+        <Typography variant="h5" className="font-bold">{item.name}</Typography>
+        <Typography variant="h6" className="font-medium">{formatPrice(item.price)}</Typography>
+        <Typography variant="body2" className="text-gray-600">
+          Posted by: {item.username}
         </Typography>
-        <Typography variant="subtitle1">Posted by: {item.username}</Typography>
-        <Typography variant="body2">{item.description}</Typography>
+        <Typography variant="body1" className="mt-2">
+          {item.description}
+        </Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton
-          onClick={handleFavoriteToggle}
-          aria-label="add to favorites"
-          sx={{
-            transition: "color 0.2s ease",
-            color: isFavorite ? "error.main" : "text.secondary",
-          }}
-        >
-          <FavoriteIcon />
-        </IconButton>
-        <Link to="/inbox" state={{ item: item }}>
-          <IconButton aria-label="go to inbox">
-            <MapsUgcIcon />
+      <CardActions disableSpacing className="mt-auto">
+        {!onProfile && (
+          <IconButton
+            onClick={handleFavoriteToggle}
+            variant="contained"
+            color={isFavorite ? "error" : "default"}
+            aria-label="add to favorites"
+          >
+            <FavoriteIcon className={isFavorite ? "text-red-600" : ""} />
           </IconButton>
-        </Link>
+        )}
+        {!onProfile && (
+          <Link to="/inbox" state={{ item: item }}>
+            <IconButton aria-label="go to inbox">
+              <MapsUgcIcon />
+            </IconButton>
+          </Link>
+        )}
+
         {onDelete && (
           <IconButton
             onClick={handleDeletePost}
             aria-label="delete post"
-            sx={{
-              ml: "auto",
-              color: "error.main",
-              transition: "color 0.2s ease",
-              "&:hover": { color: "error.dark" },
-            }}
+            className="ml-auto text-red-500 hover:text-red-700"
+
           >
             <DeleteIcon />
           </IconButton>
         )}
+        {allowStatusChange && (
+          <FormControl variant="outlined" size="small" sx={{ minWidth: 120, ml: 1 }}>
+          <InputLabel id="status-label">Status</InputLabel>
+          <Select
+            labelId="status-label"
+            id="status-select"
+            value={itemStatus}
+            onChange={handleStatusChange}
+            label="Status"
+          >
+            <MenuItem value="FOR_SALE">For Sale</MenuItem>
+            <MenuItem value="SOLD">Sold</MenuItem>
+            <MenuItem value="PENDING">Pending</MenuItem>
+          </Select>
+        </FormControl>
+        )}
+        
+
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

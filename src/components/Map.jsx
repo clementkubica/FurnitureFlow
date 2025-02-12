@@ -150,6 +150,8 @@ const Map = ({
   category,
   dateRange,
   isLoaded,
+  activeMarkerOnMap,
+  setActiveMarkerOnMap,
 }) => {
   const [activeMarker, setActiveMarker] = useState(null);
   const [gMap, setGMap] = useState(null);
@@ -181,10 +183,10 @@ const Map = ({
   }
 
   const handleActiveMarker = (marker) => {
-    if (marker === activeMarker) {
+    if (marker === activeMarkerOnMap) {
       return;
     }
-    setActiveMarker(marker);
+    setActiveMarkerOnMap(marker);
   };
 
   const handleOnLoad = (map) => {
@@ -308,21 +310,21 @@ const Map = ({
                 onClick={() => handleActiveMarker(id)}
                 icon={{
                   url:
-                    activeMarker === id
+                    activeMarkerOnMap === id
                       ? createPriceMarker(price, "#9E4B9E")
                       : createPriceMarker(price, "#DAB1DA"),
                   scaledSize: new google.maps.Size(80, 40),
                   anchor: new google.maps.Point(40, 40),
                 }}
               >
-                {activeMarker === id && (
+                {activeMarkerOnMap === id && (
                   <InfoWindowF
                     options={{
                       maxWidth: 200,
                       pixelOffset: new google.maps.Size(0, -30),
                       closeButton: false,
                     }}
-                    onCloseClick={() => setActiveMarker(null)}
+                    onCloseClick={() => setActiveMarkerOnMap(null)}
                   >
                     <div style={{ padding: 0, margin: 0 }}>
                       <Carousel
@@ -400,7 +402,11 @@ const Map = ({
                 overflowY: "auto",
               }}
             >
-              <ItemPanel items={visibleItems} cardsPerRowParameter={1} />
+              <ItemPanel
+                items={visibleItems}
+                cardsPerRowParameter={1}
+                onMarkerClick={handleActiveMarker}
+              />
             </Box>
           )}
         </>

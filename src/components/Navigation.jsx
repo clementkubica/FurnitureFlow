@@ -129,12 +129,24 @@ function Navigation({
                       variant="outlined"
                       size="small"
                       className="w-40"
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          height: 30,
+                          minHeight: 30,
+                        },
+
+                        "& .MuiInputLabel-root": {
+                          top: "-4px",
+                          left: "-2px",
+                          fontSize: "0.9rem",
+                        },
+                      }}
                     >
                       <InputLabel
                         id="category-label"
-                        sx={{ fontSize: "0.875rem" }}
+                        sx={{ fontSize: "0.9rem" }}
                       >
-                        Categories
+                        Category
                       </InputLabel>
                       <Select
                         labelId="category-label"
@@ -179,7 +191,7 @@ function Navigation({
                   {/* Date Pickers */}
                   <div className="ml-2">
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Box sx={{ display: "flex", alignItems: "center"}}>
                         <DatePicker
                           label="Start"
                           value={dateRange[0]}
@@ -190,11 +202,20 @@ function Navigation({
                               size="small"
                               variant="outlined"
                               sx={{
-                                width: 120,
-                                height: 30,
+                                fontSize: 10,
                               }}
                             />
                           )}
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              height: 30,
+                              minHeight: 30,
+                            },
+                            "& .MuiInputLabel-root": {
+                              top: "-12px",
+                              left: "0px",
+                            },
+                          }}
                         />
                         <Box sx={{ mx: 1 }}> to </Box>
                         <div className="mr-3">
@@ -212,6 +233,16 @@ function Navigation({
                                 }}
                               />
                             )}
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                height: 30,
+                                minHeight: 30,
+                              },
+                              "& .MuiInputLabel-root": {
+                                top: "-12px",
+                                left: "0px",
+                              },
+                            }}
                           />
                         </div>
                       </Box>
@@ -224,8 +255,9 @@ function Navigation({
                       onClick={handleResetFilters}
                       sx={{
                         textTransform: "none",
-                        height: "36px",
+                        height: "30px",
                         marginRight: "16px",
+                        marginLeft: "-18px",
                         whiteSpace: "nowrap",
                       }}
                     >
@@ -290,9 +322,25 @@ function Navigation({
             {/* Dropdowns Buttons */}
             <div className="flex md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
               <div className="mx-2 mr-[-30px]">
-                <FormControl variant="outlined" size="small" className="w-40">
+                <FormControl
+                  variant="outlined"
+                  size="small"
+                  className="w-40"
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: 30,
+                      minHeight: 30,
+                    },
+
+                    "& .MuiInputLabel-root": {
+                      top: "-4px",
+                      left: "-2px",
+                      fontSize: "0.9rem",
+                    },
+                  }}
+                >
                   <InputLabel id="category-label" sx={{ fontSize: "0.875rem" }}>
-                    Categories
+                    Category
                   </InputLabel>
                   <Select
                     labelId="category-label"
@@ -352,6 +400,16 @@ function Navigation({
                           }}
                         />
                       )}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          height: 30,
+                          minHeight: 30,
+                        },
+                        "& .MuiInputLabel-root": {
+                          top: "-12px",
+                          left: "0px",
+                        },
+                      }}
                     />
                     <Box sx={{ mx: 1 }}> to </Box>
                     <DatePicker
@@ -368,6 +426,16 @@ function Navigation({
                           }}
                         />
                       )}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          height: 30,
+                          minHeight: 30,
+                        },
+                        "& .MuiInputLabel-root": {
+                          top: "-12px",
+                          left: "0px",
+                        },
+                      }}
                     />
                   </Box>
                 </LocalizationProvider>

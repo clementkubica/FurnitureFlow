@@ -52,11 +52,9 @@ function Inbox() {
 
   const fetchInboxItems = async (newInboxItem) => {
     try {
-      // right now we're fetching all of the inbox_items from the collection
-      // soon, we need to change it so that we're fetching all of the inbox_items where the current user's id is in the users array
-      const inboxCollection = collection(db, "inbox_items")
-      const q = query(inboxCollection, where("users", "array-contains", user.uid), orderBy("timestamp", "desc"))
-      
+      const inboxCollection = collection(db, "inbox_items");
+      const q = query(inboxCollection, where("users", "array-contains", user.uid), orderBy("timestamp", "desc"));
+  
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const items = [];
         querySnapshot.forEach((doc) => {
@@ -64,13 +62,18 @@ function Inbox() {
         });
   
         if (newInboxItem) {
-          setInboxItems([newInboxItem, ...items]);
+          const alreadyExists = items.some(item => item.item_id === newInboxItem.item_id);
+          if (!alreadyExists) {
+            setInboxItems([newInboxItem, ...items]);
+          } else {
+            setInboxItems(items);
+          }
         } else {
           setInboxItems(items);
         }
       });
-
-      return unsubscribe
+  
+      return unsubscribe;
     } catch (error) {
       console.error("Error fetching inbox items:", error);
     }
@@ -85,7 +88,7 @@ function Inbox() {
       <div className="flex flex-1 overflow-hidden">
         {/* Inbox Item List */}
         <div className="w-1/3 border-r overflow-y-auto">
-          <InboxItemList selectedConversation={selectedConversation} inboxItems={inboxItems} setSelectedConversation={setSelectedConversation} />
+          <InboxItemList selectedConversation={selectedConversation} inboxItems={inboxItems} setInboxItems={setInboxItems} setSelectedConversation={setSelectedConversation} />
         </div>
 
         {/* Messaging Panel */}
