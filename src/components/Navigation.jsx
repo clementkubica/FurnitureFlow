@@ -18,6 +18,16 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import MailIcon from "@mui/icons-material/Mail";
 import { useMediaQuery } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import {
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 function Navigation({
   mapBounds,
@@ -93,6 +103,15 @@ function Navigation({
     setDateRange([null, null]);
   };
 
+  const [anchorElHam, setAnchorElHam] = useState(null);
+  const openHam = Boolean(anchorElHam);
+  const handleClickHam = (event) => {
+    setAnchorElHam(event.currentTarget);
+  };
+  const handleCloseHam = () => {
+    setAnchorElHam(null);
+  };
+
   return (
     <nav className="bg-white shadow w-full">
       <div className="flex items-center justify-between px-4 py-4">
@@ -110,126 +129,101 @@ function Navigation({
 
         {showSearchBar && (
           <div className="flex-1 flex items-center justify-center space-x-4">
-            <div className="flex-1 mr-2">
-              <SearchBar
-                mapBounds={mapBounds}
-                setMapBounds={setMapBounds}
-                visibleItems={visibleItems}
-                setVisibleItems={setVisibleItems}
-                query={query}
-                setQuery={setQuery}
-              />
-            </div>
             {!isMobile && (
-              <div className="mr-4">
-                {/* Dropdowns Buttons */}
-                <div className="flex md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-                  <div className="mx-2 mr-[-30px]">
-                    <FormControl
-                      variant="outlined"
-                      size="small"
-                      className="w-40"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: 30,
-                          minHeight: 30,
-                        },
+              <>
+                <div className="flex-1 mr-2">
+                  <SearchBar
+                    mapBounds={mapBounds}
+                    setMapBounds={setMapBounds}
+                    visibleItems={visibleItems}
+                    setVisibleItems={setVisibleItems}
+                    query={query}
+                    setQuery={setQuery}
+                  />
+                </div>
 
-                        "& .MuiInputLabel-root": {
-                          top: "-4px",
-                          left: "-2px",
-                          fontSize: "0.9rem",
-                        },
-                      }}
-                    >
-                      <InputLabel
-                        id="category-label"
-                        sx={{ fontSize: "0.9rem" }}
-                      >
-                        Category
-                      </InputLabel>
-                      <Select
-                        labelId="category-label"
-                        id="category-select"
-                        value={category}
-                        onChange={handleCategoryChange}
-                        label="Categories"
-                        sx={{ fontSize: "0.875rem" }}
-                        className=" min-w-[115px] max-w-[115px]"
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
+                <div className="mr-4">
+                  {/* Dropdowns Buttons */}
+                  <div className="flex md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+                    <div className="mx-2 mr-[-30px]">
+                      <FormControl
+                        variant="outlined"
+                        size="small"
+                        className="w-40"
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            height: 30,
+                            minHeight: 30,
+                          },
 
-                        <MenuItem value="Couch">Couch</MenuItem>
-                        <MenuItem value="Dresser">Dresser</MenuItem>
-                        <MenuItem value="Table">Table</MenuItem>
-                        <MenuItem value="Other">Other</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </div>
-                  {/* Price Slider */}
-                  <div className="min-w-[90px] max-w-[90px] md:w-40 mx-3">
-                    <div className="text-center">
-                      <label className="block text-[0.75rem] font-medium text-gray-700">
-                        Prices
-                      </label>
-                      <label className="block text-[0.75rem] font-medium text-gray-700">
-                        (${priceRange[0]} - ${priceRange[1]})
-                      </label>
+                          "& .MuiInputLabel-root": {
+                            top: "-4px",
+                            left: "-2px",
+                            fontSize: "0.9rem",
+                          },
+                        }}
+                      >
+                        <InputLabel
+                          id="category-label"
+                          sx={{ fontSize: "0.9rem" }}
+                        >
+                          Category
+                        </InputLabel>
+                        <Select
+                          labelId="category-label"
+                          id="category-select"
+                          value={category}
+                          onChange={handleCategoryChange}
+                          label="Categories"
+                          sx={{ fontSize: "0.875rem" }}
+                          className=" min-w-[115px] max-w-[115px]"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+
+                          <MenuItem value="Couch">Couch</MenuItem>
+                          <MenuItem value="Dresser">Dresser</MenuItem>
+                          <MenuItem value="Table">Table</MenuItem>
+                          <MenuItem value="Other">Other</MenuItem>
+                        </Select>
+                      </FormControl>
                     </div>
-                    <Slider
-                      value={priceRange}
-                      onChange={handlePriceRange}
-                      valueLabelDisplay="auto"
-                      min={0}
-                      max={2000}
-                      step={10}
-                      aria-labelledby="price-slider"
-                    />
-                  </div>
-                  {/* Date Pickers */}
-                  <div className="ml-2">
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <Box sx={{ display: "flex", alignItems: "center"}}>
-                        <DatePicker
-                          label="Start"
-                          value={dateRange[0]}
-                          onChange={handleStartDateChange}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              size="small"
-                              variant="outlined"
-                              sx={{
-                                fontSize: 10,
-                              }}
-                            />
-                          )}
-                          sx={{
-                            "& .MuiInputBase-root": {
-                              height: 30,
-                              minHeight: 30,
-                            },
-                            "& .MuiInputLabel-root": {
-                              top: "-12px",
-                              left: "0px",
-                            },
-                          }}
-                        />
-                        <Box sx={{ mx: 1 }}> to </Box>
-                        <div className="mr-3">
+                    {/* Price Slider */}
+                    <div className="min-w-[90px] max-w-[90px] md:w-40 mx-3">
+                      <div className="text-center">
+                        <label className="block text-[0.75rem] font-medium text-gray-700">
+                          Prices
+                        </label>
+                        <label className="block text-[0.75rem] font-medium text-gray-700">
+                          (${priceRange[0]} - ${priceRange[1]})
+                        </label>
+                      </div>
+                      <Slider
+                        value={priceRange}
+                        onChange={handlePriceRange}
+                        valueLabelDisplay="auto"
+                        min={0}
+                        max={2000}
+                        step={10}
+                        aria-labelledby="price-slider"
+                      />
+                    </div>
+                    {/* Date Pickers */}
+                    <div className="ml-2">
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
                           <DatePicker
-                            label="End"
-                            value={dateRange[1]}
-                            onChange={handleEndDateChange}
+                            label="Start"
+                            value={dateRange[0]}
+                            onChange={handleStartDateChange}
                             renderInput={(params) => (
                               <TextField
                                 {...params}
                                 size="small"
                                 variant="outlined"
                                 sx={{
-                                  width: 120, // Keep consistent width
+                                  fontSize: 10,
                                 }}
                               />
                             )}
@@ -244,42 +238,72 @@ function Navigation({
                               },
                             }}
                           />
-                        </div>
-                      </Box>
-                    </LocalizationProvider>
-                  </div>
-                  <div>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={handleResetFilters}
-                      sx={{
-                        textTransform: "none",
-                        height: "30px",
-                        marginRight: "16px",
-                        marginLeft: "-18px",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      Reset Filters
-                    </Button>
+                          <Box sx={{ mx: 1 }}> to </Box>
+                          <div className="mr-3">
+                            <DatePicker
+                              label="End"
+                              value={dateRange[1]}
+                              onChange={handleEndDateChange}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  size="small"
+                                  variant="outlined"
+                                  sx={{
+                                    width: 120, // Keep consistent width
+                                  }}
+                                />
+                              )}
+                              sx={{
+                                "& .MuiInputBase-root": {
+                                  height: 30,
+                                  minHeight: 30,
+                                },
+                                "& .MuiInputLabel-root": {
+                                  top: "-12px",
+                                  left: "0px",
+                                },
+                              }}
+                            />
+                          </div>
+                        </Box>
+                      </LocalizationProvider>
+                    </div>
+                    <div>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={handleResetFilters}
+                        sx={{
+                          textTransform: "none",
+                          height: "30px",
+                          marginRight: "16px",
+                          marginLeft: "-18px",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Reset Filters
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         )}
         {/* Icons */}
         <div className="flex items-center space-x-4">
-          <Button
-            className="!bg-purple-400 !text-white hover:!bg-purple-500"
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleAddListing}
-            size="small"
-          >
-            post
-          </Button>
+          {!isMobile && (
+            <Button
+              className="!bg-purple-400 !text-white hover:!bg-purple-500"
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleAddListing}
+              size="small"
+            >
+              post
+            </Button>
+          )}
           <a href="/inbox">
             <MailIcon
               className="text-black text-xl hover:text-yellow-400 cursor-pointer"
@@ -317,11 +341,37 @@ function Navigation({
         </div>
       </div>
       {showSearchBar && isMobile && (
-        <>
-          <div className="mr-4 ml-2">
-            {/* Dropdowns Buttons */}
-            <div className="flex md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-              <div className="mx-2 mr-[-30px]">
+        <div className="flex flex-horiz">
+          <div className="flex-1 ml-[1px] mt-[-10px]">
+            <SearchBar
+              mapBounds={mapBounds}
+              setMapBounds={setMapBounds}
+              visibleItems={visibleItems}
+              setVisibleItems={setVisibleItems}
+              query={query}
+              setQuery={setQuery}
+            />
+          </div>
+          <div className="mr-[6.5px] mt-[-10px]">
+            <IconButton
+              id="basic-button"
+              aria-controls={openHam ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={openHam ? "true" : undefined}
+              onClick={handleClickHam}
+            >
+              {openHam ? <MenuOpenIcon /> : <MenuIcon />}
+            </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorElHam}
+              open={openHam}
+              onClose={handleCloseHam}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <div className="flex flex-col mx-5 mr-[-25px] my-4 justify-center gap-4">
                 <FormControl
                   variant="outlined"
                   size="small"
@@ -337,9 +387,10 @@ function Navigation({
                       left: "-2px",
                       fontSize: "0.9rem",
                     },
+                    marginLeft: 0.25,
                   }}
                 >
-                  <InputLabel id="category-label" sx={{ fontSize: "0.875rem" }}>
+                  <InputLabel id="category-label" sx={{ fontSize: "0.9rem" }}>
                     Category
                   </InputLabel>
                   <Select
@@ -358,33 +409,33 @@ function Navigation({
                     <MenuItem value="Couch">Couch</MenuItem>
                     <MenuItem value="Dresser">Dresser</MenuItem>
                     <MenuItem value="Table">Table</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
                   </Select>
                 </FormControl>
-              </div>
-              {/* Price Slider */}
-              <div className="min-w-[90px] max-w-[90px] md:w-40 mx-3">
-                <div className="text-center">
-                  <label className="block text-[0.75rem] font-medium text-gray-700">
-                    Prices
-                  </label>
-                  <label className="block text-[0.75rem] font-medium text-gray-700">
-                    (${priceRange[0]} - ${priceRange[1]})
-                  </label>
+
+                <div className="min-w-[90px] max-w-[90px] md:w-40 mx-3 mt-1 ml-[17.5px]">
+                  <div className="text-center">
+                    <label className="block text-[0.75rem] font-medium text-gray-700">
+                      Prices
+                    </label>
+                    <label className="block text-[0.75rem] font-medium text-gray-700">
+                      (${priceRange[0]} - ${priceRange[1]})
+                    </label>
+                  </div>
+                  <Slider
+                    value={priceRange}
+                    onChange={handlePriceRange}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={2000}
+                    step={10}
+                    aria-labelledby="price-slider"
+                  />
                 </div>
-                <Slider
-                  value={priceRange}
-                  onChange={handlePriceRange}
-                  valueLabelDisplay="auto"
-                  min={0}
-                  max={2000}
-                  step={10}
-                  aria-labelledby="price-slider"
-                />
               </div>
-              {/* Date Pickers */}
-              <div className="ml-2">
+              <div className="flex flex-col mx-5 mr-[-25px] my-5 justify-center gap-4">
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Box className="mt-1">
                     <DatePicker
                       label="Start"
                       value={dateRange[0]}
@@ -395,8 +446,7 @@ function Navigation({
                           size="small"
                           variant="outlined"
                           sx={{
-                            width: 120, // Smaller width
-                            height: 30, // Reduce height
+                            fontSize: 10,
                           }}
                         />
                       )}
@@ -409,40 +459,73 @@ function Navigation({
                           top: "-12px",
                           left: "0px",
                         },
+                        width: 107,
+                        marginLeft: 0.5,
                       }}
                     />
-                    <Box sx={{ mx: 1 }}> to </Box>
-                    <DatePicker
-                      label="End"
-                      value={dateRange[1]}
-                      onChange={handleEndDateChange}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          size="small"
-                          variant="outlined"
-                          sx={{
-                            width: 120, // Keep consistent width
-                          }}
-                        />
-                      )}
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: 30,
-                          minHeight: 30,
-                        },
-                        "& .MuiInputLabel-root": {
-                          top: "-12px",
-                          left: "0px",
-                        },
-                      }}
-                    />
+                    {/* <div className="mx-10 mb-4"> to </div> */}
+                    <div className="mr-3 mt-7">
+                      <DatePicker
+                        label="End"
+                        value={dateRange[1]}
+                        onChange={handleEndDateChange}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            size="small"
+                            variant="outlined"
+                            sx={{
+                              width: 120, // Keep consistent width
+                            }}
+                          />
+                        )}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            height: 30,
+                            minHeight: 30,
+                          },
+                          "& .MuiInputLabel-root": {
+                            top: "-12px",
+                            left: "0px",
+                          },
+                          width: 107,
+                          marginLeft: 0.5,
+                        }}
+                      />
+                    </div>
                   </Box>
                 </LocalizationProvider>
+                <div className="ml-[18.5px]">
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleResetFilters}
+                    sx={{
+                      textTransform: "none",
+                      height: "30px",
+                      marginRight: "16px",
+                      marginLeft: "-18px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+                <div className="flex items-center space-x-4 ml-4 mt-2 mb-[-5px]">
+                  <Button
+                    className="!bg-purple-400 !text-white hover:!bg-purple-500"
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleAddListing}
+                    size="small"
+                  >
+                    post
+                  </Button>
+                </div>
               </div>
-            </div>
+            </Menu>
           </div>
-        </>
+        </div>
       )}
     </nav>
   );
