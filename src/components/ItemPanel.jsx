@@ -4,8 +4,8 @@ import { useNavigate } from "react-router";
 import { useMediaQuery } from "@mui/material";
 function ItemPanel({ items = [], category, onMarkerClick }) {
   // Default to an empty array
-  const cardsPerRow = 2;
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const cardsPerRow = isMobile ? 1 : 2;
   const navigate = useNavigate();
   const handleNav = (path) => {
     navigate(path);
@@ -18,7 +18,9 @@ function ItemPanel({ items = [], category, onMarkerClick }) {
 
   return (
     <div className="overflow-x-auto overflow-y-auto p-4 max-h-[90vh]">
-      <div className="flex flex-col gap-4 pr-4">
+      <div
+        className={`flex flex-col gap-4 ${isMobile ? "mr-[-15px]" : "pr-4"}`}
+      >
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="flex flex-row gap-4">
             {row.map((item, itemIndex) => (

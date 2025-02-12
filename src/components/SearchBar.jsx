@@ -37,8 +37,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
+    minWidth: "30ch",
     [theme.breakpoints.up("md")]: {
-      width: "20ch",
+      width: "40ch",
     },
   },
 }));
@@ -97,7 +98,7 @@ export default function SearchBar({
         </SearchIconWrapper>
         <StyledInputBase
           placeholder="Search…"
-          inputProps={{ "aria-label": "search" }}
+          inputProps={{ "aria-label": "search", minLength: 300 }}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
