@@ -39,7 +39,7 @@ exports.fetchItems = onRequest({ cors: true }, async (request, response) => {
             
 
         // Add price filter if minPrice and maxPrice are not null
-        if (minPrice && maxPrice) {
+        if (minPrice != null && maxPrice != null) {
           queryBuilder = queryBuilder.andWhereBetween('items.price', [minPrice, maxPrice]); // Price filter
         }
 
