@@ -238,7 +238,7 @@ export default function Profile() {
           </Box>
         )}
       </div>
-      <div className="bg-purple-600 h-5 w-full">
+      <div className="bg-purple-600 h-5 w-full fixed-bottom">
 
       </div>
 

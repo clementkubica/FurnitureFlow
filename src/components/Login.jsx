@@ -81,7 +81,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-stone-100 to-purple-200">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-stone-100 to-purple-200">
         <div className="flex flex-col items-center justify-center">
                 <div className="flex-col mb-0.0 items-center justify-center">
                     <Box
@@ -214,7 +214,7 @@ const Login = () => {
                     />
                 </div>
             </div>
-            <div className="max-w-sm w-full text-center">
+            <div className="max-w-sm w-full text-center pb-4">
                 <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full text-center">
                     {/* <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Furniture Flow</h1> */}
                     <p className="text-gray-600 mb-6">
