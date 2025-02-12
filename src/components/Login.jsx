@@ -1,10 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../firebase/FirebaseConfig";
-import { saveUserData } from "../services/firestore";
 import { useNavigate } from "react-router-dom"; 
 import GoogleIcon from "@mui/icons-material/Google";
-import { useAuth } from "../services/auth";
+
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
+
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -48,16 +60,17 @@ const StyledBox = styled('div')(({ theme }) => ({
 
 
 const Login = () => {
-  const navigate = useNavigate(); // Initialize navigate
-  const {user} = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
       if (user.email.endsWith("@u.northwestern.edu")) {
-        navigate("/"); // Navigate to the homepage
+        navigate("/");
       } else {
         alert("Only Northwestern emails are allowed");
         await auth.signOut();
@@ -65,6 +78,8 @@ const Login = () => {
     } catch (error) {
       console.error("Error during sign-in:", error.message);
       alert("Please use your Northwestern email to sign in. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -216,10 +231,24 @@ const Login = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Loading Dialog */}
+            <Dialog
+              open={loading}
+              PaperProps={{ style: { padding: "20px", textAlign: "center" } }}
+              aria-labelledby="loading-dialog-title"
+            >
+              <DialogTitle id="loading-dialog-title">Signing In</DialogTitle>
+              <DialogContent>
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                  <CircularProgress />
+                  <Typography variant="body1">Please wait while we log you in...</Typography>
+                </Box>
+              </DialogContent>
+            </Dialog>
         </div>
     </div>
   );
 };
-
 
 export default Login;

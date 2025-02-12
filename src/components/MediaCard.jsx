@@ -102,8 +102,12 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick, allowSt
 
   const handleFavoriteToggle = async () => {
     if (!user) return;
+    //save previous state to go back to in case of failure 
+    const prevFav = isFavorite;
+    //update UI right away
+    setIsFavorite(!prevFav);
     try {
-      if (isFavorite) {
+      if (prevFav) {
         await axios.delete(
           "https://removeuserfavorite-jbhycjd2za-uc.a.run.app",
           {
@@ -118,9 +122,9 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick, allowSt
           { headers: { "Content-Type": "application/json" } }
         );
       }
-      setIsFavorite(!isFavorite);
     } catch (error) {
       console.error("Error toggling favorite status:", error);
+      setIsFavorite(!isFavorite);
     }
   };
 
@@ -179,9 +183,12 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick, allowSt
         flexDirection: "column",
         justifyContent: "flex-start",
         backgroundColor: "#E6DFF1",
-        transition: "background-color 0.3s ease-in-out",
+        borderRadius: 2,
+        boxShadow: 3,
+        transition: "background-color 0.3s ease, transform 0.2s ease",
         "&:hover": {
           backgroundColor: "#c0afdc",
+          transform: "translateY(-3px)",
         },
       }}
       onClick={handleMapMediaCardMarkerFLink}
@@ -258,11 +265,13 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick, allowSt
             </IconButton>
           </Link>
         )}
+
         {onDelete && (
           <IconButton
             onClick={handleDeletePost}
             aria-label="delete post"
             className="ml-auto text-red-500 hover:text-red-700"
+
           >
             <DeleteIcon />
           </IconButton>
@@ -284,6 +293,7 @@ export default function MediaCard({ item, size, onDelete, onMarkerClick, allowSt
         </FormControl>
         )}
         
+
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
