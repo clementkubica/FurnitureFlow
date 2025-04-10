@@ -5,10 +5,10 @@
     <img src="public/images/logo_only.PNG" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Furniture Flow</h3>
+<h3 align="center">FurnitureFlow</h3>
 
   <p align="center">
-    Juno is an AI marketing assistant for small business owners
+    FurnitureFlow
     <br />
     <a href="https://github.com/394-w25/Juno"><strong>Explore the code »</strong></a>
   </p>
@@ -20,7 +20,7 @@
 [product-screenshot]: public/images/Home.png
 [![Product Name Screen Shot][product-screenshot]](public/images/Home.png)
 
-Juno is an AI marketing assistant that helps small business owners create marketing campaigns. It gives owners recommendations based on upcoming events that are within the context of their business, and it generates different types of flyers that the user can download.
+FurnitureFlow NU is an app designed for Northwestern students who live off campus who want to pass down or pick up gently used furniture. It enables users to effortlessly browse listings, post items they no longer need, and connect with others in the area to reduce waste and save money!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -33,8 +33,6 @@ Juno is an AI marketing assistant that helps small business owners create market
 * [![Firebase][Firebase]][Firebase-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
