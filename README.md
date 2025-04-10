@@ -17,7 +17,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](public/images/logo_only.PNG)
 
 Juno is an AI marketing assistant that helps small business owners create marketing campaigns. It gives owners recommendations based on upcoming events that are within the context of their business, and it generates different types of flyers that the user can download.
 
