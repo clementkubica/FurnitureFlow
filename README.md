@@ -11,6 +11,7 @@
     FurnitureFlow
     <br />
     <a href="https://github.com/394-w25/Juno"><strong>Explore the code »</strong></a>
+    <br />
     <a href="https://furniture-flow.web.app/"><strong>Click Here</strong></a> to view deployed website.
   </p>
 </div>
