@@ -30,7 +30,6 @@ Juno is an AI marketing assistant that helps small business owners create market
 * [![Vite][Vite]][Vite-url]
 * [![React][React.js]][React-url]
 * [![Firebase][Firebase]][Firebase-url]
-* [![Gemini][Gemini]][Gemini-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -52,10 +51,6 @@ To get a local copy up and running follow these steps.
     * To create a Firebase project go to this [link][Firebase-create-url] and follow the instructions
     * Make sure to create a web app which will generate the necessary API keys and config values for your website to connect to Firebase
 
-* Gemini API Key
-    * Get a free API Key [here](https://ai.google.dev/gemini-api/docs/api-key)
-    * Make sure your API Key is associated with the same Firebase project you created
-
 * Google Maps API Key
     * Get a free API Key [here](https://developers.google.com/maps/documentation/javascript/get-api-key)
     * Again, make sure the key is associated with your Firebase project
@@ -73,7 +68,6 @@ To get a local copy up and running follow these steps.
    ```
 3. Enter your API in `.env`
    ```ini
-    VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
     VITE_GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY
     VITE_FIREBASE_KEY=YOUR_FIREBASE_KEY
     VITE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
@@ -115,8 +109,6 @@ npm start
 [React-url]: https://reactjs.org/
 [Firebase]: https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white
 [Firebase-url]: https://firebase.google.com
-[Gemini]: https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white
-[Gemini-url]: https://gemini.google.com
 [Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white
 [Vite-url]: https://vite.dev
 [Firebase-create-url]: https://firebase.google.com
