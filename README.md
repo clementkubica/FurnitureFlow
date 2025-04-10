@@ -1,11 +1,11 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/394-w25/Juno">
-    <img src="src/assets/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/clementkubica/FurnitureFlow">
+    <img src="public/images/logo_only.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Juno</h3>
+<h3 align="center">Furniture Flow</h3>
 
   <p align="center">
     Juno is an AI marketing assistant for small business owners
