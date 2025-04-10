@@ -1,90 +1,125 @@
-# React Vitest Template
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/394-w25/Juno">
+    <img src="src/assets/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-A starter template for building React apps with Vite. Includes Vitest for unit testing and
-a hefty .gitignore file.
+<h3 align="center">Juno</h3>
 
-# Requirements
+  <p align="center">
+    Juno is an AI marketing assistant for small business owners
+    <br />
+    <a href="https://github.com/394-w25/Juno"><strong>Explore the code »</strong></a>
+  </p>
+</div>
 
-Node 20 or greater.
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+Juno is an AI marketing assistant that helps small business owners create marketing campaigns. It gives owners recommendations based on upcoming events that are within the context of their business, and it generates different types of flyers that the user can download.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+### Built With
+
+* [![Vite][Vite]][Vite-url]
+* [![React][React.js]][React-url]
+* [![Firebase][Firebase]][Firebase-url]
+* [![Gemini][Gemini]][Gemini-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+To get a local copy up and running follow these steps.
+
+### Prerequisites
+
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+* Firebase project
+    * To create a Firebase project go to this [link][Firebase-create-url] and follow the instructions
+    * Make sure to create a web app which will generate the necessary API keys and config values for your website to connect to Firebase
+
+* Gemini API Key
+    * Get a free API Key [here](https://ai.google.dev/gemini-api/docs/api-key)
+    * Make sure your API Key is associated with the same Firebase project you created
+
+* Google Maps API Key
+    * Get a free API Key [here](https://developers.google.com/maps/documentation/javascript/get-api-key)
+    * Again, make sure the key is associated with your Firebase project
+    * Make sure the key is unrestricted
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/394-w25/Juno.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+3. Enter your API in `.env`
+   ```ini
+    VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+    VITE_GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY
+    VITE_FIREBASE_KEY=YOUR_FIREBASE_KEY
+    VITE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
+    VITE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
+    VITE_STORAGE_BUCKET=YOUR_FIREBASE_STORAGE_BUCKET
+    VITE_MESSAGING_SENDER_ID=YOUR_FIREBASE_MESSAGING_SENDER_ID
+    VITE_APP_ID=YOUR_FIREBASE_APP_ID
+    VITE_MEASUREMENT_ID=YOUR_FIREBASE_MEASUREMENT_ID
+   ```
+4. Change git remote url to avoid accidental pushes to base project
+   ```sh
+   git remote set-url origin your_github_username/your_repo_name
+   git remote -v # confirm the changes
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- USAGE -->
 ## Usage
 
-```
-mkdir your-app-name
-cd your-app-name
-npx degit criesbeck/react-vitest
-npm install
-```
-If the third step hangs after printing ``> cloned criesbeck/react-vitest#HEAD``, 
-just control-C to exit then run ``npm install``.
-
-## Test
-
-Verify that the initial app works. Run
-
-```
+To run the app:
+```sh
 npm start
 ```
 
-and open the URL displayed.
-
-Verify that the unit tests work with
-
-```
-npm test
-```
-
-Two tests should run and pass. 
-
-## Scripts
-
-**package.json** defines the following scripts:
-
-| Script           | Description                                         |
-| -----------------| --------------------------------------------------- |
-| npm start        | Runs the app in the development mode.               |
-| npm run dev      | Runs the app in the development mode.               |
-| npm run build    | Builds the app for production to the `dist` folder. |
-| npm run serve    | Serves the production build from the `dist` folder. |
-| npm test         | Starts a Jest-like test loop                        |
-| npm run coverage | Runs the tests, displays code coverage results      |
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Git
+<!-- CONTRIBUTORS -->
+## Top Contributors
+```Vivian Chen```, ```Andy Vu```, ```Clement Kubica```, ```Yvonne Cheng```, ```Yosief Desta```, ```Archie Silverstein```, and ```Victor Olawale-apanpa``` created version 1 of this app.
 
-If everything is working, set up [your local and remote repositories](https://docs.github.com/en/get-started/importing-your-projects-to-github/importing-source-code-to-github/adding-locally-hosted-code-to-github#adding-a-local-repository-to-github-using-git).
-
-## Folder Structure
-
-```
-your-app-name
-├── node_modules
-├── public
-│   ├── favicon.svg
-│   └── robots.txt
-└── src
-    ├── App.css
-    ├── App.jsx
-    ├── index.css
-    ├── index.jsx
-    └── logo.svg
-├── .gitignore
-├── index.html
-├── package.json
-├── README.md
-├── vite.config.js
-```
-
-## Credits
-
-React-Vitest built and maintained by [Chris Riesbeck](https://github.com/criesbeck).
-
-Inspired by [SafdarJamal/vite-template-react](https://github.com/SafdarJamal/vite-template-react).
-Expanded to include Vitest and some sample tests.
-
-Thanks to Rich Harris for [degit](https://www.npmjs.com/package/degit).
-
-Gitignore file created with [the Toptal tool](https://www.toptal.com/developers/gitignore/api/react,firebase,visualstudiocode,macos,windows).
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[product-screenshot]: src/assets/project-ss.png
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Firebase]: https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white
+[Firebase-url]: https://firebase.google.com
+[Gemini]: https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white
+[Gemini-url]: https://gemini.google.com
+[Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white
+[Vite-url]: https://vite.dev
+[Firebase-create-url]: https://firebase.google.com
 
 
 ## License
